@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import TaskList from "../components/Tasks/TaskList";
-import TaskFilter from "../components/Tasks/TaskFilter";
+import TaskList from "../components/Tasks/TaskList.tsx";
+import TaskFilter from "../components/Tasks/TaskFilter.tsx";
 
 const Home: React.FC = () => {
   const [tasks, setTasks] = useState([

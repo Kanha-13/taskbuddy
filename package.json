@@ -7,12 +7,14 @@
     "cra-template-typescript": "1.2.0",
     "firebase": "^11.1.0",
     "react": "^19.0.0",
+    "react-beautiful-dnd": "^13.1.1",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^19.0.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.1.1",
-    "react-scripts": "5.0.1"
+    "react-scripts": "5.0.1",
+    "typescript": "^5.7.2"
   },
   "scripts": {
     "start": "react-scripts start",

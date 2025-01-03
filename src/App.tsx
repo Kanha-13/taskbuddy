@@ -4,13 +4,14 @@ import { Provider } from "react-redux";
 import { store } from "./store/store.ts";
 import Login from "./screens/Login.tsx"
 import Navbar from "./components/Navbar/Navbar.tsx"
+import Home from "./screens/Home.tsx";
 const App: React.FC = () => {
   return (
     <Provider store={store}>
       <Router>
-        <Navbar />
         <Routes>
           <Route path="/" element={<Login />} />
+          <Route path="/tasks" element={<Home />} />
         </Routes>
       </Router>
     </Provider>
