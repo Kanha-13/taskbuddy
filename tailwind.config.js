@@ -4,12 +4,17 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        custom: ['Urbanist', 'sans-serif'], // Use the name defined in @font-face
+        custom: ['Urbanist', 'sans-serif'],
+        mulish: ['Mulish', 'sans-serif'],
       },
       colors: {
         baseColor: "#FFF9F9",
         secondaryColor: "#7B1984",
-        googleBtn: "#292929"
+        nav_title: "#2F2F2F",
+        googleBtn: "#292929",
+        todoDiv: "#FAC3FF",
+        inprogressDiv:"#85D9F1",
+        completedDiv:"#CEFFCC"
       }
     },
   },

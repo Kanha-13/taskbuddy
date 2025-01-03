@@ -2,7 +2,8 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebaseConfig.ts";
-
+import userImg from "../../assets/images/user.svg"
+import taskBlackIcon from "../../assets/icons/task_black.svg"
 const Navbar: React.FC = () => {
   const navigate = useNavigate();
 
@@ -16,13 +17,15 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="bg-gray-800 text-white p-4 flex justify-between items-center">
-      <Link to="/tasks" className="text-lg font-bold">
-        Task Manager
-      </Link>
-      <button onClick={handleLogout} className="bg-red-500 py-1 px-3 rounded-lg">
-        Logout
-      </button>
+    <nav className="bg-white font-mulish text-nav_title flex justify-between items-center">
+      <div className="flex">
+        <img src={taskBlackIcon} />
+        <Link to="/tasks" className="ml-1 text-2xl font-semibold">TaskBuddy</Link>
+      </div>
+      <div className="flex items-center">
+        <img src={userImg} />
+        <div className="ml-2 text-[16px] font-bold opacity-60">Arvind</div>
+      </div>
     </nav>
   );
 };

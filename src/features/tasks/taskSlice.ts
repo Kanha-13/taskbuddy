@@ -33,16 +33,17 @@ interface Task {
   title: string;
   category: string;
   dueDate: string;
+  status: string;
 }
 
 interface TaskState {
   tasks: Task[];
-  status: "idle" | "loading" | "succeeded" | "failed";
+  status: "todo" | "in-progress" | "completed";
 }
 
 const initialState: TaskState = {
   tasks: [],
-  status: "idle",
+  status: "todo",
 };
 
 const taskSlice = createSlice({
