@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { signInWithPopup, signOut } from "firebase/auth";
-import { auth, provider } from "../../firebaseConfig";
+import { auth, provider } from "../../firebaseConfig.ts";
 
 export const loginWithGoogle = createAsyncThunk("auth/login", async () => {
   const result = await signInWithPopup(auth, provider);

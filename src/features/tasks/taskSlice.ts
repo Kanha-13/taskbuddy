@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { db } from "../../firebaseConfig";
+import { db } from "../../firebaseConfig.ts";
 import {
   collection,
   addDoc,

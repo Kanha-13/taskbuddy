@@ -1,6 +1,6 @@
 import React from "react";
 import { signInWithPopup } from "firebase/auth";
-import { auth, provider } from "../firebaseConfig";
+import { auth, provider } from "../firebaseConfig.ts";
 import { useNavigate } from "react-router-dom";
 
 const Login: React.FC = () => {
