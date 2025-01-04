@@ -13,8 +13,9 @@ module.exports = {
         nav_title: "#2F2F2F",
         googleBtn: "#292929",
         todoDiv: "#FAC3FF",
-        inprogressDiv:"#85D9F1",
-        completedDiv:"#CEFFCC"
+        inprogressDiv: "#85D9F1",
+        completedDiv: "#CEFFCC",
+        boxGray: "#F1F1F1"
       }
     },
   },

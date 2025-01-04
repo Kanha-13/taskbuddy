@@ -1,6 +1,9 @@
-// src/components/TaskList.tsx
 import React, { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import AddTaskRow from "./AddTaskRow.tsx";
+import ListHead from "./ListHead.tsx";
+import DropIcon from "../DropIcon.tsx";
+import TaskListRow from "./TaskListRow.tsx";
 
 interface Task {
   id: string;
@@ -35,49 +38,50 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onDragEnd }) => {
   const getSectionBgColor = (status: string) => {
     switch (status) {
       case "todo":
-        return "bg-todoDiv"; // Light red background
+        return "bg-todoDiv";
       case "in-progress":
-        return "bg-inprogressDiv"; // Light blue background
+        return "bg-inprogressDiv";
       case "completed":
-        return "bg-green-100"; // Light green background
-      default:
-        return "bg-completedDiv"; // Default background
+        return "bg-completedDiv";
     }
   };
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
+      <ListHead />
       {Object.entries(categorizedTasks).map(([status, tasks]) => (
         <Droppable key={status} droppableId={status}>
           {(provided) => (
-            <div className="mb-4">
+            <div
+              className="mb-8 rounded-lg overflow-hidden"
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+            >
               <div
-                onClick={() => toggleSection(status as "todo" | "in-progress" | "completed")}
-                className={`cursor-pointer ${getSectionBgColor(status)} p-2 rounded-md shadow-sm flex justify-between items-center`}
+                onClick={() =>
+                  toggleSection(status as "todo" | "in-progress" | "completed")
+                }
+                className={`cursor-pointer ${getSectionBgColor(
+                  status
+                )} p-2 shadow-sm flex justify-between items-center`}
               >
-                <h2 className="text-lg font-semibold capitalize">{status.replace("-", " ")}</h2>
-                <span>{sections[status as "todo" | "in-progress" | "completed"] ? "▼" : "▶"}</span>
+                <h2 className="text-lg font-semibold capitalize">
+                  {status.replace("-", " ")}
+                </h2>
+                <DropIcon isOpen={sections[status as "todo" | "in-progress" | "completed"]} />
               </div>
-
+              {status === "todo" ? <AddTaskRow /> : null}
               {sections[status as "todo" | "in-progress" | "completed"] && (
-                <div
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                  className="mt-2 space-y-2"
-                >
+                <div className="space-y-2 bg-boxGray">
                   {tasks.map((task, index) => (
                     <Draggable key={task.id} draggableId={task.id} index={index}>
-                      {(provided) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          className="bg-white shadow-md p-4 rounded-lg"
-                        >
-                          <h3 className="text-lg font-semibold">{task.title}</h3>
-                          <p className="text-sm text-gray-500">{task.category}</p>
-                          <p className="text-sm text-gray-400">Due: {task.dueDate}</p>
-                        </div>
+                      {(provided, snapshot) => (
+                        <TaskListRow
+                          task={task}
+                          index={index}
+                          provided={provided}
+                          snapshot={snapshot}
+                        />
                       )}
                     </Draggable>
                   ))}
