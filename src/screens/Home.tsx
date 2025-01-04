@@ -4,6 +4,7 @@ import TaskFilter from "../components/Tasks/TaskFilter.tsx";
 import TaskBoard from "../components/Tasks/TaskBoard.tsx";
 import Navbar from "../components/Navbar/Navbar.tsx";
 import ViewToggler from "../components/Tasks/TaskViewToggler.tsx";
+import TaskForm from "../components/Tasks/TaskForm.tsx";
 
 interface Task {
   id: string;
@@ -14,14 +15,15 @@ interface Task {
 }
 
 const Home: React.FC = () => {
-  const [tasks, setTasks] = useState<Task []>([
+  const [tasks, setTasks] = useState<Task[]>([
     { id: "1", title: "Task 1", status: "todo", category: "Work", dueDate: "2025-01-05" },
     { id: "2", title: "Task 2", status: "in-progress", category: "Personal", dueDate: "2025-01-06" },
     { id: "3", title: "Task 3", status: "completed", category: "Work", dueDate: "2025-01-07" },
     { id: "4", title: "Task 4", status: "completed", category: "Work", dueDate: "2025-01-07" },
   ]);
-  const [filteredTasks, setFilteredTasks] = useState<Task []>(tasks);
+  const [filteredTasks, setFilteredTasks] = useState<Task[]>(tasks);
   const [activeTab, setActiveTab] = useState<"list" | "board">("list");
+  const [isForm, setIsForm] = useState<Boolean>(false)
 
   const handleFilterChange = (filters: {
     search: string;
@@ -66,19 +68,24 @@ const Home: React.FC = () => {
     setTasks(items);
   }
 
+  const handleAddClick = () => {
+    setIsForm(!isForm)
+  }
+
 
   return (
     <div className="p-4">
       <Navbar />
       <ViewToggler activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      <TaskFilter onAddTask={()=>{}} onFilterChange={handleFilterChange} />
+      <TaskFilter onAddTask={handleAddClick} onFilterChange={handleFilterChange} />
 
       {activeTab === "list" ? (
         <TaskList tasks={filteredTasks} onDragEnd={() => { }} />
       ) : (
         <TaskBoard onDragEnd={handleOnDragEnd} tasks={filteredTasks} />
       )}
+      {isForm ? <TaskForm onClose={()=>setIsForm(false)} onSubmit={() => { }} /> : <></>}
     </div>
   );
 };

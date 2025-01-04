@@ -16,6 +16,7 @@ module.exports = {
         inprogressDiv: "#85D9F1",
         completedDiv: "#CEFFCC",
         boardcompletedDiv: "#A2D6A0",
+        disableBtnBg: "#B685BA",
         boxGray: "#F1F1F1"
       }
     },
