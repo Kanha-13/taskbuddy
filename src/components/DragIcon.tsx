@@ -7,7 +7,7 @@ const DragIcon: React.FC = () => {
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
-        stroke-width="1"
+        strokeWidth="1"
         stroke="#A7A7A7"
         className="w-5 h-5"
       >

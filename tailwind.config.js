@@ -15,6 +15,7 @@ module.exports = {
         todoDiv: "#FAC3FF",
         inprogressDiv: "#85D9F1",
         completedDiv: "#CEFFCC",
+        boardcompletedDiv: "#A2D6A0",
         boxGray: "#F1F1F1"
       }
     },

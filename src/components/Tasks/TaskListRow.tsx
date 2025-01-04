@@ -27,14 +27,7 @@ const TaskListRow: React.FC<TaskListRowProps> = ({ task, index, provided, snapsh
   const handleDropMenu = () => {
     setIsDrop(!isDrop)
   }
-  const handleSelect = (option: string) => {
-    if (option == "Edit") {
-
-    } else {
-
-    }
-    setIsDrop(false)
-  }
+  
   return (
     <div
       ref={provided.innerRef}
@@ -43,7 +36,7 @@ const TaskListRow: React.FC<TaskListRowProps> = ({ task, index, provided, snapsh
       className={`font-mulish font-medium text-black flex justify-between items-center border-t-2 border-opacity-10 border-black p-4 ${snapshot.isDragging ? "bg-white rounded-md shadow-lg" : ""
         }`}
     >
-      <div className="flex items-center">
+      <div className="flex items-center w-4/12">
         <input
           type="checkbox"
           className="mr-4 w-4 h-4 accent-secondaryColor"
@@ -53,13 +46,20 @@ const TaskListRow: React.FC<TaskListRowProps> = ({ task, index, provided, snapsh
         <h3 className="ml-3 text-base">{task.title}</h3>
       </div>
 
-      <p>{task.dueDate}</p>
-      <p>{task.category}</p>
+      <p className="w-2/12">{task.dueDate}</p>
+      <div className="w-3/12">
+        <div className="w-max rounded-md p-2 px-4 bg-[#DDDADD]">{task.status}</div>
+      </div>
+      <p className="w-2/12">{task.category}</p>
 
-      <div className="w-8 h-6 flex justify-center items-center" onClick={handleDropMenu}>
+      <div className="w-1/12 h-6 flex justify-center items-center" onClick={handleDropMenu}>
         <Ellipses />
         {
-          isDrop ? <Dropdown images={[EditIcon, DeleteIcon]} options={["Edit", "Delete"]} onSelect={handleSelect} height="h-auto" width="w-[10%]" /> : <></>
+          // isDrop ? <Dropdown images={[EditIcon, DeleteIcon]} options={["Edit", "Delete"]} onSelect={handleSelect} height="h-auto" width="w-[10%]" /> : <></>
+          isDrop ? <Dropdown height="h-auto" width="w-[10%]" >
+            <li className="flex p-2 hover:bg-[#fadfdf]"><img className="mr-3" src={EditIcon} /> Edit</li>
+            <li className="flex p-2 hover:bg-[#fadfdf]"><img className="mr-3" src={DeleteIcon} /> Delete</li>
+          </Dropdown> : <></>
         }
       </div>
 

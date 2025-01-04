@@ -1,6 +1,8 @@
 // src/components/TaskBoard.tsx
 import React, { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import TaskBoardCard from "./TaskBoardCard.tsx";
+
 
 interface Task {
   id: string;
@@ -16,15 +18,12 @@ interface TaskBoardProps {
 }
 
 const TaskBoard: React.FC<TaskBoardProps> = ({ tasks, onDragEnd }) => {
+  const [isDrop, setIsDrop] = useState<Boolean>(false)
   const [sections, setSections] = useState({
     todo: true,
     "in-progress": true,
     completed: true,
   });
-
-  const toggleSection = (section: "todo" | "in-progress" | "completed") => {
-    setSections((prev) => ({ ...prev, [section]: !prev[section] }));
-  };
 
   const categorizedTasks = {
     todo: tasks.filter((task) => task.status === "todo"),
@@ -32,25 +31,28 @@ const TaskBoard: React.FC<TaskBoardProps> = ({ tasks, onDragEnd }) => {
     completed: tasks.filter((task) => task.status === "completed"),
   };
 
+  const getSectionBgColor = (status: string) => {
+    switch (status) {
+      case "todo":
+        return "bg-todoDiv";
+      case "in-progress":
+        return "bg-inprogressDiv";
+      case "completed":
+        return "bg-boardcompletedDiv";
+    }
+  };
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 font-mulish gap-4">
         {Object.entries(categorizedTasks).map(([status, tasks]) => (
           <Droppable key={status} droppableId={status}>
-            {(provided) => (
-              <div className="bg-gray-100 p-4 rounded-lg shadow-md">
-                <div
-                  onClick={() => toggleSection(status as "todo" | "in-progress" | "completed")}
-                  className="cursor-pointer bg-gray-200 p-2 rounded-md shadow-sm flex justify-between items-center"
-                >
+            {(provided, snapshot) => (
+              <div className="bg-gray-100 p-4 rounded-lg border-2 border-[#585751] border-opacity-[7%]">
+                <div className={`${getSectionBgColor(status)} w-max px-3 py-1 rounded-md`}>
                   <h2 className="text-lg font-semibold capitalize">
                     {status.replace("-", " ")}
                   </h2>
-                  <span>
-                    {sections[status as "todo" | "in-progress" | "completed"]
-                      ? "▼"
-                      : "▶"}
-                  </span>
                 </div>
 
                 {sections[status as "todo" | "in-progress" | "completed"] && (
@@ -62,15 +64,7 @@ const TaskBoard: React.FC<TaskBoardProps> = ({ tasks, onDragEnd }) => {
                     {tasks.map((task, index) => (
                       <Draggable key={task.id} draggableId={task.id} index={index}>
                         {(provided) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            className="bg-white p-4 rounded-lg shadow-md"
-                          >
-                            <h3 className="text-md font-bold">{task.title}</h3>
-                            <p className="text-sm text-gray-500">{task.dueDate}</p>
-                          </div>
+                          <TaskBoardCard provided={provided} index={index} task={task} snapshot={snapshot} />
                         )}
                       </Draggable>
                     ))}
@@ -82,7 +76,7 @@ const TaskBoard: React.FC<TaskBoardProps> = ({ tasks, onDragEnd }) => {
           </Droppable>
         ))}
       </div>
-    </DragDropContext>
+    </DragDropContext >
   );
 };
 
