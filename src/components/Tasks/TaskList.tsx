@@ -16,9 +16,10 @@ interface Task {
 interface TaskListProps {
   tasks: Task[];
   onDragEnd: (result: any) => void;
+  onClickTask: (id: string) => void;
 }
 
-const TaskList: React.FC<TaskListProps> = ({ tasks, onDragEnd }) => {
+const TaskList: React.FC<TaskListProps> = ({ tasks, onDragEnd, onClickTask }) => {
   const [sections, setSections] = useState({
     todo: true,
     "in-progress": true,
@@ -81,6 +82,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onDragEnd }) => {
                           index={index}
                           provided={provided}
                           snapshot={snapshot}
+                          onClick={onClickTask}
                         />
                       )}
                     </Draggable>

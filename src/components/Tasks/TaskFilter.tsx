@@ -88,7 +88,7 @@ const TaskFilter: React.FC<TaskFilterProps> = ({ onFilterChange, onAddTask }) =>
             placeholder="Search"
             value={search}
             onChange={handleSearchChange}
-            className="font-semibold flex-1"
+            className="border-none outline-none font-semibold flex-1"
           />
         </div>
         <button

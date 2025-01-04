@@ -20,16 +20,22 @@ interface TaskListRowProps {
   index: number;
   provided: any;
   snapshot: any;
+  onClick: (id: string) => void;
 }
 
-const TaskListRow: React.FC<TaskListRowProps> = ({ task, index, provided, snapshot }) => {
+const TaskListRow: React.FC<TaskListRowProps> = ({ task, index, onClick, provided, snapshot }) => {
   const [isDrop, setIsDrop] = useState<Boolean>(false)
   const handleDropMenu = () => {
     setIsDrop(!isDrop)
   }
-  
+
+  const handleClick = () => {
+    onClick(task.id)
+  }
+
   return (
     <div
+      onClick={handleClick}
       ref={provided.innerRef}
       {...provided.draggableProps}
       {...provided.dragHandleProps}

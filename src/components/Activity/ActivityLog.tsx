@@ -1,15 +1,29 @@
 import React from "react";
 
-const ActivityLog: React.FC<{ logs: string[] }> = ({ logs }) => (
-  <div className="bg-gray-100 p-4 rounded-lg shadow-md">
-    <h2 className="text-lg font-semibold mb-2">Activity Log</h2>
-    <ul className="space-y-2">
-      {logs.map((log, idx) => (
-        <li key={idx} className="text-sm text-gray-600">
-          {log}
-        </li>
+interface Log {
+  detail: string;
+  date: string;
+}
+
+interface ActivityLogProps {
+  logs: Log[];
+}
+
+const ActivityLog: React.FC<ActivityLogProps> = ({ logs }) => (
+  <div className="w-full h-auto overflow-auto bg-boxGray ">
+    <h2 className="text-lg p-3 font-semibold pb-4 text-black text-opacity-60 font-mulish bg-white">Activity</h2>
+    <div className="space-y-2 p-3 border-t-2 border-black border-opacity-10 w-full">
+      {logs.map((log: Log, idx: number) => (
+        <div key={idx} className="flex justify-between mb-4">
+          <div key={idx} className="text-xs w-2/3 pr-12 text-[#1E212A] text-opacity-80">
+            {log.detail}
+          </div>
+          <div key={idx} className="text-xs w-1/3 text-[#1E212A] text-opacity-50">
+            {log.date}
+          </div>
+        </div>
       ))}
-    </ul>
+    </div>
   </div>
 );
 

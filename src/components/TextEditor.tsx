@@ -16,9 +16,11 @@ import unorderedListIcon from "../assets/icons/unorder_list_icon.svg"
 
 interface TextEditorProps {
   maxCharacters: number;
+  onchange: (text: string) => void,
+  value: string|undefined;
 }
 
-const TextEditor: React.FC<TextEditorProps> = ({ maxCharacters }) => {
+const TextEditor: React.FC<TextEditorProps> = ({ value, maxCharacters, onchange }) => {
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()
   );
@@ -32,6 +34,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ maxCharacters }) => {
       setEditorState(state);
       setCharCount(plainText.length);
     }
+    onchange(editorState);
   };
 
   const applyStyle = (style: string) => {

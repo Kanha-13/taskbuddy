@@ -1,58 +1,95 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { uploadFile } from "../../utils/fileUpload.ts";
-import TextEditor from "../TextEditor.tsx";
-import DragAndDropFileInput from "../DragAndDropFileInput.tsx";
 import CrossIcon from "../CloseIcon.tsx";
+import TaskFormDetail from "./TaskFormDetail.tsx";
+import ActivityLog from "../Activity/ActivityLog.tsx";
 
-interface TaskFormProps {
-  onSubmit: (task: { title: string; category: string; dueDate: string; files: string[] }) => void;
-  onClose: () => void; // To handle closing the modal
+const logs = [
+  { detail: "You created this task", date: "Dec 27 at 1:15 pm" },
+  { detail: "You uploaded file", date: "Dec 28 at 1:15 pm" },
+  { detail: "You changed the status from in progress to complete", date: "Dec 29 at 1:15 pm" },
+]
+
+interface Task {
+  id: string;
+  title: string;
+  status: "todo" | "in-progress" | "completed";
+  category: string;
+  dueDate: string;
+  files?: string[];
+  description?: string;
 }
 
-const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, onClose }) => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("");
-  const [status, setStatus] = useState("");
-  const [dueDate, setDueDate] = useState("");
-  const [files, setFiles] = useState<File[]>([]);
-  const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
-  const [isUploading, setIsUploading] = useState(false);
+interface TaskFormProps {
+  taskData?: Task;
+  onSubmit: (task: Task) => void;
+  onClose: () => void; // To handle closing the modal
+  mode: "update" | "create";
+}
+
+const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, onClose, mode, taskData }) => {
   const [isActive, setIsActive] = useState<Boolean>(false);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFiles(Array.from(e.target.files));
+  const [task, setTask] = useState<Task>({
+    id: "",
+    title: "",
+    status: "todo",
+    category: "",
+    dueDate: "",
+    files: [],
+  });
+
+  const handleChange = (
+    key: keyof Task,
+    e?: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    text?: string,
+    files?: File[]
+  ) => {
+    if (key === "description" && text !== undefined) {
+      setTask((prev) => ({
+        ...prev,
+        description: text,
+      }));
+      return;
+    }
+
+    if (key === "files" && files) {
+      const fileArray = Array.from(files).map((file) => file.name);
+      setTask((prev) => ({
+        ...prev,
+        files: fileArray,
+      }));
+      return;
+    }
+
+    // Handle other inputs (text or select elements)
+    if (e?.target) {
+      setTask((prev) => ({
+        ...prev,
+        [key]: e.target.value,
+      }));
     }
   };
 
-  const handleFileUpload = async () => {
-    try {
-      setIsUploading(true);
-      const fileURLs = await Promise.all(files.map((file) => uploadFile(file)));
-      setUploadedFiles(fileURLs);
-      setFiles([]);
-      setIsUploading(false);
-    } catch (error) {
-      console.error("File upload failed:", error);
-      setIsUploading(false);
-    }
-  };
+  const handleSubmit = () => {
+    onSubmit(task);
+  }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSubmit({ title, category, dueDate, files: uploadedFiles });
-    setTitle("");
-    setCategory("");
-    setDueDate("");
-    setUploadedFiles([]);
-    onClose(); // Close the modal after submission
-  };
+  const getWidth = () => {
+    if (mode == "update")
+      return "w-[70%]"
+    return "w-[45%]"
+  }
+
+  useEffect(() => {
+    if (taskData?.id)
+      setTask(taskData);
+  }, [taskData])
 
   return (
     <div className="fixed inset-0 bg-[#1f1f1f] bg-opacity-70 flex justify-center items-center z-50">
-      <div className="bg-white overflow-hidden rounded-2xl font-mulish w-[45%] h-[85%] flex flex-col items-center justify-between m-0 space-y-4">
-        <div className="h-1/8 w-full flex justify-between flex-col border-2 rounded-t-2xl  border-b-0 border-black">
+      <div className={`bg-white overflow-hidden rounded-2xl font-mulish ${getWidth()} h-[85%] flex flex-col items-center justify-between m-0 space-y-4`}>
+        <div className={`h-1/8 w-full flex justify-between flex-col rounded-t-2xl ${mode == "create" ? "border-2 border-b-0 border-black" : ""}`}>
           <div className="h-auto w-full flex justify-between font-semibold text-2xl p-6 items-center">
             <div className="">Create Task</div>
             <div
@@ -64,62 +101,23 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, onClose }) => {
           </div>
           <div style={{ marginTop: "0px" }} className="w-[100%] h-0 border-t-2 border-black border-opacity-10"></div>
         </div>
-        <div style={{ marginTop: "0px" }} className="overflow-y-auto pt-3 px-4 border-2 border-black w-full border-y-0 h-6/8 flex flex-1 flex-col">
-          <input
-            type="text"
-            placeholder="Task Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="border-2 border-black border-opacity-10 bg-[#FAFAFA] rounded-lg p-2 w-full"
-          />
-          <TextEditor maxCharacters={300} />
-          <div className="w-full flex mt-2">
-            <div className="w-1/3 mr-3">
-              <div className="opacity-60 text-xs mb-2">Task Category*</div>
-              <div
-                // onChange={(e) => setCategory(e.target.value)}
-                className="flex justify-start items-center w-full"
-              >
-                <div className="cursor-pointer text-xs text-center rounded-full p-2 border-2 border-black border-opacity-10 w-[40%] bg-white font-bold" >Work</div>
-                <div className="cursor-pointer text-xs text-center rounded-full p-2 ml-3 border-2 border-black border-opacity-10 w-[40%] bg-white font-bold" >Personal</div>
-              </div>
-            </div>
-            <div className="w-1/3 mr-3">
-              <div className="opacity-60 text-xs mb-2">Due on*</div>
-              <input
-                type="date"
-                value={dueDate}
-                onChange={(e) => setDueDate(e.target.value)}
-                className="border-2 border-black border-opacity-10 bg-[#FAFAFA] rounded-lg p-2 w-full"
-              />
-            </div>
-            <div className="w-1/3">
-              <div className="opacity-60 text-xs mb-2">Task Status*</div>
-              <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-                className="border-2 border-black border-opacity-10 bg-[#FAFAFA] rounded-lg p-2 w-full"
-              >
-                <option value="">Select Status</option>
-                <option value="todo">TODO</option>
-                <option value="in-progress">IN-PROGRESS</option>
-                <option value="completed">COMPLETED</option>
-              </select>
-            </div>
+        <div style={{ marginTop: "0px" }} className="overflow-hidden h-6/8 w-full flex flex-1 border-b-2 border-black border-opacity-10">
+          <div className={`${mode == "create" ? "w-full h-full border-2 border-black border-y-0" : "w-2/3 h-full"}`}>
+            <TaskFormDetail taskDetails={task} handleChange={handleChange} />
           </div>
-          <div className="mt-6">
-            <div className="opacity-60 text-xs mb-2">Attachment</div>
-            <div className="border bg-[#FAFAFA] border-gray-300 rounded-lg p-2 w-full">
-              <DragAndDropFileInput onFileUpload={handleFileUpload} />
-            </div>
-          </div>
+          {mode == "update" ?
+            <div className="flex w-1/3">
+              <div style={{ marginTop: "0px" }} className="m-0 h-full border-l-2 border-black border-opacity-10"></div>
+              <ActivityLog logs={logs} />
+            </div> : <></>
+          }
         </div>
         <div style={{ marginTop: "0px" }} className="bg-boxGray h-1/8 w-full justify-end p-2 py-4 font-bold text-sm items-center flex border-b-2 border-black border-opacity-10">
           <div onClick={onClose} className={`bg-white cursor-pointer mr-2 border-2 border-opacity-10 border-black text-black py-1 px-4 rounded-full`}>
             CANCEL
           </div>
           <div onClick={handleSubmit} className={`${isActive ? "bg-secondaryColor" : "bg-disableBtnBg"} text-white cursor-pointer py-1 px-4 rounded-full`}>
-            CREATE
+            {mode == "create" ? "CREATE" : "UPDATE"}
           </div>
         </div>
       </div>

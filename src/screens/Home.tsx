@@ -12,6 +12,7 @@ interface Task {
   status: "todo" | "in-progress" | "completed";
   category: string;
   dueDate: string;
+  files?: string[];
 }
 
 const Home: React.FC = () => {
@@ -23,6 +24,7 @@ const Home: React.FC = () => {
   ]);
   const [filteredTasks, setFilteredTasks] = useState<Task[]>(tasks);
   const [activeTab, setActiveTab] = useState<"list" | "board">("list");
+  const [activeTask, setActiveTask] = useState<Task>()
   const [isForm, setIsForm] = useState<Boolean>(false)
 
   const handleFilterChange = (filters: {
@@ -58,7 +60,7 @@ const Home: React.FC = () => {
     setFilteredTasks(newTasks);
   };
 
-  function handleOnDragEnd(result) {
+  function handleOnDragEnd(result: any) {
     if (!result.destination) return;
 
     const items = Array.from(tasks);
@@ -70,6 +72,14 @@ const Home: React.FC = () => {
 
   const handleAddClick = () => {
     setIsForm(!isForm)
+    setActiveTask(() => undefined)
+  }
+
+  const handleOpenTask = (id: String) => {
+    setIsForm(true)
+    let currentTask = tasks.filter((task) => task.id == id);
+    if (currentTask[0])
+      setActiveTask(currentTask[0]);
   }
 
 
@@ -81,11 +91,11 @@ const Home: React.FC = () => {
       <TaskFilter onAddTask={handleAddClick} onFilterChange={handleFilterChange} />
 
       {activeTab === "list" ? (
-        <TaskList tasks={filteredTasks} onDragEnd={() => { }} />
+        <TaskList onClickTask={handleOpenTask} tasks={filteredTasks} onDragEnd={() => { }} />
       ) : (
         <TaskBoard onDragEnd={handleOnDragEnd} tasks={filteredTasks} />
       )}
-      {isForm ? <TaskForm onClose={()=>setIsForm(false)} onSubmit={() => { }} /> : <></>}
+      {isForm ? <TaskForm mode={activeTask?.id ? "update" : "create"} taskData={activeTask} onClose={() => setIsForm(false)} onSubmit={() => { }} /> : <></>}
     </div>
   );
 };
