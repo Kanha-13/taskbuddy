@@ -116,19 +116,6 @@ const TaskFormDetail: React.FC<TaskFormDetailProps> = ({ taskDetails, handleChan
             </Dropdown>
           }
         </div>
-        {/* <div className="w-1/3">
-          <div className="opacity-60 text-xs mb-2">Task Status*</div>
-          <select
-            value={taskDetails.status}
-            onChange={(e) => handleChange("status", e)}
-            className="border-2 border-black border-opacity-10 bg-[#FAFAFA] rounded-lg p-2 w-full"
-          >
-            <option value="">Select Status</option>
-            <option value="todo">TODO</option>
-            <option value="in-progress">IN-PROGRESS</option>
-            <option value="completed">COMPLETED</option>
-          </select>
-        </div> */}
       </div>
       <div className="mt-6">
         <div className="opacity-60 text-xs mb-2">Attachment</div>

@@ -9,15 +9,15 @@ interface TaskFilterProps {
   onFilterChange: (filters: {
     search: string;
     category: string;
-    startDate?: Date | null;
-    endDate?: Date | null;
+    startDate?: Date | string | null;
+    endDate?: Date | string | null;
   }) => void;
   onAddTask: () => void;
 }
 
 interface DateRange {
-  startDate: Date | null;
-  endDate: Date | null;
+  startDate: Date | string | null;
+  endDate: Date | string | null;
 }
 
 const TaskFilter: React.FC<TaskFilterProps> = ({ onFilterChange, onAddTask }) => {
