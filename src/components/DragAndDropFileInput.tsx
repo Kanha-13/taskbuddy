@@ -52,6 +52,7 @@ const DragAndDropFileInput: React.FC<DragAndDropProps> = ({ onFileUpload }) => {
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
+      className='text-xs'
       style={{
         border: isDragging ? '2px dashed #2956DD' : '2px dashed #ccc',
         padding: '20px',

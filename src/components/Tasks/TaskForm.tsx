@@ -41,34 +41,12 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, onClose, mode, taskData }
 
   const handleChange = (
     key: keyof Task,
-    e?: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-    text?: string,
-    files?: File[]
+    value: any
   ) => {
-    if (key === "description" && text !== undefined) {
-      setTask((prev) => ({
-        ...prev,
-        description: text,
-      }));
-      return;
-    }
-
-    if (key === "files" && files) {
-      const fileArray = Array.from(files).map((file) => file.name);
-      setTask((prev) => ({
-        ...prev,
-        files: fileArray,
-      }));
-      return;
-    }
-
-    // Handle other inputs (text or select elements)
-    if (e?.target) {
-      setTask((prev) => ({
-        ...prev,
-        [key]: e.target.value,
-      }));
-    }
+    setTask((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
   };
 
   const handleSubmit = () => {
@@ -113,10 +91,10 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, onClose, mode, taskData }
           }
         </div>
         <div style={{ marginTop: "0px" }} className="bg-boxGray h-1/8 w-full justify-end p-2 py-4 font-bold text-sm items-center flex border-b-2 border-black border-opacity-10">
-          <div onClick={onClose} className={`bg-white cursor-pointer mr-2 border-2 border-opacity-10 border-black text-black py-1 px-4 rounded-full`}>
+          <div onClick={onClose} className={`bg-white cursor-pointer mr-2 border-2 border-opacity-10 border-black text-black py-2 px-4 rounded-full`}>
             CANCEL
           </div>
-          <div onClick={handleSubmit} className={`${isActive ? "bg-secondaryColor" : "bg-disableBtnBg"} text-white cursor-pointer py-1 px-4 rounded-full`}>
+          <div onClick={handleSubmit} className={`${isActive ? "bg-secondaryColor" : "bg-disableBtnBg"} text-white cursor-pointer py-2 px-4 rounded-full`}>
             {mode == "create" ? "CREATE" : "UPDATE"}
           </div>
         </div>
