@@ -84,7 +84,7 @@ const Home: React.FC = () => {
 
 
   return (
-    <div className="p-4">
+    <div className="p-4 pt-12 px-7">
       <Navbar />
       <ViewToggler activeTab={activeTab} setActiveTab={setActiveTab} />
 

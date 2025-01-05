@@ -21,7 +21,7 @@ interface DateRange {
 }
 
 const TaskFilter: React.FC<TaskFilterProps> = ({ onFilterChange, onAddTask }) => {
-  const [search, setSearch] = useState("Search");
+  const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
   const [dateRange, setDateRange] = useState<DateRange>({
     startDate: null,
@@ -58,7 +58,7 @@ const TaskFilter: React.FC<TaskFilterProps> = ({ onFilterChange, onAddTask }) =>
         <div className="cursor-pointer relative flex justify-center items-center">
           <div
             onClick={() => setIsCategoryOpen(!isCategoryOpen)}
-            className="flex justify-center items-center text-xs px-6 border-2 border-black border-opacity-20 ml-2 rounded-full py-2 bg-white text-gray-700 hover:shadow-md"
+            className="flex justify-center items-center text-xs px-6 border border-black border-opacity-20 ml-2 rounded-full py-2 bg-white text-gray-700 hover:shadow-md"
           >
             <span className="mr-2">{category || "Category"}</span>
             <DropIcon size="w-3 h-3" color="text-[#979797]" isOpen={isCategoryOpen} />
@@ -75,7 +75,7 @@ const TaskFilter: React.FC<TaskFilterProps> = ({ onFilterChange, onAddTask }) =>
         <div className="cursor-pointer relative">
           <div
             onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}
-            className="flex justify-center items-center text-xs px-4 border-2 border-black border-opacity-20 rounded-full py-2 bg-white text-gray-700 hover:shadow-md"
+            className="flex justify-center items-center text-xs px-4 border border-black border-opacity-20 rounded-full py-2 bg-white text-gray-700 hover:shadow-md"
           >
             <span className="mr-2">{dateRange.startDate && dateRange.endDate
               ? `${format(dateRange.startDate, "MMM dd")} - ${format(dateRange.endDate, "MMM dd")}`
@@ -83,7 +83,7 @@ const TaskFilter: React.FC<TaskFilterProps> = ({ onFilterChange, onAddTask }) =>
             <DropIcon size="w-3 h-3" color="text-[#979797]" isOpen={isDatePickerOpen} />
           </div>
           {isDatePickerOpen && (
-            <DateRangePicker value={dateRange} onChange={handleDateChange} />
+            <DateRangePicker mode="range" value={dateRange} onChange={handleDateChange} />
           )}
         </div>
       </div>
@@ -93,17 +93,17 @@ const TaskFilter: React.FC<TaskFilterProps> = ({ onFilterChange, onAddTask }) =>
           <SearchIcon className="mr-2" />
           <input
             type="text"
-            // placeholder="Search"
+            placeholder="Search"
             value={search}
             onChange={handleSearchChange}
-            className="border-none text-opacity-[82%] outline-none text-sm font-semibold flex-1"
+            className="border-none placeholder:text-black placeholder:opacity-80 text-opacity-[82%] outline-none text-sm font-semibold flex-1"
           />
         </div>
         <button
           onClick={onAddTask}
-          className="bg-secondaryColor text-white rounded-full font-bold px-6 py-2 transition"
+          className="bg-secondaryColor text-white text-sm rounded-full font-semibold px-6 py-2"
         >
-          Add Task
+          ADD TASK
         </button>
       </div>
     </div>

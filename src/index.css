@@ -44,6 +44,13 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'Mulish';
+  src: url('/src/assets/fonts/Mulish/static/Mulish-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
 ::-webkit-scrollbar {
   width: 5px;
 }
