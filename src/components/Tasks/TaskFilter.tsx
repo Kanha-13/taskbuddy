@@ -21,7 +21,7 @@ interface DateRange {
 }
 
 const TaskFilter: React.FC<TaskFilterProps> = ({ onFilterChange, onAddTask }) => {
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState("Search");
   const [category, setCategory] = useState("");
   const [dateRange, setDateRange] = useState<DateRange>({
     startDate: null,
@@ -89,14 +89,14 @@ const TaskFilter: React.FC<TaskFilterProps> = ({ onFilterChange, onAddTask }) =>
       </div>
 
       <div className="flex items-center gap-4 w-full sm:w-auto">
-        <div className="flex items-center rounded-full p-2 border border-opacity-60 border-gray-400">
+        <div className="flex items-center rounded-full p-2 border border-black border-opacity-[42%]">
           <SearchIcon className="mr-2" />
           <input
             type="text"
-            placeholder="Search"
+            // placeholder="Search"
             value={search}
             onChange={handleSearchChange}
-            className="border-none outline-none font-semibold flex-1"
+            className="border-none text-opacity-[82%] outline-none text-sm font-semibold flex-1"
           />
         </div>
         <button
