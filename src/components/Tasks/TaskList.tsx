@@ -15,11 +15,13 @@ interface Task {
 
 interface TaskListProps {
   tasks: Task[];
+  checkRows: string[];
   onDragEnd: (result: any) => void;
   onClickTask: (id: string) => void;
+  onRowCheck: (id: string) => void;
 }
 
-const TaskList: React.FC<TaskListProps> = ({ tasks, onDragEnd, onClickTask }) => {
+const TaskList: React.FC<TaskListProps> = ({ tasks, onDragEnd, onClickTask, checkRows, onRowCheck }) => {
   const [sections, setSections] = useState({
     todo: true,
     "in-progress": true,
@@ -92,11 +94,13 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onDragEnd, onClickTask }) =>
                     <Draggable key={task.id} draggableId={task.id} index={index}>
                       {(provided, snapshot) => (
                         <TaskListRow
+                          isChecked={checkRows.includes(task.id)}
                           task={task}
                           index={index}
                           provided={provided}
                           snapshot={snapshot}
                           onClick={onClickTask}
+                          onRowCheck={onRowCheck}
                         />
                       )}
                     </Draggable>

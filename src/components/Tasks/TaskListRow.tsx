@@ -19,12 +19,14 @@ interface Task {
 interface TaskListRowProps {
   task: Task;
   index: number;
+  isChecked: boolean;
   provided: any;
   snapshot: any;
   onClick: (id: string) => void;
+  onRowCheck: (id: string) => void;
 }
 
-const TaskListRow: React.FC<TaskListRowProps> = ({ task, index, onClick, provided, snapshot }) => {
+const TaskListRow: React.FC<TaskListRowProps> = ({ isChecked, task, index, onClick, onRowCheck, provided, snapshot }) => {
   const [isDrop, setIsDrop] = useState<Boolean>(false)
   const [isStatusOpen, setIsStatusOpen] = useState<Boolean>(false)
   const handleDropMenu = (event: React.MouseEvent) => {
@@ -53,7 +55,7 @@ const TaskListRow: React.FC<TaskListRowProps> = ({ task, index, onClick, provide
 
   const handleRowCheck = (e: React.MouseEvent) => {
     e.stopPropagation();
-
+    onRowCheck(task.id);
   }
 
   return (
@@ -68,12 +70,13 @@ const TaskListRow: React.FC<TaskListRowProps> = ({ task, index, onClick, provide
       <div className="flex items-center w-4/12">
         <input
           onClick={handleRowCheck}
+          checked={isChecked}
           type="checkbox"
-          className="mr-4 w-4 h-4 border-2 border-opacity-60 rounded-sm border-black bg-white appearance-none checked:bg-secondaryColor checked:border-secondaryColor checked:before:content-['✔'] checked:before:text-white checked:before:flex checked:before:justify-center checked:before:items-center checked:before:relative checked:before:top-[-3px]"
+          className="cursor-pointer mr-4 w-4 h-4 border-2 border-opacity-60 rounded-sm border-black bg-white appearance-none checked:bg-secondaryColor checked:border-secondaryColor checked:before:content-['✔'] checked:before:text-white checked:before:flex checked:before:justify-center checked:before:items-center checked:before:relative checked:before:top-[-3px]"
         />
         <DragIcon />
         <StatusIcon status={task.status} />
-        <h3 className="ml-3 text-sm">{task.title}</h3>
+        <h3 className={`ml-3 text-sm ${task.status == "completed" ? "line-through" : ""}`}>{task.title}</h3>
       </div>
 
       <p className="w-3/12">{getDateLabel(task.dueDate)}</p>

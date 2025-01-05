@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TaskList from "../components/Tasks/TaskList.tsx";
 import TaskFilter from "../components/Tasks/TaskFilter.tsx";
 import TaskBoard from "../components/Tasks/TaskBoard.tsx";
 import Navbar from "../components/Navbar/Navbar.tsx";
 import ViewToggler from "../components/Tasks/TaskViewToggler.tsx";
 import TaskForm from "../components/Tasks/TaskForm.tsx";
+import MultiRowsCheckModal from "../components/Tasks/MultiRowsCheckModal.tsx";
 
 interface Task {
   id: string;
@@ -24,8 +25,10 @@ const Home: React.FC = () => {
   ]);
   const [filteredTasks, setFilteredTasks] = useState<Task[]>(tasks);
   const [activeTab, setActiveTab] = useState<"list" | "board">("list");
-  const [activeTask, setActiveTask] = useState<Task>()
-  const [isForm, setIsForm] = useState<Boolean>(false)
+  const [activeTask, setActiveTask] = useState<Task>();
+  const [isForm, setIsForm] = useState<Boolean>(false);
+  const [isRowsChecked, setIsRowsChecked] = useState<Boolean>(false);
+  const [checkRows, setCheckRows] = useState<string[]>([]);
 
   const handleFilterChange = (filters: {
     search: string;
@@ -60,7 +63,7 @@ const Home: React.FC = () => {
     setFilteredTasks(newTasks);
   };
 
-  function handleOnDragEnd(result: any) {
+  const handleOnDragEnd = (result: any) => {
     if (!result.destination) return;
 
     const items = Array.from(tasks);
@@ -82,20 +85,43 @@ const Home: React.FC = () => {
       setActiveTask(currentTask[0]);
   }
 
+  const handleRowCheck = (id: string) => {
+    setCheckRows((prevRows) =>
+      prevRows.includes(id)
+        ? prevRows.filter((i) => i !== id)
+        : [...prevRows, id]
+    )
+    setIsRowsChecked(true);
+  }
+
+  const handleChangeStatus = () => {
+
+  }
+
+  const handleDeleteRows = () => {
+
+  }
+
+
+  useEffect(() => {
+    if (checkRows.length < 1)
+      setIsRowsChecked(false);
+  }, [checkRows])
 
   return (
-    <div className="p-4 pt-12 px-7">
+    <div className="p-4 pt-8 px-7">
       <Navbar />
       <ViewToggler activeTab={activeTab} setActiveTab={setActiveTab} />
 
       <TaskFilter onAddTask={handleAddClick} onFilterChange={handleFilterChange} />
 
       {activeTab === "list" ? (
-        <TaskList onClickTask={handleOpenTask} tasks={filteredTasks} onDragEnd={() => { }} />
+        <TaskList checkRows={checkRows} onClickTask={handleOpenTask} onRowCheck={handleRowCheck} tasks={filteredTasks} onDragEnd={() => { }} />
       ) : (
         <TaskBoard onDragEnd={handleOnDragEnd} tasks={filteredTasks} />
       )}
       {isForm ? <TaskForm mode={activeTask?.id ? "update" : "create"} taskData={activeTask} onClose={() => setIsForm(false)} onSubmit={() => { }} /> : <></>}
+      {isRowsChecked ? <MultiRowsCheckModal count={checkRows.length} onCancel={() => setCheckRows([])} onChangeStatus={handleChangeStatus} onDelete={handleDeleteRows} /> : <></>}
     </div>
   );
 };
