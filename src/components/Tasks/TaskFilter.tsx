@@ -1,87 +1,95 @@
 import React, { useState } from "react";
-import { ReactComponent as SearchIcon } from "../../assets/icons/search_icon.svg"
+import { ReactComponent as SearchIcon } from "../../assets/icons/search_icon.svg";
+import DateRangePicker from "../DateRangePicker.tsx";
+import { format } from "date-fns";
+import Dropdown from "../DropDown.tsx";
+import DropIcon from "../DropIcon.tsx";
+
 interface TaskFilterProps {
   onFilterChange: (filters: {
     search: string;
     category: string;
-    startDate?: string;
-    endDate?: string;
+    startDate?: Date | null;
+    endDate?: Date | null;
   }) => void;
   onAddTask: () => void;
+}
+
+interface DateRange {
+  startDate: Date | null;
+  endDate: Date | null;
 }
 
 const TaskFilter: React.FC<TaskFilterProps> = ({ onFilterChange, onAddTask }) => {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
-  const [dateRange, setDateRange] = useState<{ startDate: string; endDate: string }>({
-    startDate: "",
-    endDate: "",
+  const [dateRange, setDateRange] = useState<DateRange>({
+    startDate: null,
+    endDate: null,
   });
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState<boolean>(false);
+  const [isCategoryOpen, setIsCategoryOpen] = useState<boolean>(false);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearch(value);
-    onFilterChange({ search: value, category, ...dateRange });
+    onFilterChange({ search: value, category, startDate: dateRange.startDate, endDate: dateRange.endDate });
   };
 
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value;
-    setCategory(value);
-    onFilterChange({ search, category: value, ...dateRange });
+  const handleCategoryChange = (newCategory: string) => {
+    setCategory(newCategory);
+    onFilterChange({ search, category: newCategory, startDate: dateRange.startDate, endDate: dateRange.endDate });
   };
 
-  const handleDateRangeChange = (startDate: string, endDate: string) => {
-    setDateRange({ startDate, endDate });
-    onFilterChange({ search, category, startDate, endDate });
+  const handleDateChange = (range: DateRange) => {
+    setDateRange(range);
+    onFilterChange({ search, category, startDate: range.startDate, endDate: range.endDate });
   };
 
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    const id = e.target.id; // startDate or endDate
-    const updatedDateRange = { ...dateRange, [id]: value };
-    setDateRange(updatedDateRange);
-    onFilterChange({ search, category, ...updatedDateRange });
-  };
+  const getCatOptionBg = (cat) => {
+    if (category == cat) return "bg-pink-200"
+    return "bg-none"
+  }
 
   return (
     <div className="flex flex-wrap items-center justify-between mb-4 mt-4 gap-4 font-mulish">
-      {/* Left Section: Filters */}
-      <div className="flex items-center gap-4 flex-wrap">
-        <div className="flex items-center gap-2">
-          <label className="font-semibold opacity-60">Filter by: </label>
-          <select
-            value={category}
-            onChange={handleCategoryChange}
-            className="border border-gray-300 rounded-lg p-2"
+      <div className="flex items-center gap-4 flex-wrap w-full sm:w-1/2">
+        <span className="font-semibold text-sm opacity-60">Filter by: </span>
+        <div className="cursor-pointer relative flex justify-center items-center">
+          <div
+            onClick={() => setIsCategoryOpen(!isCategoryOpen)}
+            className="flex justify-center items-center text-xs px-6 border-2 border-black border-opacity-20 ml-2 rounded-full py-2 bg-white text-gray-700 hover:shadow-md"
           >
-            <option value="">All Categories</option>
-            <option value="Work">Work</option>
-            <option value="Personal">Personal</option>
-          </select>
+            <span className="mr-2">{category || "Category"}</span>
+            <DropIcon size="w-3 h-3" color="text-[#979797]" isOpen={isCategoryOpen} />
+          </div>
+          {
+            isCategoryOpen &&
+            <Dropdown height="h-auto" width="w-max">
+              <div onClick={() => handleCategoryChange("Work")} className={`text-left px-2 mb-1 font-semibold ${getCatOptionBg("Work")}  hover:bg-pink-100 rounded-sm`}>Work</div>
+              <div onClick={() => handleCategoryChange("Personal")} className={`text-left px-2 mb-1 font-semibold ${getCatOptionBg("Personal")}  hover:bg-pink-100 rounded-sm`}>Personal</div>
+            </Dropdown>
+          }
         </div>
 
-        <div className="flex items-center gap-2">
-          <input
-            id="startDate"
-            type="date"
-            value={dateRange.startDate}
-            onChange={handleDateChange}
-            className="border border-gray-300 rounded-lg p-2"
-          />
-          <span>-</span>
-          <input
-            id="endDate"
-            type="date"
-            value={dateRange.endDate}
-            onChange={handleDateChange}
-            className="border border-gray-300 rounded-lg p-2"
-          />
+        <div className="cursor-pointer relative">
+          <div
+            onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}
+            className="flex justify-center items-center text-xs px-4 border-2 border-black border-opacity-20 rounded-full py-2 bg-white text-gray-700 hover:shadow-md"
+          >
+            <span className="mr-2">{dateRange.startDate && dateRange.endDate
+              ? `${format(dateRange.startDate, "MMM dd")} - ${format(dateRange.endDate, "MMM dd")}`
+              : "Due date"}</span>
+            <DropIcon size="w-3 h-3" color="text-[#979797]" isOpen={isDatePickerOpen} />
+          </div>
+          {isDatePickerOpen && (
+            <DateRangePicker value={dateRange} onChange={handleDateChange} />
+          )}
         </div>
       </div>
 
-      {/* Right Section: Search and Add Task */}
-      <div className="flex items-center gap-4 ">
-        <div className="rounded-full p-2 flex justify-start items-center border-black border-opacity-[42%] border-2">
+      <div className="flex items-center gap-4 w-full sm:w-auto">
+        <div className="flex items-center rounded-full p-2 border border-opacity-60 border-gray-400">
           <SearchIcon className="mr-2" />
           <input
             type="text"

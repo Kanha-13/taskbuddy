@@ -17,6 +17,7 @@ module.exports = {
         completedDiv: "#CEFFCC",
         boardcompletedDiv: "#A2D6A0",
         disableBtnBg: "#B685BA",
+        rangeColor:"#FDE8FF",
         boxGray: "#F1F1F1"
       }
     },

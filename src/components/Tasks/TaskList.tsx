@@ -47,6 +47,20 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onDragEnd, onClickTask }) =>
     }
   };
 
+  const getArrowColor = (status: string) => {
+    switch (status) {
+      case "todo":
+        return "text-[#3E0344]";
+      case "in-progress":
+        return "text-[#055167]";
+      case "completed":
+        return "text-[#0D7A0A]";
+    }
+    return ""
+  };
+
+
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <ListHead />
@@ -69,7 +83,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onDragEnd, onClickTask }) =>
                 <h2 className="text-lg font-semibold capitalize">
                   {status.replace("-", " ")}
                 </h2>
-                <DropIcon isOpen={sections[status as "todo" | "in-progress" | "completed"]} />
+                <DropIcon color={getArrowColor(status)} size="w-6 h-6" isOpen={sections[status as "todo" | "in-progress" | "completed"]} />
               </div>
               {status === "todo" ? <AddTaskRow /> : null}
               {sections[status as "todo" | "in-progress" | "completed"] && (

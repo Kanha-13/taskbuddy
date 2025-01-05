@@ -30,8 +30,8 @@ const Home: React.FC = () => {
   const handleFilterChange = (filters: {
     search: string;
     category: string;
-    startDate?: string;
-    endDate?: string;
+    startDate?: Date | null;
+    endDate?: Date | null;
   }) => {
     let newTasks = tasks;
 
@@ -47,13 +47,13 @@ const Home: React.FC = () => {
 
     if (filters.startDate) {
       newTasks = newTasks.filter(
-        (task) => new Date(task.dueDate) >= new Date(filters.startDate!)
+        (task) => new Date(task.dueDate).setHours(0, 0, 0, 0) >= new Date(filters.startDate!).setHours(0, 0, 0, 0)
       );
     }
 
     if (filters.endDate) {
       newTasks = newTasks.filter(
-        (task) => new Date(task.dueDate) <= new Date(filters.endDate!)
+        (task) => new Date(task.dueDate).setHours(0, 0, 0, 0) <= new Date(filters.endDate!).setHours(0, 0, 0, 0)
       );
     }
 

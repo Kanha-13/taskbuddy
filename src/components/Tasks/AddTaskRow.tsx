@@ -35,8 +35,8 @@ const AddTaskRow: React.FC = () => {
 
   return (
     <div className="pb-2 font-mulish flex flex-col bg-boxGray">
-      <div onClick={() => setIsAdding(!isAdding)} className="font-bold cursor-pointer self-start mt-4 ml-16 pl-3">
-        ADD TASK
+      <div onClick={() => setIsAdding(!isAdding)} className="text-opacity-80 font-bold cursor-pointer self-start mt-4 ml-16 pl-3">
+        <span className="text-2xl text-secondaryColor font-semibold">+</span> ADD TASK
       </div>
       {isAdding && (
         <div className="border-t-2 border-opacity-10 border-black mt-3 flex flex-row flex-wrap px-16 pt-2 justify-between gap-2 w-full">
