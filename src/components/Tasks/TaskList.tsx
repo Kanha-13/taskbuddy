@@ -69,10 +69,6 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onChangeStatus, onDelete, on
   }, [])
 
 
-  useEffect(()=>{
-    console.log(tasks)
-  },[tasks])
-
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <ListHead />
