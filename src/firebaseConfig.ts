@@ -36,9 +36,6 @@ export const addTaskToFirebase = async (task: Task): Promise<Task> => {
   const tasksCollection = collection(db, "tasks");
   const docRef = doc(tasksCollection);
   const taskWithId = { ...task, id: docRef.id };
-  console.log("this is going to db --------------")
-  console.log(docRef.id)
-  console.log(taskWithId)
   await setDoc(docRef, taskWithId);
 
   return taskWithId;

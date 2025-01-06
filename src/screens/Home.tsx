@@ -119,10 +119,6 @@ const Home: React.FC = () => {
     fetchTasks();
   }, [fetchTasks])
 
-  useEffect(() => {
-    console.log(error)
-  }, [error])
-
   return (
     <div className="p-4 px-7">
       <Navbar />

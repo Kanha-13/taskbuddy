@@ -59,10 +59,8 @@ const useTasks = (): UseTasks => {
       setError(null);
       try {
         const newTask = await addTaskToFirebase(task); // Firebase service returns the created task with ID
-        console.log(newTask)
         dispatch(addTask(newTask));
       } catch (err) {
-        console.log(err)
         setError(err instanceof Error ? err.message : "Error adding task");
       } finally {
         setLoading(false);
@@ -80,7 +78,6 @@ const useTasks = (): UseTasks => {
         await updateTaskInFirebase(task); // Updates task in Firebase
         dispatch(updateTask(task));
       } catch (err) {
-        console.log(err)
         setError(err instanceof Error ? err.message : "Error updating task");
       } finally {
         setLoading(false);
