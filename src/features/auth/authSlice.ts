@@ -1,14 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { signInWithPopup, signOut } from "firebase/auth";
-import { auth, provider } from "../../firebaseConfig.ts";
 
-export const loginWithGoogle = createAsyncThunk("auth/login", async () => {
-  const result = await signInWithPopup(auth, provider);
-  return result.user;
+export const loginUser = createAsyncThunk("auth/login", (user: any) => {
+  return user;
 });
 
-export const logout = createAsyncThunk("auth/logout", async () => {
-  await signOut(auth);
+export const logoutUser = createAsyncThunk("auth/logout", () => {
+  return null;
 });
 
 interface AuthState {
@@ -24,16 +21,22 @@ const initialState: AuthState = {
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    setUser: (state, action) => {
+      state.user = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
-      .addCase(loginWithGoogle.fulfilled, (state, action) => {
+      .addCase(loginUser.fulfilled, (state, action) => {
         state.user = action.payload;
       })
-      .addCase(logout.fulfilled, (state) => {
+      .addCase(logoutUser.fulfilled, (state) => {
         state.user = null;
       });
   },
 });
+
+export const { setUser } = authSlice.actions;
 
 export default authSlice.reducer;

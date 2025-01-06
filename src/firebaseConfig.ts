@@ -1,11 +1,9 @@
-import { getFirestore, collection, addDoc, updateDoc, doc, deleteDoc, getDocs, setDoc } from "firebase/firestore";
+import { getFirestore, collection, updateDoc, doc, deleteDoc, getDocs, setDoc } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
-import { Task } from "./features/tasks/taskSlice"; // Import Task interface
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import { Task } from "./features/tasks/taskSlice";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 
-
-// Initialize Firebase (replace with your Firebase config)
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
@@ -16,12 +14,32 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const provider = new GoogleAuthProvider();
-export const db = getFirestore(app);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+const db = getFirestore(app);
 export const storage = getStorage(app);
 
-// Fetch all tasks
+export const loginFirebase = async () => {
+  try {
+    const result = await signInWithPopup(auth, provider);
+    localStorage.setItem("taskBuddyuser", JSON.stringify(result.user))
+    return result.user;
+  } catch (error) {
+    console.error("Error during Google login:", error);
+    throw error;
+  }
+};
+
+export const logoutFirebase = async () => {
+  try {
+    await signOut(auth);
+    localStorage.removeItem("taskBuddyuser")
+  } catch (error) {
+    console.error("Logout Error:", error);
+    throw error;
+  }
+};
+
 export const fetchTasksFromFirebase = async (): Promise<Task[]> => {
   const tasksCollection = collection(db, "tasks");
   const snapshot = await getDocs(tasksCollection);
@@ -31,7 +49,6 @@ export const fetchTasksFromFirebase = async (): Promise<Task[]> => {
   }));
 };
 
-// Add a new task
 export const addTaskToFirebase = async (task: Task): Promise<Task> => {
   const tasksCollection = collection(db, "tasks");
   const docRef = doc(tasksCollection);
@@ -41,13 +58,11 @@ export const addTaskToFirebase = async (task: Task): Promise<Task> => {
   return taskWithId;
 };
 
-// Update an existing task
 export const updateTaskInFirebase = async (task: Task): Promise<void> => {
   const taskDoc = doc(db, "tasks", task.id);
   await updateDoc(taskDoc, { ...task });
 };
 
-// Delete a task
 export const deleteTaskFromFirebase = async (taskId: string): Promise<void> => {
   const taskDoc = doc(db, "tasks", taskId);
   await deleteDoc(taskDoc);

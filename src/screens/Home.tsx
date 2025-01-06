@@ -8,6 +8,8 @@ import ViewToggler from '../components/Tasks/TaskViewToggler.tsx';
 import TaskForm from '../components/Tasks/TaskForm.tsx';
 import MultiRowsCheckModal from '../components/Tasks/MultiRowsCheckModal.tsx';
 import useTasks from '../features/tasks/useTask.ts';
+import { useAuth } from '../features/auth/useAuth.ts';
+import { useNavigate } from 'react-router-dom';
 
 const Home: React.FC = () => {
   const {
@@ -21,6 +23,8 @@ const Home: React.FC = () => {
     deleteExistingTask,
     filterTasksByParams,
   } = useTasks();
+  const { user, status, loginWithGoogle, logout } = useAuth();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'list' | 'board'>('list');
   const [isForm, setIsForm] = useState(false);
   const [checkRows, setCheckRows] = useState<string[]>([]);
@@ -106,6 +110,11 @@ const Home: React.FC = () => {
     }
   };
 
+  const handleLogOut = () => {
+    logout();
+    navigate("/");
+  }
+
   useEffect(() => {
     filterTasksByParams({ search: '', category: '', startDate: undefined, endDate: undefined });
   }, [tasks]);
@@ -119,10 +128,14 @@ const Home: React.FC = () => {
     fetchTasks();
   }, [fetchTasks])
 
+  useEffect(() => {
+    if (!user) navigate("/");
+  }, [user])
+
   return (
     <div className="p-4 px-7">
-      <Navbar />
-      <ViewToggler activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Navbar user={user} />
+      <ViewToggler onLogout={handleLogOut} activeTab={activeTab} setActiveTab={setActiveTab} />
       <TaskFilter onAddTask={handleAddClick} onFilterChange={handleFilterChange} />
 
       {activeTab === 'list' ? (
