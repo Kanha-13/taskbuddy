@@ -70,7 +70,7 @@ const Home: React.FC = () => {
     const items = Array.from(tasks);
 
     setTasks(items.filter((task, index) => {
-      if (task.id == result.draggableId){
+      if (task.id == result.draggableId) {
         task.status = result.destination.droppableId;
       }
       return task;
@@ -98,14 +98,29 @@ const Home: React.FC = () => {
     setIsRowsChecked(true);
   }
 
-  const handleChangeStatus = () => {
-
+  const handleMultiChangeStatus = (newStatus) => {
+    const newTaskList = tasks.filter((task) => checkRows.includes(task.id) ? { ...task, status: newStatus } : task)
+    setTasks(newTaskList);
   }
 
-  const handleDeleteRows = () => {
-
+  const handleMultiDeleteRows = () => {
+    const newTaskList = tasks.filter((task) => !checkRows.includes(task.id))
+    setTasks(newTaskList);
   }
 
+  const handleDeleteRow = (taskId: string) => {
+    const newTaskList = tasks.filter((task) => !(taskId == task.id))
+    setTasks(newTaskList);
+
+  }
+  const handleChangeStatus = (taskId: string, newStatus: "todo" | "in-progress" | "completed") => {
+    const newTaskList = tasks.map((task) => taskId == task.id ? { ...task, status: newStatus } : task)
+    setTasks(newTaskList);
+  }
+
+  useEffect(()=>{
+    setFilteredTasks(tasks)
+  },[tasks])
 
   useEffect(() => {
     if (checkRows.length < 1)
@@ -120,12 +135,12 @@ const Home: React.FC = () => {
       <TaskFilter onAddTask={handleAddClick} onFilterChange={handleFilterChange} />
 
       {activeTab === "list" ? (
-        <TaskList checkRows={checkRows} onClickTask={handleOpenTask} onRowCheck={handleRowCheck} tasks={filteredTasks} onDragEnd={handleOnDragEnd} />
+        <TaskList onChangeStatus={handleChangeStatus} checkRows={checkRows} onClickTask={handleOpenTask} onRowCheck={handleRowCheck} tasks={filteredTasks} onDragEnd={handleOnDragEnd} onDelete={handleDeleteRow} />
       ) : (
-        <TaskBoard onDragEnd={handleOnDragEnd} tasks={filteredTasks} onClickTask={handleOpenTask} />
+        <TaskBoard onChangeStatus={handleChangeStatus} onDragEnd={handleOnDragEnd} tasks={filteredTasks} onClickTask={handleOpenTask} onDelete={handleDeleteRow} />
       )}
       {isForm ? <TaskForm mode={activeTask?.id ? "update" : "create"} taskData={activeTask} onClose={() => setIsForm(false)} onSubmit={() => { }} /> : <></>}
-      {isRowsChecked ? <MultiRowsCheckModal count={checkRows.length} onCancel={() => setCheckRows([])} onChangeStatus={handleChangeStatus} onDelete={handleDeleteRows} /> : <></>}
+      {isRowsChecked ? <MultiRowsCheckModal count={checkRows.length} onCancel={() => setCheckRows([])} onChangeStatus={handleMultiChangeStatus} onDelete={handleMultiDeleteRows} /> : <></>}
     </div>
   );
 };

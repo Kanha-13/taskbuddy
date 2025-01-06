@@ -19,9 +19,11 @@ interface TaskListProps {
   onDragEnd: (result: any) => void;
   onClickTask: (id: string) => void;
   onRowCheck: (id: string) => void;
+  onChangeStatus: (id: string, status: "todo" | "in-progress" | "completed") => void;
+  onDelete: (id: string) => void;
 }
 
-const TaskList: React.FC<TaskListProps> = ({ tasks, onDragEnd, onClickTask, checkRows, onRowCheck }) => {
+const TaskList: React.FC<TaskListProps> = ({ tasks, onChangeStatus, onDelete, onDragEnd, onClickTask, checkRows, onRowCheck }) => {
   const [isDroppableMounted, setMountDroppable] = useState<boolean>(false);
   const [sections, setSections] = useState({
     todo: true,
@@ -66,6 +68,11 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onDragEnd, onClickTask, chec
     setMountDroppable(true)
   }, [])
 
+
+  useEffect(()=>{
+    console.log(tasks)
+  },[tasks])
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <ListHead />
@@ -99,6 +106,8 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onDragEnd, onClickTask, chec
                         <TaskListRow
                           isChecked={checkRows.includes(task.id)}
                           task={task}
+                          onEdit={onChangeStatus}
+                          onDelete={onDelete}
                           index={index}
                           provided={provided}
                           snapshot={snapshot}

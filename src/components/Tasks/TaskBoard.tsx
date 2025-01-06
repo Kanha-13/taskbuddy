@@ -16,9 +16,11 @@ interface TaskBoardProps {
   tasks: Task[];
   onDragEnd: (result: any) => void;
   onClickTask: (id: string) => void;
+  onChangeStatus: (id: string, status: "todo" | "in-progress" | "completed") => void;
+  onDelete: (id: string) => void;
 }
 
-const TaskBoard: React.FC<TaskBoardProps> = ({ tasks, onClickTask, onDragEnd }) => {
+const TaskBoard: React.FC<TaskBoardProps> = ({ tasks, onChangeStatus, onDelete, onClickTask, onDragEnd }) => {
   const [isDrop, setIsDrop] = useState<Boolean>(false)
   const [isDroppableMounted, setIsDroppableMounted] = useState<Boolean>(false)
   const [sections, setSections] = useState({
@@ -70,7 +72,14 @@ const TaskBoard: React.FC<TaskBoardProps> = ({ tasks, onClickTask, onDragEnd }) 
                     {tasks.map((task, index) => (
                       <Draggable key={task.id} draggableId={task.id} index={index}>
                         {(provided) => (
-                          <TaskBoardCard provided={provided} onClick={onClickTask} index={index} task={task} snapshot={snapshot} />
+                          <TaskBoardCard
+                            provided={provided}
+                            onClick={onClickTask}
+                            index={index}
+                            task={task}
+                            onEdit={onChangeStatus}
+                            onDelete={onDelete}
+                            snapshot={snapshot} />
                         )}
                       </Draggable>
                     ))}

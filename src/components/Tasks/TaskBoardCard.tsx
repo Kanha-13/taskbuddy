@@ -19,9 +19,11 @@ interface TaskBoardCardProps {
   provided: any;
   snapshot: any;
   onClick: (id: string) => void;
+  onEdit: (id: string, status: "todo" | "in-progress" | "completed") => void;
+  onDelete: (id: string) => void;
 }
 
-const TaskBoardCard: React.FC<TaskBoardCardProps> = ({ task, index, onClick, provided, snapshot }) => {
+const TaskBoardCard: React.FC<TaskBoardCardProps> = ({ onEdit, onDelete, task, index, onClick, provided, snapshot }) => {
   const [isDrop, setIsDrop] = useState<Boolean>(false)
   const handleDropMenu = (e: React.MouseEvent) => {
     e.stopPropagation();

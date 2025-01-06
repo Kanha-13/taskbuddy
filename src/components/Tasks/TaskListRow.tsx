@@ -24,9 +24,11 @@ interface TaskListRowProps {
   snapshot: any;
   onClick: (id: string) => void;
   onRowCheck: (id: string) => void;
+  onEdit: (id: string, status: "todo" | "in-progress" | "completed") => void;
+  onDelete: (id: string) => void;
 }
 
-const TaskListRow: React.FC<TaskListRowProps> = ({ isChecked, task, index, onClick, onRowCheck, provided, snapshot }) => {
+const TaskListRow: React.FC<TaskListRowProps> = ({ onEdit, onDelete, isChecked, task, index, onClick, onRowCheck, provided, snapshot }) => {
   const [isDrop, setIsDrop] = useState<Boolean>(false)
   const [isStatusOpen, setIsStatusOpen] = useState<Boolean>(false)
   const handleDropMenu = (event: React.MouseEvent) => {
@@ -36,11 +38,13 @@ const TaskListRow: React.FC<TaskListRowProps> = ({ isChecked, task, index, onCli
 
   const handleClick = (event: React.MouseEvent) => {
     event.stopPropagation();
-    onClick(task.id)
+    setIsDrop(false);
+    onClick(task.id);
   }
 
   const handleStatusChange = (e: React.MouseEvent, newStatus: string) => {
     e.stopPropagation();
+    onEdit(task.id, newStatus);
   }
 
   const getStatusOptionBg = (status: string) => {
@@ -102,8 +106,8 @@ const TaskListRow: React.FC<TaskListRowProps> = ({ isChecked, task, index, onCli
         <Ellipses />
         {
           isDrop ? <Dropdown height="h-auto" width="w-[230%]" position="top-full right-[24%]" >
-            <li className="flex pl-2 pr-4 hover:bg-pink-100 rounded-md font-semibold"><img className="mr-3" src={EditIcon} /> Edit</li>
-            <li className="flex pl-2 pt-2 pr-4 hover:bg-pink-100 rounded-md font-semibold text-[#DA2F2F]"><img className="mr-3" src={DeleteIcon} /> Delete</li>
+            <li onClick={handleClick} className="flex pl-2 pr-4 hover:bg-pink-100 rounded-md font-semibold"><img className="mr-3" src={EditIcon} /> Edit</li>
+            <li onClick={() => onDelete(task.id)} className="flex pl-2 pt-2 pr-4 hover:bg-pink-100 rounded-md font-semibold text-[#DA2F2F]"><img className="mr-3" src={DeleteIcon} /> Delete</li>
           </Dropdown> : <></>
         }
       </div>
