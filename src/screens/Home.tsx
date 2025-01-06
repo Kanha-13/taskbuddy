@@ -1,30 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { moveTask, filterTasks, deleteTask, addTask, updateTask } from '../features/tasks/taskSlice';
-import TaskList from '../components/Tasks/TaskList';
-import TaskFilter from '../components/Tasks/TaskFilter';
-import TaskBoard from '../components/Tasks/TaskBoard';
-import Navbar from '../components/Navbar/Navbar';
-import ViewToggler from '../components/Tasks/TaskViewToggler';
-import TaskForm from '../components/Tasks/TaskForm';
-import MultiRowsCheckModal from '../components/Tasks/MultiRowsCheckModal';
-import { RootState } from '../store/store';
-
-interface Task {
-  id: string;
-  title: string;
-  status: "todo" | "in-progress" | "completed" | "";
-  category: "Work" | "Personal" | "";
-  dueDate: Date | string | null;
-  files?: string[];
-  description?: string;
-}
+import { Task } from '../features/tasks/taskSlice';
+import TaskList from '../components/Tasks/TaskList.tsx';
+import TaskFilter from '../components/Tasks/TaskFilter.tsx';
+import TaskBoard from '../components/Tasks/TaskBoard.tsx';
+import Navbar from '../components/Navbar/Navbar.tsx';
+import ViewToggler from '../components/Tasks/TaskViewToggler.tsx';
+import TaskForm from '../components/Tasks/TaskForm.tsx';
+import MultiRowsCheckModal from '../components/Tasks/MultiRowsCheckModal.tsx';
+import useTasks from '../features/tasks/useTask.ts';
 
 const Home: React.FC = () => {
-  const dispatch = useDispatch();
-  const tasks = useSelector((state: RootState) => state.tasks.tasks);
-  const filteredTasks = useSelector((state: RootState) => state.tasks.filteredTasks);
-
+  const {
+    tasks,
+    filteredTasks,
+    loading,
+    error,
+    fetchTasks,
+    addNewTask,
+    updateExistingTask,
+    deleteExistingTask,
+    filterTasksByParams,
+  } = useTasks();
   const [activeTab, setActiveTab] = useState<'list' | 'board'>('list');
   const [isForm, setIsForm] = useState(false);
   const [checkRows, setCheckRows] = useState<string[]>([]);
@@ -32,7 +28,7 @@ const Home: React.FC = () => {
   const [activeTask, setActiveTask] = useState<Task | undefined | null>(null);
 
   const handleFilterChange = (filters: { search: string; category: string; startDate?: Date | null; endDate?: Date | null }) => {
-    dispatch(filterTasks(filters));
+    filterTasksByParams(filters);
   };
 
   const handleAddClick = () => {
@@ -41,13 +37,13 @@ const Home: React.FC = () => {
   };
 
   const handleTaskCreate = (newTask: Task) => {
-    dispatch(addTask(newTask));
+    addNewTask(newTask);
     setIsForm(false);
     setActiveTask(null);
   };
 
   const handleTaskUpdate = (update: Task) => {
-    dispatch(updateTask(update));
+    updateExistingTask(update);
     setIsForm(false);
     setActiveTask(null);
   };
@@ -67,9 +63,12 @@ const Home: React.FC = () => {
     setIsRowsChecked(true);
   };
 
-  const handleMultiChangeStatus = (newStatus: 'todo' | 'in-progress' | 'completed') => {
+  const handleMultiChangeStatus = (newStatus: Task['status']) => {
     checkRows.forEach((taskId) => {
-      dispatch(moveTask({ taskId, newStatus }));
+      let taskToUpdate = tasks.find((task) => task.id === taskId);
+      if (taskToUpdate) {
+        updateExistingTask({ ...taskToUpdate, status: newStatus });
+      }
     });
     setCheckRows([]);
     setIsRowsChecked(false);
@@ -77,18 +76,22 @@ const Home: React.FC = () => {
 
   const handleMultiDeleteRows = () => {
     checkRows.forEach((taskId) => {
-      dispatch(deleteTask(taskId));
+      deleteExistingTask(taskId);
     });
     setCheckRows([]);
     setIsRowsChecked(false);
   };
 
   const handleDeleteRow = (taskId: string) => {
-    dispatch(deleteTask(taskId));
+    deleteExistingTask(taskId);
   };
 
   const handleChangeStatus = (taskId: string, newStatus: 'todo' | 'in-progress' | 'completed' | '') => {
-    dispatch(moveTask({ taskId, newStatus }));
+    let taskToUpdate = tasks.find((task) => task.id === taskId);
+
+    if (taskToUpdate) {
+      updateExistingTask({ ...taskToUpdate, status: newStatus });
+    }
   };
 
   const handleOnDragEnd = (result: any) => {
@@ -97,17 +100,28 @@ const Home: React.FC = () => {
     const { draggableId, destination } = result;
     const newStatus: 'todo' | 'in-progress' | 'completed' = destination.droppableId as 'todo' | 'in-progress' | 'completed';
 
-    dispatch(moveTask({ taskId: draggableId, newStatus }));
+    let taskToUpdate = tasks.find((task) => task.id === draggableId);
+    if (taskToUpdate) {
+      updateExistingTask({ ...taskToUpdate, status: newStatus });
+    }
   };
 
   useEffect(() => {
-    dispatch(filterTasks({ search: '', category: '', startDate: undefined, endDate: undefined }));
-  }, [dispatch, tasks]);
+    filterTasksByParams({ search: '', category: '', startDate: undefined, endDate: undefined });
+  }, [tasks]);
 
   useEffect(() => {
     if (checkRows.length < 1)
       setIsRowsChecked(false);
   }, [checkRows])
+
+  useEffect(() => {
+    fetchTasks();
+  }, [fetchTasks])
+
+  useEffect(() => {
+    console.log(error)
+  }, [error])
 
   return (
     <div className="p-4 px-7">

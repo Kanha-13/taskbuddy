@@ -45,7 +45,7 @@ const AddTaskRow: React.FC<AddTaskRowProps> = ({ onSave }) => {
 
   const handleDateChange = (date: DateRange) => {
     setDateRange(date)
-    setTask((prevTask) => ({ ...prevTask, dueDate: date.startDate }));
+    setTask((prevTask) => ({ ...prevTask, dueDate: `${date.startDate}` }));
   };
 
   const handleSave = () => {

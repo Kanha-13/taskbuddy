@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface Task {
+export interface Task {
   id: string;
   title: string;
   status: "todo" | "in-progress" | "completed" | "";
@@ -16,14 +16,7 @@ interface TaskState {
 }
 
 const initialState: TaskState = {
-  tasks: [
-    { id: '1', title: 'Task 1', status: 'todo', category: 'Work', dueDate: '2025-01-05' },
-    { id: '2', title: 'Task 2', status: 'in-progress', category: 'Personal', dueDate: '2025-01-06' },
-    { id: '3', title: 'Task 3', status: 'completed', category: 'Work', dueDate: '2025-01-07' },
-    { id: '4', title: 'Task 4', status: 'completed', category: 'Work', dueDate: '2025-01-07' },
-    { id: '5', title: 'Task 5', status: 'completed', category: 'Work', dueDate: '2025-01-07' },
-    { id: '6', title: 'Task 6', status: 'completed', category: 'Work', dueDate: '2025-01-07' },
-  ],
+  tasks: [],
   filteredTasks: [],
 };
 
@@ -31,6 +24,9 @@ const taskSlice = createSlice({
   name: 'tasks',
   initialState,
   reducers: {
+    setTasks(state, action: PayloadAction<Task[]>) {
+      state.tasks = action.payload;
+    },
     addTask(state, action: PayloadAction<Task>) {
       if (!action.payload.id) action.payload.id = `${state.tasks.length + 1}`;
       state.tasks.push(action.payload);
@@ -88,5 +84,5 @@ const taskSlice = createSlice({
   },
 });
 
-export const { addTask, updateTask, deleteTask, changeTaskStatus, filterTasks, moveTask } = taskSlice.actions;
+export const { setTasks, addTask, updateTask, deleteTask, changeTaskStatus, filterTasks, moveTask } = taskSlice.actions;
 export default taskSlice.reducer;
