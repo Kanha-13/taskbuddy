@@ -98,9 +98,10 @@ const Home: React.FC = () => {
     setIsRowsChecked(true);
   }
 
-  const handleMultiChangeStatus = (newStatus) => {
-    const newTaskList = tasks.filter((task) => checkRows.includes(task.id) ? { ...task, status: newStatus } : task)
+  const handleMultiChangeStatus = (newStatus: "todo" | "in-progress" | "completed") => {
+    const newTaskList = tasks.map((task) => checkRows.includes(task.id) ? { ...task, status: newStatus } : task)
     setTasks(newTaskList);
+    setCheckRows([]);
   }
 
   const handleMultiDeleteRows = () => {

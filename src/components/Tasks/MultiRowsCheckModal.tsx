@@ -4,7 +4,7 @@ import { ReactComponent as TaskIcon } from "../../assets/icons/tasks_icon.svg"
 
 interface MultiRowsCheckModalProps {
   onDelete: () => void;
-  onChangeStatus: (status: string) => void;
+  onChangeStatus: (status: "todo" | "in-progress" | "completed") => void;
   onCancel: () => void;
   count: number;
 }
@@ -12,8 +12,9 @@ interface MultiRowsCheckModalProps {
 const MultiRowsCheckModal: React.FC<MultiRowsCheckModalProps> = ({ onDelete, onChangeStatus, onCancel, count }) => {
   const [isStatusOpen, setIsStatusOpen] = useState<Boolean>(false);
 
-  const handleStatusChange = (e: React.MouseEvent, newStatus: string) => {
+  const handleStatusChange = (e: React.MouseEvent, newStatus: "todo" | "in-progress" | "completed") => {
     e.stopPropagation();
+    onChangeStatus(newStatus)
   }
 
   return (
@@ -37,7 +38,7 @@ const MultiRowsCheckModal: React.FC<MultiRowsCheckModalProps> = ({ onDelete, onC
             </Dropdown>
           }
         </div>
-        <div className='text-xs font-semibold cursor-pointer p-2 px-4 text-[#E13838] border border-[#e1383878] bg-[#FF3535] rounded-full bg-opacity-[14%]'>Delete</div>
+        <div onClick={onDelete} className='text-xs font-semibold cursor-pointer p-2 px-4 text-[#E13838] border border-[#e1383878] bg-[#FF3535] rounded-full bg-opacity-[14%]'>Delete</div>
       </div>
     </div>
   )
