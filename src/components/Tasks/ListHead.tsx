@@ -6,7 +6,7 @@ const ListHead: React.FC = () => {
       <div className="w-4/12">Task name</div>
       <div className="w-3/12">Due on</div>
       <div className="w-3/12">Task Status</div>
-      <div className="w-2/12">Task Category</div>
+      <div className="w-3/12">Task Category</div>
       <div className="w-16"></div>
     </div>
   );

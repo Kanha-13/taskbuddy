@@ -107,7 +107,7 @@ const AddTaskRow: React.FC = () => {
                 </Dropdown>
               }
             </div>
-            <div className="w-2/12 cursor-pointer relative flex items-center">
+            <div className="w-3/12 cursor-pointer relative flex items-center">
               <div
                 onClick={() => setIsCategoryOpen(!isCategoryOpen)}
                 className="flex justify-center items-center text-xs border border-black border-opacity-20 rounded-full hover:shadow-md"

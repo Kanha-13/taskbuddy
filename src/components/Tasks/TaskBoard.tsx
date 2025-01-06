@@ -15,9 +15,10 @@ interface Task {
 interface TaskBoardProps {
   tasks: Task[];
   onDragEnd: (result: any) => void;
+  onClickTask: (id: string) => void;
 }
 
-const TaskBoard: React.FC<TaskBoardProps> = ({ tasks, onDragEnd }) => {
+const TaskBoard: React.FC<TaskBoardProps> = ({ tasks, onClickTask, onDragEnd }) => {
   const [isDrop, setIsDrop] = useState<Boolean>(false)
   const [sections, setSections] = useState({
     todo: true,
@@ -44,13 +45,13 @@ const TaskBoard: React.FC<TaskBoardProps> = ({ tasks, onDragEnd }) => {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="grid grid-cols-3 font-mulish gap-4">
+      <div className="grid grid-cols-3 font-mulish gap-5 mt-10 w-4/5 h-[71vh]">
         {Object.entries(categorizedTasks).map(([status, tasks]) => (
           <Droppable key={status} droppableId={status}>
             {(provided, snapshot) => (
-              <div className="bg-gray-100 p-4 rounded-lg border-2 border-[#585751] border-opacity-[7%]">
+              <div className="bg-gray-100 h-full p-4 rounded-2xl border-2 border-[#585751] border-opacity-[7%]">
                 <div className={`${getSectionBgColor(status)} w-max px-3 py-1 rounded-md`}>
-                  <h2 className="text-lg font-semibold capitalize">
+                  <h2 className="text-sm font-semibold capitalize">
                     {status.replace("-", " ")}
                   </h2>
                 </div>
@@ -59,12 +60,12 @@ const TaskBoard: React.FC<TaskBoardProps> = ({ tasks, onDragEnd }) => {
                   <div
                     {...provided.droppableProps}
                     ref={provided.innerRef}
-                    className="mt-2 space-y-2"
+                    className="mt-4 space-y-2"
                   >
                     {tasks.map((task, index) => (
                       <Draggable key={task.id} draggableId={task.id} index={index}>
                         {(provided) => (
-                          <TaskBoardCard provided={provided} index={index} task={task} snapshot={snapshot} />
+                          <TaskBoardCard provided={provided} onClick={onClickTask} index={index} task={task} snapshot={snapshot} />
                         )}
                       </Draggable>
                     ))}

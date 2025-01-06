@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import DragAndDropFileInput from '../DragAndDropFileInput.tsx'
 import TextEditor from '../TextEditor.tsx'
 import { ReactComponent as Calender } from "../../assets/icons/calender_icon.svg"
@@ -45,13 +45,17 @@ const TaskFormDetail: React.FC<TaskFormDetailProps> = ({ taskDetails, handleChan
   const handleDateChange = (date: DateRange) => {
     setDateRange(date)
     handleChange("dueDate", `${date.startDate}`)
-    // setTask((prevTask) => ({ ...prevTask, dueDate: date.startDate }));
   };
 
   const getStatusOptionBg = (status: string) => {
     if (taskDetails.status == status) return "bg-pink-200"
     return "bg-none"
   };
+
+  useEffect(() => {
+    if (taskDetails.dueDate)
+      setDateRange({ startDate: taskDetails.dueDate, endDate: null })
+  }, [taskDetails.dueDate])
 
   return (
     <div style={{ marginTop: "0px" }} className="overflow-y-auto pt-3 px-6 w-full h-full flex flex-1 flex-col">

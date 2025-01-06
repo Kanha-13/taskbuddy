@@ -20,7 +20,7 @@ const Navbar: React.FC = () => {
     <nav className="bg-white font-mulish text-nav_title flex justify-between items-center">
       <div className="flex">
         <img src={taskBlackIcon} />
-        <Link to="/tasks" className="ml-1 text-2xl font-semibold">TaskBuddy</Link>
+        <Link to="/tasks" className="ml-1 outline-none text-2xl font-semibold">TaskBuddy</Link>
       </div>
       <div className="flex items-center">
         <img src={userImg} />

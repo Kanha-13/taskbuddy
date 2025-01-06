@@ -83,7 +83,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onDragEnd, onClickTask, chec
                 )} p-2 px-4 shadow-sm flex justify-between items-center rounded-t-xl`}
               >
                 <h2 className="text-lg font-semibold capitalize">
-                  {status.replace("-", " ")}
+                  {status.replace("-", " ")} ({tasks.length})
                 </h2>
                 <DropIcon color={getArrowColor(status)} size="w-6 h-6 mr-3" isOpen={sections[status as "todo" | "in-progress" | "completed"]} />
               </div>

@@ -22,6 +22,8 @@ const Home: React.FC = () => {
     { id: "2", title: "Task 2", status: "in-progress", category: "Personal", dueDate: "2025-01-06" },
     { id: "3", title: "Task 3", status: "completed", category: "Work", dueDate: "2025-01-07" },
     { id: "4", title: "Task 4", status: "completed", category: "Work", dueDate: "2025-01-07" },
+    { id: "5", title: "Task 5", status: "completed", category: "Work", dueDate: "2025-01-07" },
+    { id: "6", title: "Task 6", status: "completed", category: "Work", dueDate: "2025-01-07" },
   ]);
   const [filteredTasks, setFilteredTasks] = useState<Task[]>(tasks);
   const [activeTab, setActiveTab] = useState<"list" | "board">("list");
@@ -109,7 +111,7 @@ const Home: React.FC = () => {
   }, [checkRows])
 
   return (
-    <div className="p-4 pt-8 px-7">
+    <div className="p-4 px-7">
       <Navbar />
       <ViewToggler activeTab={activeTab} setActiveTab={setActiveTab} />
 
@@ -118,7 +120,7 @@ const Home: React.FC = () => {
       {activeTab === "list" ? (
         <TaskList checkRows={checkRows} onClickTask={handleOpenTask} onRowCheck={handleRowCheck} tasks={filteredTasks} onDragEnd={() => { }} />
       ) : (
-        <TaskBoard onDragEnd={handleOnDragEnd} tasks={filteredTasks} />
+        <TaskBoard onDragEnd={handleOnDragEnd} tasks={filteredTasks} onClickTask={handleOpenTask} />
       )}
       {isForm ? <TaskForm mode={activeTask?.id ? "update" : "create"} taskData={activeTask} onClose={() => setIsForm(false)} onSubmit={() => { }} /> : <></>}
       {isRowsChecked ? <MultiRowsCheckModal count={checkRows.length} onCancel={() => setCheckRows([])} onChangeStatus={handleChangeStatus} onDelete={handleDeleteRows} /> : <></>}

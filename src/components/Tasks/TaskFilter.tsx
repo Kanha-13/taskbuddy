@@ -52,7 +52,7 @@ const TaskFilter: React.FC<TaskFilterProps> = ({ onFilterChange, onAddTask }) =>
   }
 
   return (
-    <div className="flex flex-wrap items-center justify-between mb-4 mt-4 gap-4 font-mulish">
+    <div className="flex flex-wrap items-center justify-between mb-4 mt-4 font-mulish">
       <div className="flex items-center gap-4 flex-wrap w-full sm:w-1/2">
         <span className="font-semibold text-sm opacity-60">Filter by: </span>
         <div className="cursor-pointer relative flex justify-center items-center">
@@ -88,8 +88,8 @@ const TaskFilter: React.FC<TaskFilterProps> = ({ onFilterChange, onAddTask }) =>
         </div>
       </div>
 
-      <div className="flex items-center gap-4 w-full sm:w-auto">
-        <div className="flex items-center rounded-full p-2 border border-black border-opacity-[42%]">
+      <div className="flex items-center gap-4 w-full sm:w-1/3">
+        <div className="flex items-center rounded-full p-2 w-1/2 ml-auto border-2 border-black border-opacity-[42%]">
           <SearchIcon className="mr-2" />
           <input
             type="text"
@@ -101,7 +101,7 @@ const TaskFilter: React.FC<TaskFilterProps> = ({ onFilterChange, onAddTask }) =>
         </div>
         <button
           onClick={onAddTask}
-          className="bg-secondaryColor text-white text-sm rounded-full font-semibold px-6 py-2"
+          className="bg-secondaryColor outline-none text-white text-sm rounded-full font-semibold px-8 py-3"
         >
           ADD TASK
         </button>

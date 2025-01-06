@@ -18,7 +18,7 @@ const ViewToggler: React.FC<ViewTogglerProps> = ({ activeTab, setActiveTab }) =>
           <ListIcon fill="red" className="items-center" style={{ fill: "red" }} />
           <button
             onClick={() => setActiveTab("list")}
-            className={`px-2 ${activeTab == "list" ? "text-black" : "text-[#231F20] opacity-[82%]"}`}
+            className={`outline-none px-2 ${activeTab == "list" ? "text-black" : "text-[#231F20] opacity-[82%]"}`}
           >
             List
           </button>
@@ -27,7 +27,7 @@ const ViewToggler: React.FC<ViewTogglerProps> = ({ activeTab, setActiveTab }) =>
           <BoardIcon fill="black" />
           <button
             onClick={() => setActiveTab("board")}
-            className={`px-2 ${activeTab == "board" ? "text-black" : "text-[#231F20] opacity-[82%]"}`}
+            className={`outline-none px-2 ${activeTab == "board" ? "text-black" : "text-[#231F20] opacity-[82%]"}`}
           >
             Board
           </button>
