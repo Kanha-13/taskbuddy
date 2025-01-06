@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from "react";
-import TaskList from "../components/Tasks/TaskList.tsx";
-import TaskFilter from "../components/Tasks/TaskFilter.tsx";
-import TaskBoard from "../components/Tasks/TaskBoard.tsx";
-import Navbar from "../components/Navbar/Navbar.tsx";
-import ViewToggler from "../components/Tasks/TaskViewToggler.tsx";
-import TaskForm from "../components/Tasks/TaskForm.tsx";
-import MultiRowsCheckModal from "../components/Tasks/MultiRowsCheckModal.tsx";
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { moveTask, filterTasks, deleteTask } from '../features/tasks/taskSlice';
+import TaskList from '../components/Tasks/TaskList';
+import TaskFilter from '../components/Tasks/TaskFilter';
+import TaskBoard from '../components/Tasks/TaskBoard';
+import Navbar from '../components/Navbar/Navbar';
+import ViewToggler from '../components/Tasks/TaskViewToggler';
+import TaskForm from '../components/Tasks/TaskForm';
+import MultiRowsCheckModal from '../components/Tasks/MultiRowsCheckModal';
+import { RootState } from '../store/store';
 
 interface Task {
   id: string;
@@ -14,114 +17,80 @@ interface Task {
   category: string;
   dueDate: string;
   files?: string[];
+  description?: string;
 }
 
 const Home: React.FC = () => {
-  const [tasks, setTasks] = useState<Task[]>([
-    { id: "1", title: "Task 1", status: "todo", category: "Work", dueDate: "2025-01-05" },
-    { id: "2", title: "Task 2", status: "in-progress", category: "Personal", dueDate: "2025-01-06" },
-    { id: "3", title: "Task 3", status: "completed", category: "Work", dueDate: "2025-01-07" },
-    { id: "4", title: "Task 4", status: "completed", category: "Work", dueDate: "2025-01-07" },
-    { id: "5", title: "Task 5", status: "completed", category: "Work", dueDate: "2025-01-07" },
-    { id: "6", title: "Task 6", status: "completed", category: "Work", dueDate: "2025-01-07" },
-  ]);
-  const [filteredTasks, setFilteredTasks] = useState<Task[]>(tasks);
-  const [activeTab, setActiveTab] = useState<"list" | "board">("list");
-  const [activeTask, setActiveTask] = useState<Task>();
-  const [isForm, setIsForm] = useState<Boolean>(false);
-  const [isRowsChecked, setIsRowsChecked] = useState<Boolean>(false);
+  const dispatch = useDispatch();
+  const tasks = useSelector((state: RootState) => state.tasks.tasks);
+  const filteredTasks = useSelector((state: RootState) => state.tasks.filteredTasks);
+
+  const [activeTab, setActiveTab] = useState<'list' | 'board'>('list');
+  const [isForm, setIsForm] = useState(false);
   const [checkRows, setCheckRows] = useState<string[]>([]);
+  const [isRowsChecked, setIsRowsChecked] = useState(false);
+  const [activeTask, setActiveTask] = useState<Task | undefined | null>(null);
 
-  const handleFilterChange = (filters: {
-    search: string;
-    category: string;
-    startDate?: Date | null;
-    endDate?: Date | null;
-  }) => {
-    let newTasks = tasks;
+  const handleFilterChange = (filters: { search: string; category: string; startDate?: Date | null; endDate?: Date | null }) => {
+    dispatch(filterTasks(filters));
+  };
 
-    if (filters.search) {
-      newTasks = newTasks.filter((task) =>
-        task.title.toLowerCase().includes(filters.search.toLowerCase())
-      );
+  const handleAddClick = () => {
+    setIsForm(!isForm);
+    setActiveTask(null);
+  };
+
+  const handleOpenTask = (id: string) => {
+    setIsForm(true);
+    const taskToEdit = tasks.find((task) => task.id === id);
+    if (taskToEdit) {
+      setActiveTask(taskToEdit);
     }
+  };
 
-    if (filters.category) {
-      newTasks = newTasks.filter((task) => task.category === filters.category);
-    }
+  const handleRowCheck = (id: string) => {
+    setCheckRows((prevRows) =>
+      prevRows.includes(id) ? prevRows.filter((i) => i !== id) : [...prevRows, id]
+    );
+    setIsRowsChecked(true);
+  };
 
-    if (filters.startDate) {
-      newTasks = newTasks.filter(
-        (task) => new Date(task.dueDate).setHours(0, 0, 0, 0) >= new Date(filters.startDate!).setHours(0, 0, 0, 0)
-      );
-    }
+  const handleMultiChangeStatus = (newStatus: 'todo' | 'in-progress' | 'completed') => {
+    checkRows.forEach((taskId) => {
+      dispatch(moveTask({ taskId, newStatus }));
+    });
+    setCheckRows([]);
+    setIsRowsChecked(false);
+  };
 
-    if (filters.endDate) {
-      newTasks = newTasks.filter(
-        (task) => new Date(task.dueDate).setHours(0, 0, 0, 0) <= new Date(filters.endDate!).setHours(0, 0, 0, 0)
-      );
-    }
+  const handleMultiDeleteRows = () => {
+    checkRows.forEach((taskId) => {
+      dispatch(deleteTask(taskId));
+    });
+    setCheckRows([]);
+    setIsRowsChecked(false);
+  };
 
-    setFilteredTasks(newTasks);
+  const handleDeleteRow = (taskId: string) => {
+    dispatch(deleteTask(taskId));
+  };
+
+  const handleChangeStatus = (taskId: string, newStatus: 'todo' | 'in-progress' | 'completed') => {
+    dispatch(moveTask({ taskId, newStatus }));
   };
 
   const handleOnDragEnd = (result: any) => {
     if (!result.destination) return;
-    const items = Array.from(tasks);
 
-    setTasks(items.filter((task, index) => {
-      if (task.id == result.draggableId) {
-        task.status = result.destination.droppableId;
-      }
-      return task;
-    }));
-  }
+    const { draggableId, destination } = result;
+    const newStatus: 'todo' | 'in-progress' | 'completed' = destination.droppableId as 'todo' | 'in-progress' | 'completed';
 
-  const handleAddClick = () => {
-    setIsForm(!isForm)
-    setActiveTask(() => undefined)
-  }
-
-  const handleOpenTask = (id: String) => {
-    setIsForm(true)
-    let currentTask = tasks.filter((task) => task.id == id);
-    if (currentTask[0])
-      setActiveTask(currentTask[0]);
-  }
-
-  const handleRowCheck = (id: string) => {
-    setCheckRows((prevRows) =>
-      prevRows.includes(id)
-        ? prevRows.filter((i) => i !== id)
-        : [...prevRows, id]
-    )
-    setIsRowsChecked(true);
-  }
-
-  const handleMultiChangeStatus = (newStatus: "todo" | "in-progress" | "completed") => {
-    const newTaskList = tasks.map((task) => checkRows.includes(task.id) ? { ...task, status: newStatus } : task)
-    setTasks(newTaskList);
-    setCheckRows([]);
-  }
-
-  const handleMultiDeleteRows = () => {
-    const newTaskList = tasks.filter((task) => !checkRows.includes(task.id))
-    setTasks(newTaskList);
-  }
-
-  const handleDeleteRow = (taskId: string) => {
-    const newTaskList = tasks.filter((task) => !(taskId == task.id))
-    setTasks(newTaskList);
-
-  }
-  const handleChangeStatus = (taskId: string, newStatus: "todo" | "in-progress" | "completed") => {
-    const newTaskList = tasks.map((task) => taskId == task.id ? { ...task, status: newStatus } : task)
-    setTasks(newTaskList);
-  }
+    dispatch(moveTask({ taskId: draggableId, newStatus }));
+  };
 
   useEffect(() => {
-    setFilteredTasks(tasks)
-  }, [tasks])
+    dispatch(filterTasks({ search: '', category: '', startDate: undefined, endDate: undefined }));
+  }, [dispatch, tasks]);
 
   useEffect(() => {
     if (checkRows.length < 1)
@@ -132,16 +101,30 @@ const Home: React.FC = () => {
     <div className="p-4 px-7">
       <Navbar />
       <ViewToggler activeTab={activeTab} setActiveTab={setActiveTab} />
-
       <TaskFilter onAddTask={handleAddClick} onFilterChange={handleFilterChange} />
 
-      {activeTab === "list" ? (
-        <TaskList onChangeStatus={handleChangeStatus} checkRows={checkRows} onClickTask={handleOpenTask} onRowCheck={handleRowCheck} tasks={filteredTasks} onDragEnd={handleOnDragEnd} onDelete={handleDeleteRow} />
+      {activeTab === 'list' ? (
+        <TaskList
+          tasks={filteredTasks}
+          onChangeStatus={handleChangeStatus}
+          onClickTask={handleOpenTask}
+          onRowCheck={handleRowCheck}
+          checkRows={checkRows}
+          onDelete={handleDeleteRow}
+          onDragEnd={handleOnDragEnd}
+        />
       ) : (
         <TaskBoard onDragEnd={handleOnDragEnd} tasks={filteredTasks} onClickTask={handleOpenTask} onDelete={handleDeleteRow} />
       )}
-      {isForm ? <TaskForm mode={activeTask?.id ? "update" : "create"} taskData={activeTask} onClose={() => setIsForm(false)} onSubmit={() => { }} /> : <></>}
-      {isRowsChecked ? <MultiRowsCheckModal count={checkRows.length} onCancel={() => setCheckRows([])} onChangeStatus={handleMultiChangeStatus} onDelete={handleMultiDeleteRows} /> : <></>}
+      {isForm && <TaskForm mode={activeTask ? 'update' : 'create'} taskData={activeTask} onClose={() => setIsForm(false)} onSubmit={() => { }} />}
+      {isRowsChecked && (
+        <MultiRowsCheckModal
+          count={checkRows.length}
+          onCancel={() => setCheckRows([])}
+          onChangeStatus={handleMultiChangeStatus}
+          onDelete={handleMultiDeleteRows}
+        />
+      )}
     </div>
   );
 };

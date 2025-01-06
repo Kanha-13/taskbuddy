@@ -1,67 +1,90 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { db } from "../../firebaseConfig.ts";
-import {
-  collection,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  query,
-  getDocs,
-} from "firebase/firestore";
-
-export const fetchTasks = createAsyncThunk("tasks/fetch", async () => {
-  const q = query(collection(db, "tasks"));
-  const querySnapshot = await getDocs(q);
-  return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-});
-
-export const addTask = createAsyncThunk(
-  "tasks/add",
-  async (task: { title: string; category: string; dueDate: string }) => {
-    const docRef = await addDoc(collection(db, "tasks"), task);
-    return { id: docRef.id, ...task };
-  }
-);
-
-export const deleteTask = createAsyncThunk("tasks/delete", async (id: string) => {
-  await deleteDoc(collection(db, "tasks").doc(id));
-  return id;
-});
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface Task {
   id: string;
   title: string;
+  status: 'todo' | 'in-progress' | 'completed';
   category: string;
   dueDate: string;
-  status: string;
+  files?: string[];
 }
 
 interface TaskState {
   tasks: Task[];
-  status: "todo" | "in-progress" | "completed";
+  filteredTasks: Task[];
 }
 
 const initialState: TaskState = {
-  tasks: [],
-  status: "todo",
+  tasks: [
+    { id: '1', title: 'Task 1', status: 'todo', category: 'Work', dueDate: '2025-01-05' },
+    { id: '2', title: 'Task 2', status: 'in-progress', category: 'Personal', dueDate: '2025-01-06' },
+    { id: '3', title: 'Task 3', status: 'completed', category: 'Work', dueDate: '2025-01-07' },
+    { id: '4', title: 'Task 4', status: 'completed', category: 'Work', dueDate: '2025-01-07' },
+    { id: '5', title: 'Task 5', status: 'completed', category: 'Work', dueDate: '2025-01-07' },
+    { id: '6', title: 'Task 6', status: 'completed', category: 'Work', dueDate: '2025-01-07' },
+  ],
+  filteredTasks: [],
 };
 
 const taskSlice = createSlice({
-  name: "tasks",
+  name: 'tasks',
   initialState,
-  reducers: {},
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchTasks.fulfilled, (state, action) => {
-        state.tasks = action.payload;
-      })
-      .addCase(addTask.fulfilled, (state, action) => {
-        state.tasks.push(action.payload);
-      })
-      .addCase(deleteTask.fulfilled, (state, action) => {
-        state.tasks = state.tasks.filter((task) => task.id !== action.payload);
-      });
+  reducers: {
+    addTask(state, action: PayloadAction<Task>) {
+      state.tasks.push(action.payload);
+    },
+    updateTask(state, action: PayloadAction<Task>) {
+      const index = state.tasks.findIndex((task) => task.id === action.payload.id);
+      if (index !== -1) {
+        state.tasks[index] = action.payload;
+      }
+    },
+    deleteTask(state, action: PayloadAction<string>) {
+      state.tasks = state.tasks.filter((task) => task.id !== action.payload);
+    },
+    changeTaskStatus(state, action: PayloadAction<{ taskId: string; status: 'todo' | 'in-progress' | 'completed' }>) {
+      const { taskId, status } = action.payload;
+      const task = state.tasks.find((task) => task.id === taskId);
+      if (task) {
+        task.status = status;
+      }
+    },
+    filterTasks(state, action: PayloadAction<{ search: string; category: string; startDate?: Date | null; endDate?: Date | null }>) {
+      let filtered = state.tasks;
+
+      if (action.payload.search) {
+        filtered = filtered.filter((task) =>
+          task.title.toLowerCase().includes(action.payload.search.toLowerCase())
+        );
+      }
+
+      if (action.payload.category) {
+        filtered = filtered.filter((task) => task.category === action.payload.category);
+      }
+
+      if (action.payload.startDate) {
+        filtered = filtered.filter(
+          (task) => new Date(task.dueDate).setHours(0, 0, 0, 0) >= new Date(action.payload.startDate).setHours(0, 0, 0, 0)
+        );
+      }
+
+      if (action.payload.endDate) {
+        filtered = filtered.filter(
+          (task) => new Date(task.dueDate).setHours(0, 0, 0, 0) <= new Date(action.payload.endDate).setHours(0, 0, 0, 0)
+        );
+      }
+
+      state.filteredTasks = filtered;
+    },
+    moveTask(state, action: PayloadAction<{ taskId: string; newStatus: 'todo' | 'in-progress' | 'completed' }>) {
+      const { taskId, newStatus } = action.payload;
+      const task = state.tasks.find((task) => task.id === taskId);
+      if (task) {
+        task.status = newStatus;
+      }
+    },
   },
 });
 
+export const { addTask, updateTask, deleteTask, changeTaskStatus, filterTasks, moveTask } = taskSlice.actions;
 export default taskSlice.reducer;

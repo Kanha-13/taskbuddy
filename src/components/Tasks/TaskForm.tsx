@@ -21,7 +21,7 @@ interface Task {
 }
 
 interface TaskFormProps {
-  taskData?: Task;
+  taskData?: Task | undefined | null;
   onSubmit: (task: Task) => void;
   onClose: () => void; // To handle closing the modal
   mode: "update" | "create";

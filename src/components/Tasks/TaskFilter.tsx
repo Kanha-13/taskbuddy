@@ -6,18 +6,13 @@ import Dropdown from "../DropDown.tsx";
 import DropIcon from "../DropIcon.tsx";
 
 interface TaskFilterProps {
-  onFilterChange: (filters: {
-    search: string;
-    category: string;
-    startDate?: Date | string | null;
-    endDate?: Date | string | null;
-  }) => void;
+  onFilterChange: (filters: { search: string; category: string; startDate?: Date | null; endDate?: Date | null }) => void;
   onAddTask: () => void;
 }
 
 interface DateRange {
-  startDate: Date | string | null;
-  endDate: Date | string | null;
+  startDate: Date | null ;
+  endDate: Date | null;
 }
 
 const TaskFilter: React.FC<TaskFilterProps> = ({ onFilterChange, onAddTask }) => {
