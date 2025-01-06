@@ -1,6 +1,6 @@
 // src/components/TaskBoard.tsx
 import React, { useEffect, useState } from "react";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import TaskBoardCard from "./TaskBoardCard.tsx";
 
 
@@ -52,7 +52,7 @@ const TaskBoard: React.FC<TaskBoardProps> = ({ tasks, onClickTask, onDragEnd }) 
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="grid grid-cols-3 font-mulish gap-5 mt-10 w-4/5 h-[71vh]">
         {isDroppableMounted && Object.entries(categorizedTasks).map(([status, tasks]) => (
-          <Droppable key={status} droppableId={status}>
+          <Droppable type="group" key={status} droppableId={status}>
             {(provided, snapshot) => (
               <div className="bg-gray-100 h-full p-4 rounded-2xl border-2 border-[#585751] border-opacity-[7%]">
                 <div className={`${getSectionBgColor(status)} w-max px-3 py-1 rounded-md`}>
