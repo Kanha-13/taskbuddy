@@ -67,12 +67,14 @@ const Home: React.FC = () => {
 
   const handleOnDragEnd = (result: any) => {
     if (!result.destination) return;
-
     const items = Array.from(tasks);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
 
-    setTasks(items);
+    setTasks(items.filter((task, index) => {
+      if (task.id == result.draggableId){
+        task.status = result.destination.droppableId;
+      }
+      return task;
+    }));
   }
 
   const handleAddClick = () => {
@@ -118,7 +120,7 @@ const Home: React.FC = () => {
       <TaskFilter onAddTask={handleAddClick} onFilterChange={handleFilterChange} />
 
       {activeTab === "list" ? (
-        <TaskList checkRows={checkRows} onClickTask={handleOpenTask} onRowCheck={handleRowCheck} tasks={filteredTasks} onDragEnd={() => { }} />
+        <TaskList checkRows={checkRows} onClickTask={handleOpenTask} onRowCheck={handleRowCheck} tasks={filteredTasks} onDragEnd={handleOnDragEnd} />
       ) : (
         <TaskBoard onDragEnd={handleOnDragEnd} tasks={filteredTasks} onClickTask={handleOpenTask} />
       )}
