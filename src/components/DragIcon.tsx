@@ -1,8 +1,11 @@
 import React from 'react'
 
 const DragIcon: React.FC = () => {
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  }
   return (
-    <div className="mr-4 cursor-grab">
+    <div onClick={handleClick} className="mr-4 cursor-grab">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"

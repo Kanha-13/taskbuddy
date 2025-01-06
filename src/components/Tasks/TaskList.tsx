@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import AddTaskRow from "./AddTaskRow.tsx";
 import ListHead from "./ListHead.tsx";
@@ -22,6 +22,7 @@ interface TaskListProps {
 }
 
 const TaskList: React.FC<TaskListProps> = ({ tasks, onDragEnd, onClickTask, checkRows, onRowCheck }) => {
+  const [isDroppableMounted, setMountDroppable] = useState<boolean>(false);
   const [sections, setSections] = useState({
     todo: true,
     "in-progress": true,
@@ -61,12 +62,14 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onDragEnd, onClickTask, chec
     return ""
   };
 
-
+  useEffect(() => {
+    setMountDroppable(true)
+  }, [])
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <ListHead />
-      {Object.entries(categorizedTasks).map(([status, tasks]) => (
+      {isDroppableMounted && Object.entries(categorizedTasks).map(([status, tasks]) => (
         <Droppable key={status} droppableId={status}>
           {(provided) => (
             <div

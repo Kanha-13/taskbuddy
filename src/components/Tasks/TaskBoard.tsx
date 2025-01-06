@@ -1,5 +1,5 @@
 // src/components/TaskBoard.tsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import TaskBoardCard from "./TaskBoardCard.tsx";
 
@@ -20,6 +20,7 @@ interface TaskBoardProps {
 
 const TaskBoard: React.FC<TaskBoardProps> = ({ tasks, onClickTask, onDragEnd }) => {
   const [isDrop, setIsDrop] = useState<Boolean>(false)
+  const [isDroppableMounted, setIsDroppableMounted] = useState<Boolean>(false)
   const [sections, setSections] = useState({
     todo: true,
     "in-progress": true,
@@ -43,10 +44,14 @@ const TaskBoard: React.FC<TaskBoardProps> = ({ tasks, onClickTask, onDragEnd }) 
     }
   };
 
+  useEffect(() => {
+    setIsDroppableMounted(true)
+  }, [])
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="grid grid-cols-3 font-mulish gap-5 mt-10 w-4/5 h-[71vh]">
-        {Object.entries(categorizedTasks).map(([status, tasks]) => (
+        {isDroppableMounted && Object.entries(categorizedTasks).map(([status, tasks]) => (
           <Droppable key={status} droppableId={status}>
             {(provided, snapshot) => (
               <div className="bg-gray-100 h-full p-4 rounded-2xl border-2 border-[#585751] border-opacity-[7%]">

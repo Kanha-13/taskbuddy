@@ -101,7 +101,6 @@ const TaskListRow: React.FC<TaskListRowProps> = ({ isChecked, task, index, onCli
       <div className="w-16 h-6 flex justify-center items-center relative" onClick={handleDropMenu}>
         <Ellipses />
         {
-          // isDrop ? <Dropdown images={[EditIcon, DeleteIcon]} options={["Edit", "Delete"]} onSelect={handleSelect} height="h-auto" width="w-[10%]" /> : <></>
           isDrop ? <Dropdown height="h-auto" width="w-[230%]" position="top-full right-[24%]" >
             <li className="flex pl-2 pr-4 hover:bg-pink-100 rounded-md font-semibold"><img className="mr-3" src={EditIcon} /> Edit</li>
             <li className="flex pl-2 pt-2 pr-4 hover:bg-pink-100 rounded-md font-semibold text-[#DA2F2F]"><img className="mr-3" src={DeleteIcon} /> Delete</li>
