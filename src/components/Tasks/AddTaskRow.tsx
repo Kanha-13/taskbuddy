@@ -5,25 +5,33 @@ import DateRangePicker from "../DateRangePicker.tsx";
 import { format } from "date-fns";
 import Dropdown from "../DropDown.tsx";
 
-type Task = {
+interface Task {
+  id: string;
   title: string;
   status: "todo" | "in-progress" | "completed" | "";
   category: "Work" | "Personal" | "";
   dueDate: Date | string | null;
-};
+  files?: string[];
+  description?: string;
+}
 
 interface DateRange {
   startDate: Date | string | null;
   endDate: Date | string | null;
 }
 
-const AddTaskRow: React.FC = () => {
+interface AddTaskRowProps {
+  onSave: (task: Task) => void;
+}
+
+const AddTaskRow: React.FC<AddTaskRowProps> = ({ onSave }) => {
   const [dateRange, setDateRange] = useState<DateRange>({ startDate: null, endDate: null });
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [isStatusOpen, setIsStatusOpen] = useState(false);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [task, setTask] = useState<Task>({
+    id: "",
     title: "",
     status: "",
     category: "",
@@ -41,8 +49,8 @@ const AddTaskRow: React.FC = () => {
   };
 
   const handleSave = () => {
-    console.log("Task saved:", task);
-    setTask({ title: "", status: "", category: "", dueDate: null });
+    onSave(task)
+    setTask({ id: "", title: "", status: "", category: "", dueDate: null });
     setIsAdding(false);
   };
 
@@ -135,7 +143,7 @@ const AddTaskRow: React.FC = () => {
               ADD
               <EnterIcon className="ml-2 w-5 h-5" />
             </div>
-            <button onClick={() => setIsAdding(!isAdding)} className="font-semibold">
+            <button onClick={() => setIsAdding(!isAdding)} className="font-semibold outline-none">
               CANCEL
             </button>
           </div>

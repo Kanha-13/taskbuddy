@@ -7,9 +7,11 @@ import TaskBoardCard from "./TaskBoardCard.tsx";
 interface Task {
   id: string;
   title: string;
-  category: string;
-  dueDate: string;
-  status: "todo" | "in-progress" | "completed";
+  status: "todo" | "in-progress" | "completed" | "";
+  category: "Work" | "Personal" | "";
+  dueDate: Date | string | null;
+  files?: string[];
+  description?: string;
 }
 
 interface TaskBoardProps {

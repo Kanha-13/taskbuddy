@@ -8,9 +8,11 @@ import TaskListRow from "./TaskListRow.tsx";
 interface Task {
   id: string;
   title: string;
-  category: string;
-  dueDate: string;
-  status: "todo" | "in-progress" | "completed";
+  status: "todo" | "in-progress" | "completed" | "";
+  category: "Work" | "Personal" | "";
+  dueDate: Date | string | null;
+  files?: string[];
+  description?: string;
 }
 
 interface TaskListProps {
@@ -19,11 +21,12 @@ interface TaskListProps {
   onDragEnd: (result: any) => void;
   onClickTask: (id: string) => void;
   onRowCheck: (id: string) => void;
-  onChangeStatus: (id: string, status: "todo" | "in-progress" | "completed") => void;
+  onChangeStatus: (id: string, status: "todo" | "in-progress" | "completed" | "") => void;
   onDelete: (id: string) => void;
+  onCreateNewTask: (task: Task) => void;
 }
 
-const TaskList: React.FC<TaskListProps> = ({ tasks, onChangeStatus, onDelete, onDragEnd, onClickTask, checkRows, onRowCheck }) => {
+const TaskList: React.FC<TaskListProps> = ({ tasks, onChangeStatus, onDelete, onDragEnd, onClickTask, checkRows, onRowCheck, onCreateNewTask }) => {
   const [isDroppableMounted, setMountDroppable] = useState<boolean>(false);
   const [sections, setSections] = useState({
     todo: true,
@@ -93,7 +96,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onChangeStatus, onDelete, on
                 </h2>
                 <DropIcon color={getArrowColor(status)} size="w-6 h-6 mr-3" isOpen={sections[status as "todo" | "in-progress" | "completed"]} />
               </div>
-              {status === "todo" ? <AddTaskRow /> : null}
+              {status === "todo" ? <AddTaskRow onSave={onCreateNewTask} /> : null}
               {sections[status as "todo" | "in-progress" | "completed"] && (
                 <div className="space-y-2 bg-boxGray rounded-b-xl">
                   {tasks.map((task, index) => (

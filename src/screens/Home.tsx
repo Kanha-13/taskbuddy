@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { moveTask, filterTasks, deleteTask } from '../features/tasks/taskSlice';
+import { moveTask, filterTasks, deleteTask, addTask, updateTask } from '../features/tasks/taskSlice';
 import TaskList from '../components/Tasks/TaskList';
 import TaskFilter from '../components/Tasks/TaskFilter';
 import TaskBoard from '../components/Tasks/TaskBoard';
@@ -13,9 +13,9 @@ import { RootState } from '../store/store';
 interface Task {
   id: string;
   title: string;
-  status: "todo" | "in-progress" | "completed";
-  category: string;
-  dueDate: string;
+  status: "todo" | "in-progress" | "completed" | "";
+  category: "Work" | "Personal" | "";
+  dueDate: Date | string | null;
   files?: string[];
   description?: string;
 }
@@ -37,6 +37,18 @@ const Home: React.FC = () => {
 
   const handleAddClick = () => {
     setIsForm(!isForm);
+    setActiveTask(null);
+  };
+
+  const handleTaskCreate = (newTask: Task) => {
+    dispatch(addTask(newTask));
+    setIsForm(false);
+    setActiveTask(null);
+  };
+
+  const handleTaskUpdate = (update: Task) => {
+    dispatch(updateTask(update));
+    setIsForm(false);
     setActiveTask(null);
   };
 
@@ -75,7 +87,7 @@ const Home: React.FC = () => {
     dispatch(deleteTask(taskId));
   };
 
-  const handleChangeStatus = (taskId: string, newStatus: 'todo' | 'in-progress' | 'completed') => {
+  const handleChangeStatus = (taskId: string, newStatus: 'todo' | 'in-progress' | 'completed' | '') => {
     dispatch(moveTask({ taskId, newStatus }));
   };
 
@@ -106,6 +118,7 @@ const Home: React.FC = () => {
       {activeTab === 'list' ? (
         <TaskList
           tasks={filteredTasks}
+          onCreateNewTask={handleTaskCreate}
           onChangeStatus={handleChangeStatus}
           onClickTask={handleOpenTask}
           onRowCheck={handleRowCheck}
@@ -116,7 +129,7 @@ const Home: React.FC = () => {
       ) : (
         <TaskBoard onDragEnd={handleOnDragEnd} tasks={filteredTasks} onClickTask={handleOpenTask} onDelete={handleDeleteRow} />
       )}
-      {isForm && <TaskForm mode={activeTask ? 'update' : 'create'} taskData={activeTask} onClose={() => setIsForm(false)} onSubmit={() => { }} />}
+      {isForm && <TaskForm mode={activeTask ? 'update' : 'create'} taskData={activeTask} onClose={() => setIsForm(false)} onSubmit={handleTaskCreate} onUpdate={handleTaskUpdate} />}
       {isRowsChecked && (
         <MultiRowsCheckModal
           count={checkRows.length}

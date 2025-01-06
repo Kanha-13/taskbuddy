@@ -3,10 +3,11 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface Task {
   id: string;
   title: string;
-  status: 'todo' | 'in-progress' | 'completed';
-  category: string;
-  dueDate: string;
+  status: "todo" | "in-progress" | "completed" | "";
+  category: "Work" | "Personal" | "";
+  dueDate: Date | string | null;
   files?: string[];
+  description?: string;
 }
 
 interface TaskState {
@@ -31,6 +32,7 @@ const taskSlice = createSlice({
   initialState,
   reducers: {
     addTask(state, action: PayloadAction<Task>) {
+      if (!action.payload.id) action.payload.id = `${state.tasks.length + 1}`;
       state.tasks.push(action.payload);
     },
     updateTask(state, action: PayloadAction<Task>) {
@@ -42,7 +44,7 @@ const taskSlice = createSlice({
     deleteTask(state, action: PayloadAction<string>) {
       state.tasks = state.tasks.filter((task) => task.id !== action.payload);
     },
-    changeTaskStatus(state, action: PayloadAction<{ taskId: string; status: 'todo' | 'in-progress' | 'completed' }>) {
+    changeTaskStatus(state, action: PayloadAction<{ taskId: string; status: 'todo' | 'in-progress' | 'completed' | '' }>) {
       const { taskId, status } = action.payload;
       const task = state.tasks.find((task) => task.id === taskId);
       if (task) {
@@ -76,7 +78,7 @@ const taskSlice = createSlice({
 
       state.filteredTasks = filtered;
     },
-    moveTask(state, action: PayloadAction<{ taskId: string; newStatus: 'todo' | 'in-progress' | 'completed' }>) {
+    moveTask(state, action: PayloadAction<{ taskId: string; newStatus: 'todo' | 'in-progress' | 'completed' | '' }>) {
       const { taskId, newStatus } = action.payload;
       const task = state.tasks.find((task) => task.id === taskId);
       if (task) {

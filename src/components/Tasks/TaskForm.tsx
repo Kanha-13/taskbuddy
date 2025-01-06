@@ -13,9 +13,9 @@ const logs = [
 interface Task {
   id: string;
   title: string;
-  status: "todo" | "in-progress" | "completed";
-  category: string;
-  dueDate: string;
+  status: "todo" | "in-progress" | "completed" | "";
+  category: "Work" | "Personal" | "";
+  dueDate: Date | string | null;
   files?: string[];
   description?: string;
 }
@@ -23,11 +23,12 @@ interface Task {
 interface TaskFormProps {
   taskData?: Task | undefined | null;
   onSubmit: (task: Task) => void;
+  onUpdate: (task: Task) => void;
   onClose: () => void; // To handle closing the modal
   mode: "update" | "create";
 }
 
-const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, onClose, mode, taskData }) => {
+const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, onUpdate, onClose, mode, taskData }) => {
   const [isActive, setIsActive] = useState<Boolean>(false);
 
   const [task, setTask] = useState<Task>({
@@ -50,7 +51,17 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, onClose, mode, taskData }
   };
 
   const handleSubmit = () => {
-    onSubmit(task);
+    if (mode == "create")
+      onSubmit(task);
+    else onUpdate(task);
+    setTask({
+      id: "",
+      title: "",
+      status: "todo",
+      category: "",
+      dueDate: "",
+      files: [],
+    })
   }
 
   const getWidth = () => {

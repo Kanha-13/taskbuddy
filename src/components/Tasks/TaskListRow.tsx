@@ -11,9 +11,11 @@ import { format } from "date-fns";
 interface Task {
   id: string;
   title: string;
-  category: string;
-  dueDate: string;
-  status: "todo" | "in-progress" | "completed";
+  status: "todo" | "in-progress" | "completed" | "";
+  category: "Work" | "Personal" | "";
+  dueDate: Date | string | null;
+  files?: string[];
+  description?: string;
 }
 
 interface TaskListRowProps {
@@ -24,7 +26,7 @@ interface TaskListRowProps {
   snapshot: any;
   onClick: (id: string) => void;
   onRowCheck: (id: string) => void;
-  onEdit: (id: string, status: "todo" | "in-progress" | "completed") => void;
+  onEdit: (id: string, status: "todo" | "in-progress" | "completed" | "") => void;
   onDelete: (id: string) => void;
 }
 
@@ -42,7 +44,7 @@ const TaskListRow: React.FC<TaskListRowProps> = ({ onEdit, onDelete, isChecked, 
     onClick(task.id);
   }
 
-  const handleStatusChange = (e: React.MouseEvent, newStatus: string) => {
+  const handleStatusChange = (e: React.MouseEvent, newStatus: "todo" | "in-progress" | "completed") => {
     e.stopPropagation();
     onEdit(task.id, newStatus);
   }
@@ -52,7 +54,7 @@ const TaskListRow: React.FC<TaskListRowProps> = ({ onEdit, onDelete, isChecked, 
     return "bg-none"
   };
 
-  const getDateLabel = (date: string) => {
+  const getDateLabel = (date: Date | string | null) => {
     if (new Date().setHours(0, 0, 0, 0) === new Date(date).setHours(0, 0, 0, 0)) return "Today"
     return format(task.dueDate, "dd MMM, yyyy");
   }

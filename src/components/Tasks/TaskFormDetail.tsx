@@ -10,9 +10,9 @@ import DropIcon from '../DropIcon.tsx';
 interface Task {
   id: string;
   title: string;
-  status: "todo" | "in-progress" | "completed";
-  category: string;
-  dueDate: string;
+  status: "todo" | "in-progress" | "completed" | "";
+  category: "Work" | "Personal" | "";
+  dueDate: Date | string | null;
   files?: string[];
   description?: string;
 }
@@ -74,8 +74,8 @@ const TaskFormDetail: React.FC<TaskFormDetailProps> = ({ taskDetails, handleChan
             // onChange={(e) => setCategory(e.target.value)}
             className="flex justify-start items-center w-full"
           >
-            <div className={`cursor-pointer text-xs text-center rounded-full p-2 border-2 border-black border-opacity-10 w-[40%] ${getBg("Work")} font-bold`}>Work</div>
-            <div className={`cursor-pointer text-xs text-center rounded-full p-2 ml-3 border-2 border-black border-opacity-10 w-[40%] ${getBg("Personal")} font-bold`}>Personal</div>
+            <div onClick={() => handleChange("category", "Work")} className={`cursor-pointer text-xs text-center rounded-full p-2 border-2 border-black border-opacity-10 w-[40%] ${getBg("Work")} font-bold`}>Work</div>
+            <div onClick={() => handleChange("category", "Personal")} className={`cursor-pointer text-xs text-center rounded-full p-2 ml-3 border-2 border-black border-opacity-10 w-[40%] ${getBg("Personal")} font-bold`}>Personal</div>
           </div>
         </div>
         <div className="w-1/3 cursor-pointer relative mr-3">
