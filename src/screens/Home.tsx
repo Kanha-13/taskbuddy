@@ -118,9 +118,9 @@ const Home: React.FC = () => {
     setTasks(newTaskList);
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     setFilteredTasks(tasks)
-  },[tasks])
+  }, [tasks])
 
   useEffect(() => {
     if (checkRows.length < 1)
@@ -137,7 +137,7 @@ const Home: React.FC = () => {
       {activeTab === "list" ? (
         <TaskList onChangeStatus={handleChangeStatus} checkRows={checkRows} onClickTask={handleOpenTask} onRowCheck={handleRowCheck} tasks={filteredTasks} onDragEnd={handleOnDragEnd} onDelete={handleDeleteRow} />
       ) : (
-        <TaskBoard onChangeStatus={handleChangeStatus} onDragEnd={handleOnDragEnd} tasks={filteredTasks} onClickTask={handleOpenTask} onDelete={handleDeleteRow} />
+        <TaskBoard onDragEnd={handleOnDragEnd} tasks={filteredTasks} onClickTask={handleOpenTask} onDelete={handleDeleteRow} />
       )}
       {isForm ? <TaskForm mode={activeTask?.id ? "update" : "create"} taskData={activeTask} onClose={() => setIsForm(false)} onSubmit={() => { }} /> : <></>}
       {isRowsChecked ? <MultiRowsCheckModal count={checkRows.length} onCancel={() => setCheckRows([])} onChangeStatus={handleMultiChangeStatus} onDelete={handleMultiDeleteRows} /> : <></>}
