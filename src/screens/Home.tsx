@@ -10,7 +10,6 @@ import MultiRowsCheckModal from '../components/Tasks/MultiRowsCheckModal.tsx';
 import useTasks from '../features/tasks/useTask.ts';
 import { useAuth } from '../features/auth/useAuth.ts';
 import { useNavigate } from 'react-router-dom';
-import NoSearchResult from '../components/NoSearchResult.tsx';
 
 const Home: React.FC = () => {
   const {
@@ -139,7 +138,7 @@ const Home: React.FC = () => {
 
   return (
     <div className="md:p-4 md:px-7">
-      <Navbar user={user} />
+      <Navbar user={user} onLogout={handleLogOut} />
       <ViewToggler onLogout={handleLogOut} activeTab={activeTab} setActiveTab={setActiveTab} />
       <TaskFilter onAddTask={handleAddClick} onFilterChange={handleFilterChange} />
 

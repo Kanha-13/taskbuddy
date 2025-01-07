@@ -71,7 +71,6 @@ const TaskFormDetail: React.FC<TaskFormDetailProps> = ({ taskDetails, handleChan
         <div className="w-[60%] md:w-1/3 mr-3">
           <div className="opacity-60 text-xs mb-2">Task Category*</div>
           <div
-            // onChange={(e) => setCategory(e.target.value)}
             className="flex justify-start items-center w-full"
           >
             <div onClick={() => handleChange("category", "Work")} className={`cursor-pointer text-xs text-center rounded-full p-2 border-2 border-black border-opacity-10 w-[40%] ${getBg("Work")} font-bold`}>Work</div>
@@ -87,7 +86,7 @@ const TaskFormDetail: React.FC<TaskFormDetailProps> = ({ taskDetails, handleChan
             <span className="ml-2 text-xs">{dateRange.startDate
               ? `${format(dateRange.startDate, "dd MMMM yyyy")}`
               : "DD/MM/YYYY"}</span>
-            <Calender />
+            <Calender className="bg-transparent focus:bg-transparent active:bg-transparent" />
           </div>
           {isDatePickerOpen && (
             <DateRangePicker mode="single" value={dateRange} onChange={handleDateChange} />

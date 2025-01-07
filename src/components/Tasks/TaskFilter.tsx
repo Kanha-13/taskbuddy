@@ -54,7 +54,7 @@ const TaskFilter: React.FC<TaskFilterProps> = ({ onFilterChange, onAddTask }) =>
   </button>
   return (
     <div className="flex flex-wrap items-center justify-between p-4 pb-0 px-4 gap-4 md:gap-0 md:p-0 mb-4 mt-2 md:mt-4 font-mulish">
-      <div className="flex items-center gap-4 flex-wrap w-full sm:w-1/2">
+      <div className="flex items-center gap-4 flex-wrap w-full md:w-1/2">
         <div className="md:hidden w-full flex">
           {renderAddBtn()}
         </div>
