@@ -12,7 +12,7 @@ const Navbar: React.FC<NavbarProps> = ({ user }) => {
     <nav className="bg-[#FAEEFC] p-3 px-4 shadow-md md:shadow-none md:p-0 md:bg-white font-mulish text-nav_title flex justify-between items-center">
       <div className="flex">
         <img className="hidden md:block" src={taskBlackIcon} />
-        <p className="ml-1 outline-none text-2xl font-semibold">TaskBuddy</p>
+        <p className="ml-1 outline-none text-base md:text-2xl font-semibold">TaskBuddy</p>
       </div>
       <div className="flex items-center">
         <img className="w-10 h-10 rounded-full overflow-hidden" src={photoURL || userImg} />
