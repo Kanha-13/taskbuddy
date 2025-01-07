@@ -58,7 +58,7 @@ const TaskFormDetail: React.FC<TaskFormDetailProps> = ({ taskDetails, handleChan
   }, [taskDetails.dueDate])
 
   return (
-    <div style={{ marginTop: "0px" }} className="overflow-y-auto pt-3 px-6 w-full h-full flex flex-1 flex-col">
+    <div style={{ marginTop: "0px" }} className="overflow-y-auto pt-3 px-3 md:px-6 w-full h-full flex flex-1 flex-col">
       <input
         type="text"
         placeholder="Task Title"
@@ -67,8 +67,8 @@ const TaskFormDetail: React.FC<TaskFormDetailProps> = ({ taskDetails, handleChan
         className="border-2 border-black border-opacity-10 bg-[#FAFAFA] rounded-lg p-2 w-full"
       />
       <TextEditor value={taskDetails.description} onchange={(text) => handleChange("description", text)} maxCharacters={300} />
-      <div className="w-full flex mt-2 items-center">
-        <div className="w-1/3 mr-3">
+      <div className="w-full font-semibold gap-6 md:gap-0 flex flex-wrap md:flex-nowrap mt-2 items-center">
+        <div className="w-[60%] md:w-1/3 mr-3">
           <div className="opacity-60 text-xs mb-2">Task Category*</div>
           <div
             // onChange={(e) => setCategory(e.target.value)}
@@ -78,7 +78,7 @@ const TaskFormDetail: React.FC<TaskFormDetailProps> = ({ taskDetails, handleChan
             <div onClick={() => handleChange("category", "Personal")} className={`cursor-pointer text-xs text-center rounded-full p-2 ml-3 border-2 border-black border-opacity-10 w-[40%] ${getBg("Personal")} font-bold`}>Personal</div>
           </div>
         </div>
-        <div className="w-1/3 cursor-pointer relative mr-3">
+        <div className="w-[60%] md:w-1/3 cursor-pointer relative mr-3">
           <div className="opacity-60 text-xs mb-2">Due on*</div>
           <div
             onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}
@@ -93,16 +93,7 @@ const TaskFormDetail: React.FC<TaskFormDetailProps> = ({ taskDetails, handleChan
             <DateRangePicker mode="single" value={dateRange} onChange={handleDateChange} />
           )}
         </div>
-        {/* <div className="w-1/3 mr-3">
-          <div className="opacity-60 text-xs mb-2">Due on*</div>
-          <input
-            type="date"
-            value={taskDetails.dueDate}
-            onChange={(e) => handleChange("dueDate", e)}
-            className="border-2 border-black border-opacity-10 bg-[#FAFAFA] rounded-lg p-2 w-full"
-          />
-        </div> */}
-        <div className="w-1/3 text-xs cursor-pointer relative mr-3">
+        <div className="w-[60%] md:w-1/3 text-xs cursor-pointer relative mr-3">
           <div className="opacity-60 text-xs mb-2">Task Status*</div>
           <div
             onClick={() => setIsStatusOpen(!isStatusOpen)}

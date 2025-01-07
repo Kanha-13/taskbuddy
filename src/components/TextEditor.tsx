@@ -49,7 +49,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, maxCharacters, onchange 
   const isMaxReached = currentContent.getPlainText().length >= maxCharacters;
 
   return (
-    <div className='border-2 border-black rounded-lg my-4 min-h-[25%] flex flex-col justify-between p-2 px-3 bg-[#FAFAFA] border-opacity-10'>
+    <div className='border-2 border-black rounded-lg my-4 min-h-28 md:min-h-[25%] flex flex-col justify-between px-3 pt-1 md:p-2 md:px-3 bg-[#FAFAFA] border-opacity-10'>
       <div className='w-full h-auto'>
         <Editor placeholder={<div className='flex'><img src={descriptionIcon} /> Description</div>} editorState={editorState} onChange={handleEditorChange} />
       </div>
@@ -72,7 +72,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, maxCharacters, onchange 
             <img src={unorderedListIcon} />
           </div>
         </div>
-        <small className='w-1/4 text-end text-[#A2A3A7]'>
+        <small className='w-max text-end text-[#A2A3A7]'>
           {charCount}/{maxCharacters} characters
         </small>
       </div>
