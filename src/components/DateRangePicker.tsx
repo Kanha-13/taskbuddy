@@ -11,12 +11,15 @@ interface DateRangePickerProps {
   mode: 'single' | 'range';
   onChange: (dateRange: DateRange) => void;
   value: DateRange;
+  position?: string;
 }
 
-const DateRangePicker: React.FC<DateRangePickerProps> = ({ mode="range", value, onChange }) => {
+const DateRangePicker: React.FC<DateRangePickerProps> = ({ mode = "range", value, onChange, position = "top-full left-0" }) => {
   const [range, setRange] = useState<DateRange>(value);
   const [hoverDate, setHoverDate] = useState<Date | null>(null);
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [isselectMonth, setSelectMonth] = useState<boolean>(false);
+  const [isselectYear, setSelectYear] = useState<boolean>(false);
 
   const months = Array.from({ length: 12 }, (_, i) => format(new Date(0, i), 'MMMM'));
   const years = Array.from({ length: 100 }, (_, i) => new Date().getFullYear() - 50 + i);
@@ -37,11 +40,13 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ mode="range", value, 
     }
   };
 
-  const handleMonthChange = (newmonth: string) => {
+  const handleMonthChange = (e: React.MouseEvent, newmonth: string) => {
+    e.stopPropagation();
     setCurrentMonth(new Date(`${newmonth} 1, ${currentMonth.getFullYear()}`));
   };
 
-  const handleYearChange = (newyear: number) => {
+  const handleYearChange = (e: React.MouseEvent, newyear: number) => {
+    e.stopPropagation();
     setCurrentMonth(new Date(newyear, currentMonth.getMonth()));
   };
 
@@ -82,15 +87,14 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ mode="range", value, 
       days.push(
         <div
           key={date.toDateString()}
-          className={`flex items-center justify-center cursor-pointer w-full aspect-square ${
-            isSelected
-              ? 'bg-secondaryColor text-white rounded-md'
-              : isInRange
+          className={`flex items-center justify-center cursor-pointer w-full aspect-square ${isSelected
+            ? 'bg-secondaryColor text-white rounded-md'
+            : isInRange
               ? 'bg-rangeColor h-[60%] self-center'
               : isHovered
-              ? 'bg-purple-100'
-              : 'hover:bg-gray-100'
-          }`}
+                ? 'bg-purple-100'
+                : 'hover:bg-gray-100'
+            }`}
           onClick={() => handleDateClick(dateCopy)}
           onMouseEnter={() => setHoverDate(dateCopy)}
         >
@@ -101,9 +105,6 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ mode="range", value, 
 
     return days;
   };
-
-  const [isselectMonth, setSelectMonth] = useState<boolean>(false);
-  const [isselectYear, setSelectYear] = useState<boolean>(false);
 
   const DroperIcon = ({ direction }: { direction: boolean }) => {
     return (
@@ -117,38 +118,47 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ mode="range", value, 
     );
   };
 
+  const handleOpenMonth = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSelectMonth(!isselectMonth)
+  }
+  const handleOpenYear = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSelectYear(!isselectYear)
+  }
+
   return (
-    <div className="absolute w-[15vw] top-full left-0 font-mulish bg-white border rounded-lg shadow-lg p-4 mt-2 z-50">
+    <div className={`absolute w-max md:w-[15vw] text-xs ${position} font-mulish bg-white border rounded-lg shadow-lg p-4 mt-2 z-50`}>
       <div className="flex justify-center mb-4">
-        <div onClick={() => setSelectMonth(!isselectMonth)} className="flex justify-center items-center cursor-pointer relative w-[60%]">
+        <div onClick={handleOpenMonth} className="mr-2 text-center w-max flex justify-center items-center cursor-pointer relative">
           {format(new Date(0, currentMonth.getMonth()), 'MMMM')}
           <DroperIcon direction={isselectMonth} />
           {isselectMonth && (
-            <Dropdown height="h-auto" width="w-[100%]">
+            <Dropdown height="h-auto" width="w-max" position='right-34 top-full'>
               {months.map((month, index) => (
-                <div key={index} onClick={() => handleMonthChange(month)} className="px-2 mb-1">
+                <div key={index} onClick={(e) => handleMonthChange(e, month)} className="px-2 w-max mb-1">
                   {month}
                 </div>
               ))}
             </Dropdown>
           )}
         </div>
-        <div onClick={() => setSelectYear(!isselectYear)} className="flex justify-center items-center cursor-pointer relative w-[30%]">
+        <div onClick={handleOpenYear} className="ml-2 text-center w-max flex justify-center items-center cursor-pointer relative">
           {currentMonth.getFullYear()}
           <DroperIcon direction={isselectYear} />
           {isselectYear && (
-            <Dropdown height="h-[30vh]" width="w-[120%]">
+            <Dropdown height="h-[30vh]" width="w-max" position='right-34 top-full'>
               {years.map((year) => (
-                <div key={year} onClick={() => handleYearChange(year)} className="text-center">
+                <div key={year} onClick={(e) => handleYearChange(e, year)} className="px-2 w-max mb-1">
                   {year}
                 </div>
               ))}
             </Dropdown>
           )}
         </div>
-      </div>
+      </div >
 
-      <div className="grid grid-cols-7 gap-2 mb-2 text-center font-bold text-sm">
+      <div className="grid grid-cols-7 md:gap-2 mb-2 text-center font-bold">
         {daysOfWeek.map((day) => (
           <div key={day} className="text-gray-600">
             {day}
@@ -157,7 +167,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ mode="range", value, 
       </div>
 
       <div className="grid grid-cols-7 gap-0">{renderDays(currentMonth)}</div>
-    </div>
+    </div >
   );
 };
 

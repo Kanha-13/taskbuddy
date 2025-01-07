@@ -81,16 +81,16 @@ const TaskFormDetail: React.FC<TaskFormDetailProps> = ({ taskDetails, handleChan
           <div className="opacity-60 text-xs mb-2">Due on*</div>
           <div
             onClick={() => setIsDatePickerOpen(!isDatePickerOpen)}
-            className="flex justify-between items-center border-2 border-black border-opacity-10 bg-[#FAFAFA] rounded-lg p-2 w-full"
+            className="flex relative justify-between items-center border-2 border-black border-opacity-10 bg-[#FAFAFA] rounded-lg p-2 w-full"
           >
             <span className="ml-2 text-xs">{dateRange.startDate
               ? `${format(dateRange.startDate, "dd MMMM yyyy")}`
               : "DD/MM/YYYY"}</span>
             <Calender className="bg-transparent focus:bg-transparent active:bg-transparent" />
+            {isDatePickerOpen && (
+              <DateRangePicker mode="single" position='top-full right-0' value={dateRange} onChange={handleDateChange} />
+            )}
           </div>
-          {isDatePickerOpen && (
-            <DateRangePicker mode="single" value={dateRange} onChange={handleDateChange} />
-          )}
         </div>
         <div className="w-[60%] md:w-1/3 text-xs cursor-pointer relative mr-3">
           <div className="opacity-60 text-xs mb-2">Task Status*</div>
