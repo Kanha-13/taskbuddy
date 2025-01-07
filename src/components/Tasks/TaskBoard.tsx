@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import TaskBoardCard from "./TaskBoardCard.tsx";
+import NoSearchResult from "../NoSearchResult.tsx";
 
 
 interface Task {
@@ -19,9 +20,10 @@ interface TaskBoardProps {
   onDragEnd: (result: any) => void;
   onClickTask: (id: string) => void;
   onDelete: (id: string) => void;
+  isSearching: boolean;
 }
 
-const TaskBoard: React.FC<TaskBoardProps> = ({ tasks, onDelete, onClickTask, onDragEnd }) => {
+const TaskBoard: React.FC<TaskBoardProps> = ({ isSearching, tasks, onDelete, onClickTask, onDragEnd }) => {
   const [isDrop, setIsDrop] = useState<Boolean>(false)
   const [isDroppableMounted, setIsDroppableMounted] = useState<Boolean>(false)
   const [sections, setSections] = useState({
@@ -53,22 +55,22 @@ const TaskBoard: React.FC<TaskBoardProps> = ({ tasks, onDelete, onClickTask, onD
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="grid grid-cols-3 font-mulish gap-5 mt-10 w-4/5 h-[71vh]">
+      {isSearching && tasks.length < 1 ? <NoSearchResult /> : (<div className="grid grid-cols-3 font-mulish gap-5 mt-10 w-4/5 h-[71vh] overflow-auto">
         {isDroppableMounted && Object.entries(categorizedTasks).map(([status, tasks]) => (
           <Droppable type="group" key={status} droppableId={status}>
             {(provided, snapshot) => (
-              <div className="bg-gray-100 h-full p-4 rounded-2xl border-2 border-[#585751] border-opacity-[7%]">
+              <div className="bg-gray-100 h-max p-4 rounded-2xl border-2 border-[#585751] border-opacity-[7%]">
                 <div className={`${getSectionBgColor(status)} w-max px-3 py-1 rounded-md`}>
                   <h2 className="text-sm font-semibold capitalize">
                     {status.replace("-", " ")}
                   </h2>
                 </div>
 
-                {sections[status as "todo" | "in-progress" | "completed"] && (
+                {isSearching && tasks.length < 1 ? <></> : (sections[status as "todo" | "in-progress" | "completed"] && (
                   <div
                     {...provided.droppableProps}
                     ref={provided.innerRef}
-                    className="mt-4 space-y-2"
+                    className="mt-4 h-[60vh] overflow-auto"
                   >
                     {tasks.map((task, index) => (
                       <Draggable key={task.id} draggableId={task.id} index={index}>
@@ -84,13 +86,18 @@ const TaskBoard: React.FC<TaskBoardProps> = ({ tasks, onDelete, onClickTask, onD
                       </Draggable>
                     ))}
                     {provided.placeholder}
+                    {tasks.length < 1 && (
+                      <div className="h-full max-h-full text-[#2F2F2F] font-mulish flex justify-center items-center font-medium">
+                        No task in {status}
+                      </div>
+                    )}
                   </div>
-                )}
+                ))}
               </div>
             )}
           </Droppable>
         ))}
-      </div>
+      </div>)}
     </DragDropContext >
   );
 };

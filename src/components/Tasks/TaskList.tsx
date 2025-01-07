@@ -4,6 +4,7 @@ import AddTaskRow from "./AddTaskRow.tsx";
 import ListHead from "./ListHead.tsx";
 import DropIcon from "../DropIcon.tsx";
 import TaskListRow from "./TaskListRow.tsx";
+import NoSearchResult from "../NoSearchResult.tsx";
 
 interface Task {
   id: string;
@@ -24,9 +25,10 @@ interface TaskListProps {
   onChangeStatus: (id: string, status: "todo" | "in-progress" | "completed" | "") => void;
   onDelete: (id: string) => void;
   onCreateNewTask: (task: Task) => void;
+  isSearching: boolean;
 }
 
-const TaskList: React.FC<TaskListProps> = ({ tasks, onChangeStatus, onDelete, onDragEnd, onClickTask, checkRows, onRowCheck, onCreateNewTask }) => {
+const TaskList: React.FC<TaskListProps> = ({ tasks, onChangeStatus, onDelete, onDragEnd, onClickTask, checkRows, onRowCheck, onCreateNewTask, isSearching }) => {
   const [isDroppableMounted, setMountDroppable] = useState<boolean>(false);
   const [sections, setSections] = useState({
     todo: true,
@@ -74,55 +76,63 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onChangeStatus, onDelete, on
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <ListHead />
-      {isDroppableMounted && Object.entries(categorizedTasks).map(([status, tasks]) => (
-        <Droppable key={status} droppableId={status}>
-          {(provided) => (
-            <div
-              className="mb-8 rounded-xl"
-              ref={provided.innerRef}
-              {...provided.droppableProps}
-            >
-              <div
-                onClick={() =>
-                  toggleSection(status as "todo" | "in-progress" | "completed")
-                }
-                className={`cursor-pointer ${getSectionBgColor(
-                  status
-                )} p-2 px-4 shadow-sm flex justify-between items-center rounded-t-xl`}
-              >
-                <h2 className="text-lg font-semibold capitalize">
-                  {status.replace("-", " ")} ({tasks.length})
-                </h2>
-                <DropIcon color={getArrowColor(status)} size="w-6 h-6 mr-3" isOpen={sections[status as "todo" | "in-progress" | "completed"]} />
-              </div>
-              {status === "todo" ? <AddTaskRow onSave={onCreateNewTask} /> : null}
-              {sections[status as "todo" | "in-progress" | "completed"] && (
-                <div className="space-y-2 bg-boxGray rounded-b-xl">
-                  {tasks.map((task, index) => (
-                    <Draggable key={task.id} draggableId={task.id} index={index}>
-                      {(provided, snapshot) => (
-                        <TaskListRow
-                          isChecked={checkRows.includes(task.id)}
-                          task={task}
-                          onEdit={onChangeStatus}
-                          onDelete={onDelete}
-                          index={index}
-                          provided={provided}
-                          snapshot={snapshot}
-                          onClick={onClickTask}
-                          onRowCheck={onRowCheck}
-                        />
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </div>
-              )}
-            </div>
-          )}
-        </Droppable>
-      ))}
+      <div className="border-t-2 border-opacity-10 border-black mt-8">
+        {isSearching && tasks.length < 1 ? <NoSearchResult /> :
+          <>
+            <ListHead />
+            {isDroppableMounted && Object.entries(categorizedTasks).map(([status, tasks]) => (
+              <Droppable key={status} droppableId={status}>
+                {(provided) => (
+                  <div
+                    className={`mb-8 rounded-xl border-2 border-[#EAECF0] ${sections[status as "todo" | "in-progress" | "completed"] ? "" : "overflow-hidden"}`}
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                  >
+                    <div
+                      onClick={() =>
+                        toggleSection(status as "todo" | "in-progress" | "completed")
+                      }
+                      className={`cursor-pointer ${getSectionBgColor(
+                        status
+                      )} p-2 px-4 shadow-sm flex justify-between items-center rounded-t-xl`}
+                    >
+                      <h2 className="text-lg font-semibold capitalize">
+                        {status.replace("-", " ")} ({tasks.length})
+                      </h2>
+                      <DropIcon color={getArrowColor(status)} size="w-6 h-6 mr-3" isOpen={sections[status as "todo" | "in-progress" | "completed"]} />
+                    </div>
+                    {status === "todo" ? <AddTaskRow onSave={onCreateNewTask} /> : null}
+                    {sections[status as "todo" | "in-progress" | "completed"] && (
+                      <div className="space-y-2 bg-boxGray rounded-b-xl">
+                        {tasks.map((task, index) => (
+                          <Draggable key={task.id} draggableId={task.id} index={index}>
+                            {(provided, snapshot) => (
+                              <TaskListRow
+                                isChecked={checkRows.includes(task.id)}
+                                task={task}
+                                onEdit={onChangeStatus}
+                                onDelete={onDelete}
+                                index={index}
+                                provided={provided}
+                                snapshot={snapshot}
+                                onClick={onClickTask}
+                                onRowCheck={onRowCheck}
+                              />
+                            )}
+                          </Draggable>
+                        ))}
+                        {provided.placeholder}
+                        {tasks.length < 1 && <div className="h-[25vh] text-[#2F2F2F] font-mulish flex justify-center items-center font-medium">No task in {status}</div>}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </Droppable>
+            ))}
+          </>
+        }
+
+      </div>
     </DragDropContext>
   );
 };

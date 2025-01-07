@@ -10,6 +10,7 @@ import MultiRowsCheckModal from '../components/Tasks/MultiRowsCheckModal.tsx';
 import useTasks from '../features/tasks/useTask.ts';
 import { useAuth } from '../features/auth/useAuth.ts';
 import { useNavigate } from 'react-router-dom';
+import NoSearchResult from '../components/NoSearchResult.tsx';
 
 const Home: React.FC = () => {
   const {
@@ -30,9 +31,13 @@ const Home: React.FC = () => {
   const [checkRows, setCheckRows] = useState<string[]>([]);
   const [isRowsChecked, setIsRowsChecked] = useState(false);
   const [activeTask, setActiveTask] = useState<Task | undefined | null>(null);
+  const [isSearching, setIsSearching] = useState<boolean>(false)
 
-  const handleFilterChange = (filters: { search: string; category: string; startDate?: Date | null; endDate?: Date | null }) => {
+  const handleFilterChange = (filters: { search: string | ""; category: string; startDate?: Date | null; endDate?: Date | null }) => {
     filterTasksByParams(filters);
+    if (filters.search || filters.category || filters.endDate || filters.startDate)
+      setIsSearching(true);
+    else setIsSearching(false)
   };
 
   const handleAddClick = () => {
@@ -141,6 +146,7 @@ const Home: React.FC = () => {
       {activeTab === 'list' ? (
         <TaskList
           tasks={filteredTasks}
+          isSearching={isSearching}
           onCreateNewTask={handleTaskCreate}
           onChangeStatus={handleChangeStatus}
           onClickTask={handleOpenTask}
@@ -150,7 +156,7 @@ const Home: React.FC = () => {
           onDragEnd={handleOnDragEnd}
         />
       ) : (
-        <TaskBoard onDragEnd={handleOnDragEnd} tasks={filteredTasks} onClickTask={handleOpenTask} onDelete={handleDeleteRow} />
+        <TaskBoard isSearching={isSearching} onDragEnd={handleOnDragEnd} tasks={filteredTasks} onClickTask={handleOpenTask} onDelete={handleDeleteRow} />
       )}
       {isForm && <TaskForm mode={activeTask ? 'update' : 'create'} taskData={activeTask} onClose={() => setIsForm(false)} onSubmit={handleTaskCreate} onUpdate={handleTaskUpdate} />}
       {isRowsChecked && (
