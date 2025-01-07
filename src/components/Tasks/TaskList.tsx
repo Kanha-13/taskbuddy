@@ -95,7 +95,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onChangeStatus, onDelete, on
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="border-t-2 border-opacity-10 border-black mt-8">
+      <div className="px-4 md:p-0 md:border-t-2 border-opacity-10 border-black mt-6 md:mt-8">
         {/* condition to check if the search filter is active and if the user filtered beyond the available task then rendering no search found illustrator */}
         {isSearching && tasks.length < 1 ? (
           <NoSearchResult />
@@ -112,7 +112,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onChangeStatus, onDelete, on
                   <Droppable key={status} droppableId={status}>
                     {(provided) => (
                       <div
-                        className={`mb-8 rounded-xl border-2 border-[#EAECF0] ${sections[status as "todo" | "in-progress" | "completed"] ? "" : "overflow-hidden"}`}
+                        className={`mb-8 rounded-2xl md:border-2 border-[#EAECF0] ${sections[status as "todo" | "in-progress" | "completed"] ? "" : "overflow-hidden"}`}
                         ref={provided.innerRef}
                         {...provided.droppableProps}
                       >
@@ -133,7 +133,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onChangeStatus, onDelete, on
                         {status === "todo" ? <AddTaskRow onSave={onCreateNewTask} /> : null}
                         {/* here rendering the tasks for each section */}
                         {sections[status as "todo" | "in-progress" | "completed"] && (
-                          <div className="space-y-2 bg-boxGray rounded-b-xl">
+                          <div className="space-y-2 bg-boxGray rounded-b-xl pb-2">
                             {tasksToDisplay.map((task, index) => (
                               <Draggable key={task.id} draggableId={task.id} index={index}>
                                 {(provided, snapshot) => (

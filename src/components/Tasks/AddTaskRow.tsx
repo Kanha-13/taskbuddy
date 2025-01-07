@@ -65,13 +65,13 @@ const AddTaskRow: React.FC<AddTaskRowProps> = ({ onSave }) => {
   }
 
   return (
-    <div className="pb-2 font-mulish flex flex-col bg-boxGray">
-      <div onClick={() => setIsAdding(!isAdding)} className="text-opacity-80 font-bold cursor-pointer self-start mt-4 ml-16 pl-6">
+    <div className="hidden md:flex pb-2 font-mulish flex-col bg-boxGray">
+      <div onClick={() => setIsAdding(!isAdding)} className="text-opacity-80 font-bold cursor-pointer self-start mt-4 ml-10 pl-6">
         <span className="text-2xl text-secondaryColor font-semibold">+</span> ADD TASK
       </div>
       {isAdding && (
         <>
-          <div className="font-mulish font-medium text-black flex justify-between items-center border-t-2 border-opacity-10 border-black p-4 ">
+          <div className="mt-2 font-mulish font-medium text-black flex justify-between items-center border-t-2 border-opacity-10 border-black p-4 ">
             <div className="w-4/12">
               <input
                 type="text"
@@ -79,7 +79,7 @@ const AddTaskRow: React.FC<AddTaskRowProps> = ({ onSave }) => {
                 placeholder="Task Title"
                 value={task.title}
                 onChange={handleInputChange}
-                className="p-3 px-20 bg-transparent border-none outline-none"
+                className="p-3 px-16 bg-transparent border-none outline-none"
               />
             </div>
             <div className="w-3/12 cursor-pointer relative">
@@ -109,9 +109,9 @@ const AddTaskRow: React.FC<AddTaskRowProps> = ({ onSave }) => {
               {
                 isStatusOpen &&
                 <Dropdown height="h-auto" width="w-max">
-                  <div onClick={() => setTask({ ...task, status: "todo" })} className={`text-left px-2 mb-1 font-semibold ${getStatusOptionBg("todo")}  hover:bg-pink-100 rounded-sm`}>TO-DO</div>
-                  <div onClick={() => setTask({ ...task, status: "in-progress" })} className={`text-left px-2 mb-1 font-semibold ${getStatusOptionBg("in-progress")}  hover:bg-pink-100 rounded-sm`}>IN PROGRESS</div>
-                  <div onClick={() => setTask({ ...task, status: "completed" })} className={`text-left px-2 mb-1 font-semibold ${getStatusOptionBg("completed")}  hover:bg-pink-100 rounded-sm`}>COMPLETED</div>
+                  <div onClick={() => setTask({ ...task, status: "todo" })} className={`text-xs text-left px-2 mb-1 font-semibold ${getStatusOptionBg("todo")}  hover:bg-pink-100 rounded-sm`}>TO-DO</div>
+                  <div onClick={() => setTask({ ...task, status: "in-progress" })} className={`text-xs text-left px-2 mb-1 font-semibold ${getStatusOptionBg("in-progress")}  hover:bg-pink-100 rounded-sm`}>IN PROGRESS</div>
+                  <div onClick={() => setTask({ ...task, status: "completed" })} className={`text-xs text-left px-2 mb-1 font-semibold ${getStatusOptionBg("completed")}  hover:bg-pink-100 rounded-sm`}>COMPLETED</div>
                 </Dropdown>
               }
             </div>
@@ -128,14 +128,14 @@ const AddTaskRow: React.FC<AddTaskRowProps> = ({ onSave }) => {
               {
                 isCategoryOpen &&
                 <Dropdown height="h-auto" width="w-max">
-                  <div onClick={() => setTask({ ...task, category: "Work" })} className={`text-left px-2 mb-1 font-semibold ${getCatOptionBg("Work")}  hover:bg-pink-100 rounded-sm`}>Work</div>
-                  <div onClick={() => setTask({ ...task, category: "Personal" })} className={`text-left px-2 mb-1 font-semibold ${getCatOptionBg("Personal")}  hover:bg-pink-100 rounded-sm`}>Personal</div>
+                  <div onClick={() => setTask({ ...task, category: "Work" })} className={`text-xs text-left px-2 mb-1 font-semibold ${getCatOptionBg("Work")}  hover:bg-pink-100 rounded-sm`}>Work</div>
+                  <div onClick={() => setTask({ ...task, category: "Personal" })} className={`text-xs text-left px-2 mb-1 font-semibold ${getCatOptionBg("Personal")}  hover:bg-pink-100 rounded-sm`}>Personal</div>
                 </Dropdown>
               }
             </div>
             <div className="w-16">.</div>
           </div>
-          <div className="w-max pl-24 flex">
+          <div className="w-max pl-20 flex">
             <div
               onClick={handleSave}
               className="items-center flex w-24 my-3 mb-5 px-0 font-bold justify-center py-1 mr-6 bg-secondaryColor text-white border-none  rounded-full cursor-pointer"

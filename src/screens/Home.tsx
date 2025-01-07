@@ -133,12 +133,12 @@ const Home: React.FC = () => {
     fetchTasks();
   }, [fetchTasks])
 
-  useEffect(() => {
-    if (!user) navigate("/");
-  }, [user])
+  // useEffect(() => {
+  //   if (!user) navigate("/");
+  // }, [user])
 
   return (
-    <div className="p-4 px-7">
+    <div className="md:p-4 md:px-7">
       <Navbar user={user} />
       <ViewToggler onLogout={handleLogOut} activeTab={activeTab} setActiveTab={setActiveTab} />
       <TaskFilter onAddTask={handleAddClick} onFilterChange={handleFilterChange} />

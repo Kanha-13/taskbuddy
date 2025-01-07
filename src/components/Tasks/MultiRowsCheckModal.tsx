@@ -39,9 +39,9 @@ const MultiRowsCheckModal: React.FC<MultiRowsCheckModalProps> = ({ onDelete, onC
                     ...provided.draggableProps.style,
                     position: "absolute",
                   }} className="pointer-events-auto mb-4 font-mulish w-max flex justify-center items-center">
-                  <div className='w-[30vw] bg-[#1A1C20] h-12 rounded-xl py-8 flex justify-between px-5 items-center' >
-                    <div className='text-xs font-semibold border border-opacity-60 border-white p-2 px-4 text-white rounded-full'>{count} {count > 1 ? "Tasks" : "Task"} selected <span className='ml-2 cursor-pointer' onClick={onCancel}>X</span></div>
-                    <TaskIcon className="mr-10" />
+                  <div className='w-full md:w-[30vw] bg-[#1A1C20] h-12 rounded-xl py-8 flex justify-between px-5 items-center' >
+                    <div className='text-xs text-center font-semibold border w-full md:w-max border-opacity-60 border-white p-2 md:px-4 text-white rounded-full'>{count} {count > 1 ? "Tasks" : "Task"} selected <span className='ml-2 cursor-pointer' onClick={onCancel}>X</span></div>
+                    <TaskIcon className="ml-3 md:ml-0 w-12 md:w-max h-12 md:h-max mr-6 md:mr-10" />
                     <div className="w-3/12 cursor-pointer relative flex items-center">
                       <div
                         onClick={(e) => { e.stopPropagation(); setIsStatusOpen(!isStatusOpen) }}
@@ -52,13 +52,13 @@ const MultiRowsCheckModal: React.FC<MultiRowsCheckModalProps> = ({ onDelete, onC
                       {
                         isStatusOpen &&
                         <Dropdown height="h-auto" width="w-max" position='bottom-[150%] right-0' bgColor="bg-[#1A1C20] text-white" border='border-none'>
-                          <div onClick={(e) => handleStatusChange(e, "todo")} className={`text-left px-2 mb-1 font-semibold hover:bg-gray-700 rounded-sm`}>TO-DO</div>
-                          <div onClick={(e) => handleStatusChange(e, "in-progress")} className={`text-left px-2 mb-1 font-semibold  hover:bg-gray-700 rounded-sm`}>IN PROGRESS</div>
-                          <div onClick={(e) => handleStatusChange(e, "completed")} className={`text-left px-2 mb-1 font-semibold  hover:bg-gray-700 rounded-sm`}>COMPLETED</div>
+                          <div onClick={(e) => handleStatusChange(e, "todo")} className={`text-xs text-left px-2 mb-1 font-semibold hover:bg-gray-700 rounded-sm`}>TO-DO</div>
+                          <div onClick={(e) => handleStatusChange(e, "in-progress")} className={`text-xs text-left px-2 mb-1 font-semibold  hover:bg-gray-700 rounded-sm`}>IN PROGRESS</div>
+                          <div onClick={(e) => handleStatusChange(e, "completed")} className={`text-xs text-left px-2 mb-1 font-semibold  hover:bg-gray-700 rounded-sm`}>COMPLETED</div>
                         </Dropdown>
                       }
                     </div>
-                    <div onClick={onDelete} className='text-xs font-semibold cursor-pointer p-2 px-4 text-[#E13838] border border-[#e1383878] bg-[#FF3535] rounded-full bg-opacity-[14%]'>Delete</div>
+                    <div onClick={onDelete} className='text-xs font-semibold cursor-pointer ml-3 md:ml-0 p-2 px-4 text-[#E13838] border border-[#e1383878] bg-[#FF3535] rounded-full bg-opacity-[14%]'>Delete</div>
                   </div>
                 </div>
               )}

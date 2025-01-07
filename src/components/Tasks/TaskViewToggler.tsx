@@ -13,7 +13,7 @@ interface ViewTogglerProps {
 
 const ViewToggler: React.FC<ViewTogglerProps> = ({ onLogout, activeTab, setActiveTab }) => {
   return (
-    <div className="flex mt-2 font-mulish justify-between items-center">
+    <div className="hidden md:flex mt-2 font-mulish justify-between items-center">
       <div className="flex mb-2 justify-center items-center">
         <div className={`flex items-center font-semibold border-b-2 h-3/4  ${activeTab === "list" ? "border-black" : "border-transparent"}`}>
           <ListIcon fill="red" className="items-center" style={{ fill: "red" }} />

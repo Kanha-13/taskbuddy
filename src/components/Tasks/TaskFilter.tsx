@@ -11,7 +11,7 @@ interface TaskFilterProps {
 }
 
 interface DateRange {
-  startDate: Date | null ;
+  startDate: Date | null;
   endDate: Date | null;
 }
 
@@ -46,14 +46,23 @@ const TaskFilter: React.FC<TaskFilterProps> = ({ onFilterChange, onAddTask }) =>
     return "bg-none"
   }
 
+  const renderAddBtn = () => <button
+    onClick={onAddTask}
+    className="bg-secondaryColor ml-auto md:ml-0 outline-none text-white text-sm rounded-full font-semibold px-5 md:px-8 py-3"
+  >
+    ADD TASK
+  </button>
   return (
-    <div className="flex flex-wrap items-center justify-between mb-4 mt-4 font-mulish">
+    <div className="flex flex-wrap items-center justify-between p-4 pb-0 px-4 gap-4 md:gap-0 md:p-0 mb-4 mt-2 md:mt-4 font-mulish">
       <div className="flex items-center gap-4 flex-wrap w-full sm:w-1/2">
-        <span className="font-semibold text-sm opacity-60">Filter by: </span>
+        <div className="md:hidden w-full flex">
+          {renderAddBtn()}
+        </div>
+        <span className="font-semibold text-sm opacity-60 w-full md:w-max">Filter by: </span>
         <div className="cursor-pointer relative flex justify-center items-center">
           <div
             onClick={() => setIsCategoryOpen(!isCategoryOpen)}
-            className="flex justify-center items-center text-xs px-6 border border-black border-opacity-20 ml-2 rounded-full py-2 bg-white text-gray-700 hover:shadow-md"
+            className="flex justify-center items-center text-xs px-3 md:px-6 border border-black border-opacity-20 rounded-full py-2 bg-white text-gray-700 hover:shadow-md"
           >
             <span className="mr-2">{category || "Category"}</span>
             <DropIcon size="w-3 h-3" color="text-[#979797]" isOpen={isCategoryOpen} />
@@ -61,8 +70,8 @@ const TaskFilter: React.FC<TaskFilterProps> = ({ onFilterChange, onAddTask }) =>
           {
             isCategoryOpen &&
             <Dropdown height="h-auto" width="w-max">
-              <div onClick={() => handleCategoryChange("Work")} className={`text-left px-2 mb-1 font-semibold ${getCatOptionBg("Work")}  hover:bg-pink-100 rounded-sm`}>Work</div>
-              <div onClick={() => handleCategoryChange("Personal")} className={`text-left px-2 mb-1 font-semibold ${getCatOptionBg("Personal")}  hover:bg-pink-100 rounded-sm`}>Personal</div>
+              <div onClick={() => handleCategoryChange("Work")} className={`text-xs text-left px-2 mb-1 font-semibold ${getCatOptionBg("Work")}  hover:bg-pink-100 rounded-sm`}>Work</div>
+              <div onClick={() => handleCategoryChange("Personal")} className={`text-xs text-left px-2 mb-1 font-semibold ${getCatOptionBg("Personal")}  hover:bg-pink-100 rounded-sm`}>Personal</div>
             </Dropdown>
           }
         </div>
@@ -84,7 +93,7 @@ const TaskFilter: React.FC<TaskFilterProps> = ({ onFilterChange, onAddTask }) =>
       </div>
 
       <div className="flex items-center gap-4 w-full sm:w-1/3">
-        <div className="flex items-center rounded-full p-2 w-1/2 ml-auto border-2 border-black border-opacity-[42%]">
+        <div className="flex m-auto items-center rounded-full p-2 py-3 md:py-2 w-full md:w-1/2 md:mr-0 md:ml-auto border md:border-2 border-black border-opacity-[22%]">
           <SearchIcon className="mr-2" />
           <input
             type="text"
@@ -94,12 +103,9 @@ const TaskFilter: React.FC<TaskFilterProps> = ({ onFilterChange, onAddTask }) =>
             className="border-none placeholder:text-black placeholder:opacity-80 text-opacity-[82%] outline-none text-sm font-semibold flex-1"
           />
         </div>
-        <button
-          onClick={onAddTask}
-          className="bg-secondaryColor outline-none text-white text-sm rounded-full font-semibold px-8 py-3"
-        >
-          ADD TASK
-        </button>
+        <div className="hidden md:block">
+          {renderAddBtn()}
+        </div>
       </div>
     </div>
   );

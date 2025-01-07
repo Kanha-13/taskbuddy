@@ -2,7 +2,7 @@ import React from "react";
 
 const ListHead: React.FC = () => {
   return (
-    <div className="flex items-center p-2 px-4 font-bold font-mulish opacity-60">
+    <div className="items-center hidden md:flex p-2 px-4 font-bold font-mulish opacity-60">
       <div className="w-4/12">Task name</div>
       <div className="w-3/12">Due on</div>
       <div className="w-3/12">Task Status</div>
