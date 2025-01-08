@@ -54,15 +54,18 @@ const useTasks = (): UseTasks => {
   // Add a new task to Firebase and Redux
   const addNewTask = useCallback(
     async (task: Task, user: any) => {
+      let filesLink = <Task['files']>[]
       setLoading(true);
       setError(null);
       try {
-        const filesLink = await uploadFiles(task.filesData, user);
+        filesLink = await uploadFiles(task.filesData, user);
         task.files = filesLink;
         delete task.filesData;
         const newTask = await addTaskToFirebase(task);
         dispatch(addTask(newTask));
       } catch (err) {
+        if (filesLink?.length)
+          await deleteFiles(filesLink);
         setError(err instanceof Error ? err.message : "Error adding task");
       } finally {
         setLoading(false);
