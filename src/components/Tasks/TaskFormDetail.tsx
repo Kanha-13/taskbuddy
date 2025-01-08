@@ -110,7 +110,7 @@ const TaskFormDetail: React.FC<TaskFormDetailProps> = ({ taskDetails, handleChan
         </div>
         {
           taskDetails.files?.length > 0 &&
-          <div className='border-2 my-4 rounded-md p-4 h-max w-max'>
+          <div className='border-2 my-4 rounded-md p-4 h-max w-auto'>
             <FileViewer files={taskDetails.files} />
           </div>
         }
