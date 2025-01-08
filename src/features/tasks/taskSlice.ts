@@ -6,7 +6,8 @@ export interface Task {
   status: "todo" | "in-progress" | "completed" | "";
   category: "Work" | "Personal" | "";
   dueDate: Date | string | null;
-  files?: string[];
+  filesData?: (File | null)[];//for storing data when uploading files
+  files?: (string | undefined)[];//for storing the files link
   description?: string;
 }
 
@@ -40,13 +41,6 @@ const taskSlice = createSlice({
     deleteTask(state, action: PayloadAction<string>) {
       state.tasks = state.tasks.filter((task) => task.id !== action.payload);
     },
-    changeTaskStatus(state, action: PayloadAction<{ taskId: string; status: 'todo' | 'in-progress' | 'completed' | '' }>) {
-      const { taskId, status } = action.payload;
-      const task = state.tasks.find((task) => task.id === taskId);
-      if (task) {
-        task.status = status;
-      }
-    },
     filterTasks(state, action: PayloadAction<{ search: string; category: string; startDate?: Date | null; endDate?: Date | null }>) {
       let filtered = state.tasks;
 
@@ -73,13 +67,6 @@ const taskSlice = createSlice({
       }
 
       state.filteredTasks = filtered;
-    },
-    moveTask(state, action: PayloadAction<{ taskId: string; newStatus: 'todo' | 'in-progress' | 'completed' | '' }>) {
-      const { taskId, newStatus } = action.payload;
-      const task = state.tasks.find((task) => task.id === taskId);
-      if (task) {
-        task.status = newStatus;
-      }
     },
   },
 });

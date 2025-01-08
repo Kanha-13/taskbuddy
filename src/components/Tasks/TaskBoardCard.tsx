@@ -4,16 +4,7 @@ import Dropdown from "../DropDown.tsx";
 import EditIcon from "../../assets/icons/edit_icon.svg"
 import DeleteIcon from "../../assets/icons/delete_icon.svg"
 import { format } from 'date-fns';
-
-interface Task {
-  id: string;
-  title: string;
-  status: "todo" | "in-progress" | "completed" | "";
-  category: "Work" | "Personal" | "";
-  dueDate: Date | string | null;
-  files?: string[];
-  description?: string;
-}
+import { Task } from '../../features/tasks/taskSlice.ts';
 
 interface TaskBoardCardProps {
   task: Task;

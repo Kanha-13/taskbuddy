@@ -23,7 +23,7 @@ const Home: React.FC = () => {
     deleteExistingTask,
     filterTasksByParams,
   } = useTasks();
-  const { user, status, loginWithGoogle, logout } = useAuth();
+  const { user, status, logout } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'list' | 'board'>('list');
   const [isForm, setIsForm] = useState(false);
@@ -45,7 +45,7 @@ const Home: React.FC = () => {
   };
 
   const handleTaskCreate = (newTask: Task) => {
-    addNewTask(newTask);
+    addNewTask(newTask, user);
     setIsForm(false);
     setActiveTask(null);
   };
@@ -132,9 +132,9 @@ const Home: React.FC = () => {
     fetchTasks();
   }, [fetchTasks])
 
-  // useEffect(() => {
-  //   if (!user) navigate("/");
-  // }, [user])
+  useEffect(() => {
+    if (!user) navigate("/");
+  }, [user])
 
   return (
     <div className="md:p-4 md:px-7">

@@ -1,14 +1,43 @@
-import { storage } from "../firebaseConfig.ts";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getSupabaseClient } from "../supabaseConfig.ts";
 
-export const uploadFile = async (file: File): Promise<string> => {
+const SUPABASE_BUCKET_NAME = process.env.REACT_APP_SUPABASE_BUCKET_NAME || ""
+
+export const uploadFileToSupabase = async (filename: string, file: File, userId: string) => {
+  if (!file) {
+    alert("Please select a file first.");
+    return;
+  }
+
   try {
-    const fileRef = ref(storage, `uploads/${file.name}`);
-    await uploadBytes(fileRef, file);
-    const downloadURL = await getDownloadURL(fileRef);
-    return downloadURL;
+    const fileName = `${Date.now()}-${filename}`;
+    const { data, error } = await getSupabaseClient().storage
+      .from(SUPABASE_BUCKET_NAME)
+      .upload(fileName, file, {
+        cacheControl: "3600",
+        upsert: false,
+        metadata: { user_id: userId },
+      });
+
+    if (error) {
+      throw error;
+    }
+    return fileName;
   } catch (error) {
-    console.error("File upload error:", error);
-    throw new Error("File upload failed");
+    alert("Failed to upload file.");
+    return null;
+  }
+};
+
+
+export const fetchFileFromSupabase = async (fileName: string) => {
+  try {
+    const { data, error } = await getSupabaseClient().storage
+      .from(SUPABASE_BUCKET_NAME)
+      .download(fileName);
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    alert("Failed to fetch file.");
+    return null;
   }
 };

@@ -1,21 +1,10 @@
 import React, { useState, DragEvent } from 'react';
-
-interface Task {
-  id: string;
-  title: string;
-  status: "todo" | "in-progress" | "completed";
-  category: string;
-  dueDate: string;
-  files?: string[];
-  description?: string;
-}
+import { Task } from '../features/tasks/taskSlice';
 
 interface DragAndDropProps {
   onFileUpload: (
     key: keyof Task,
-    e?: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-    text?: string,
-    files?: File[]) => void;
+    value?: File[]) => void;
 }
 
 const DragAndDropFileInput: React.FC<DragAndDropProps> = ({ onFileUpload }) => {
@@ -38,13 +27,13 @@ const DragAndDropFileInput: React.FC<DragAndDropProps> = ({ onFileUpload }) => {
 
     const files = Array.from(event.dataTransfer.files);
     setUploadedFiles(files);
-    onFileUpload("files", undefined, "", files);
+    onFileUpload("filesData", files);
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files ? Array.from(event.target.files) : [];
     setUploadedFiles(files);
-    onFileUpload("files", undefined, "", files);
+    onFileUpload("filesData", files);
   };
 
   return (

@@ -3,17 +3,7 @@ import React, { useEffect, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import TaskBoardCard from "./TaskBoardCard.tsx";
 import NoSearchResult from "../NoSearchResult.tsx";
-
-
-interface Task {
-  id: string;
-  title: string;
-  status: "todo" | "in-progress" | "completed" | "";
-  category: "Work" | "Personal" | "";
-  dueDate: Date | string | null;
-  files?: string[];
-  description?: string;
-}
+import { Task } from "../../features/tasks/taskSlice.ts";
 
 interface TaskBoardProps {
   tasks: Task[];
@@ -24,7 +14,6 @@ interface TaskBoardProps {
 }
 
 const TaskBoard: React.FC<TaskBoardProps> = ({ isSearching, tasks, onDelete, onClickTask, onDragEnd }) => {
-  const [isDrop, setIsDrop] = useState<Boolean>(false)
   const [isDroppableMounted, setIsDroppableMounted] = useState<Boolean>(false)
   const [sections, setSections] = useState({
     todo: true,

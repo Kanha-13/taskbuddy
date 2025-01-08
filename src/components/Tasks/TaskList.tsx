@@ -5,16 +5,7 @@ import ListHead from "./ListHead.tsx";
 import DropIcon from "../DropIcon.tsx";
 import TaskListRow from "./TaskListRow.tsx";
 import NoSearchResult from "../NoSearchResult.tsx";
-
-interface Task {
-  id: string;
-  title: string;
-  status: "todo" | "in-progress" | "completed" | "";
-  category: "Work" | "Personal" | "";
-  dueDate: Date | string | null;
-  files?: string[];
-  description?: string;
-}
+import { Task } from "../../features/tasks/taskSlice.ts";
 
 interface TaskListProps {
   tasks: Task[];

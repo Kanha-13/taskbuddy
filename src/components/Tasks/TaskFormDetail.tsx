@@ -6,16 +6,8 @@ import DateRangePicker from '../DateRangePicker.tsx';
 import { format } from 'date-fns';
 import Dropdown from '../DropDown.tsx';
 import DropIcon from '../DropIcon.tsx';
-
-interface Task {
-  id: string;
-  title: string;
-  status: "todo" | "in-progress" | "completed" | "";
-  category: "Work" | "Personal" | "";
-  dueDate: Date | string | null;
-  files?: string[];
-  description?: string;
-}
+import { Task } from '../../features/tasks/taskSlice.ts';
+import FileViewer from '../FileViewer.tsx';
 
 interface TaskFormDetailProps {
   handleChange: (
@@ -116,6 +108,12 @@ const TaskFormDetail: React.FC<TaskFormDetailProps> = ({ taskDetails, handleChan
         <div className="border bg-[#FAFAFA] border-gray-300 rounded-lg p-2 w-full">
           <DragAndDropFileInput onFileUpload={handleChange} />
         </div>
+        {
+          taskDetails.files?.length > 0 &&
+          <div className='border-2 my-4 rounded-md p-4 h-max w-max'>
+            <FileViewer files={taskDetails.files} />
+          </div>
+        }
       </div>
     </div>
   )

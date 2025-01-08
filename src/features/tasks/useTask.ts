@@ -5,13 +5,12 @@ import {
   addTask,
   updateTask,
   deleteTask,
-  changeTaskStatus,
   filterTasks,
-  moveTask,
   setTasks,
 } from "./taskSlice.ts"; // Redux actions
 import { Task } from "./taskSlice.ts"; // Task interface
 import { RootState } from "../../store/store.ts"; // RootState type
+import { uploadFileToSupabase } from "../../utils/fileUpload.ts";
 
 interface UseTasks {
   tasks: Task[];
@@ -19,7 +18,7 @@ interface UseTasks {
   loading: boolean;
   error: string | null;
   fetchTasks: () => Promise<void>;
-  addNewTask: (task: Omit<Task, "id">) => Promise<void>;
+  addNewTask: (task: Task, user: any) => Promise<void>;
   updateExistingTask: (task: Task) => Promise<void>;
   deleteExistingTask: (taskId: string) => Promise<void>;
   filterTasksByParams: (params: {
@@ -54,11 +53,33 @@ const useTasks = (): UseTasks => {
 
   // Add a new task to Firebase and Redux
   const addNewTask = useCallback(
-    async (task: Omit<Task, "id">) => {
+    async (task: Task, user: any) => {
       setLoading(true);
       setError(null);
       try {
-        const newTask = await addTaskToFirebase(task); // Firebase service returns the created task with ID
+        let filesLink: (string | undefined)[] = [];
+        if (task.filesData && task.filesData.length > 0) {
+          const uploadPromises = task.filesData.map(async (file) => {
+            try {
+              if (file) {
+                const filelink = await uploadFileToSupabase(file.name + user?.email || "guest@guest.com", file, user.id);
+                if (!filelink) throw new Error(`Unable to upload file '${file.name}'`);
+                return `${file.name} + "<<-@separator@->>" + ${filelink}`;
+              }
+            } catch (err) {
+              if (file)
+                console.error(`Error uploading file '${file.name}':`, err);
+              throw err;
+            }
+          });
+          filesLink = await Promise.all(uploadPromises);
+        } else {
+          console.warn("No files to upload.");
+        }
+
+        task.files = filesLink;
+        delete task.filesData;
+        const newTask = await addTaskToFirebase(task);
         dispatch(addTask(newTask));
       } catch (err) {
         setError(err instanceof Error ? err.message : "Error adding task");

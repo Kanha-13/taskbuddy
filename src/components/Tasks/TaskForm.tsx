@@ -1,24 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { uploadFile } from "../../utils/fileUpload.ts";
 import CrossIcon from "../CloseIcon.tsx";
 import TaskFormDetail from "./TaskFormDetail.tsx";
 import ActivityLog from "../Activity/ActivityLog.tsx";
+import { Task } from "../../features/tasks/taskSlice.ts";
 
 const logs = [
   { detail: "You created this task", date: "Dec 27 at 1:15 pm" },
   { detail: "You uploaded file", date: "Dec 28 at 1:15 pm" },
   { detail: "You changed the status from in progress to complete", date: "Dec 29 at 1:15 pm" },
 ];
-
-interface Task {
-  id: string;
-  title: string;
-  status: "todo" | "in-progress" | "completed" | "";
-  category: "Work" | "Personal" | "";
-  dueDate: Date | string | null;
-  files?: string[];
-  description?: string;
-}
 
 interface TaskFormProps {
   taskData?: Task | undefined | null;
@@ -28,7 +18,7 @@ interface TaskFormProps {
   mode: "update" | "create";
 }
 
-const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, onUpdate, onClose, mode, taskData }) => {
+const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, onUpdate, onClose, mode, taskData}) => {
   const [isActive, setIsActive] = useState<Boolean>(false);
   const [activeTab, setActiveTab] = useState<"details" | "activity">("details");
   const [task, setTask] = useState<Task>({
