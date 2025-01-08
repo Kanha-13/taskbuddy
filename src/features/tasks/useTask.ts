@@ -114,6 +114,12 @@ const useTasks = (): UseTasks => {
       setLoading(true);
       setError(null);
       try {
+        const tasktodelete = tasks.filter((task) => task.id == taskId)?.[0]
+        if (tasktodelete) {
+          if (tasktodelete.files && tasktodelete.files?.length > 0){
+            await deleteFiles(tasktodelete.files);
+          }
+        }
         await deleteTaskFromFirebase(taskId); // Deletes task from Firebase
         dispatch(deleteTask(taskId));
       } catch (err) {
