@@ -23,7 +23,7 @@ export const uploadFileToSupabase = async (filename: string, file: File, userId:
     }
     return fileName;
   } catch (error) {
-    alert("Failed to upload file.");
+    alert("Failed to UPLOAD file.");
     return null;
   }
 };
@@ -37,7 +37,22 @@ export const fetchFileFromSupabase = async (fileName: string) => {
     if (error) throw error;
     return data;
   } catch (error) {
-    alert("Failed to fetch file.");
+    alert("Failed to FETCH file.");
+    return null;
+  }
+};
+
+export const deleteFileFromSupabase = async (filename: string) => {
+
+  try {
+    const { data, error } = await getSupabaseClient().storage
+      .from(SUPABASE_BUCKET_NAME)
+      .remove([filename]);
+
+    if (error) throw new Error(error.message);
+    return data;
+  } catch (error) {
+    alert("Failed to DELETE file.");
     return null;
   }
 };

@@ -51,7 +51,7 @@ const Home: React.FC = () => {
   };
 
   const handleTaskUpdate = (update: Task) => {
-    updateExistingTask(update);
+    updateExistingTask(update, user);
     setIsForm(false);
     setActiveTask(null);
   };
@@ -75,7 +75,7 @@ const Home: React.FC = () => {
     checkRows.forEach((taskId) => {
       let taskToUpdate = tasks.find((task) => task.id === taskId);
       if (taskToUpdate) {
-        updateExistingTask({ ...taskToUpdate, status: newStatus });
+        updateExistingTask({ ...taskToUpdate, status: newStatus }, user);
       }
     });
     setCheckRows([]);
@@ -98,7 +98,7 @@ const Home: React.FC = () => {
     let taskToUpdate = tasks.find((task) => task.id === taskId);
 
     if (taskToUpdate) {
-      updateExistingTask({ ...taskToUpdate, status: newStatus });
+      updateExistingTask({ ...taskToUpdate, status: newStatus }, user);
     }
   };
 
@@ -110,7 +110,7 @@ const Home: React.FC = () => {
 
     let taskToUpdate = tasks.find((task) => task.id === draggableId);
     if (taskToUpdate) {
-      updateExistingTask({ ...taskToUpdate, status: newStatus });
+      updateExistingTask({ ...taskToUpdate, status: newStatus }, user);
     }
   };
 

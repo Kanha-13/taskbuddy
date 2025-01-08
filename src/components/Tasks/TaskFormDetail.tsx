@@ -39,6 +39,10 @@ const TaskFormDetail: React.FC<TaskFormDetailProps> = ({ taskDetails, handleChan
     handleChange("dueDate", `${date.startDate}`)
   };
 
+  const handleFileDelete = (fileToDelete: string) => {
+    handleChange("filesToDelete", [fileToDelete])
+  }
+
   const getStatusOptionBg = (status: string) => {
     if (taskDetails.status == status) return "bg-pink-200"
     return "bg-none"
@@ -109,9 +113,9 @@ const TaskFormDetail: React.FC<TaskFormDetailProps> = ({ taskDetails, handleChan
           <DragAndDropFileInput onFileUpload={handleChange} />
         </div>
         {
-          taskDetails.files?.length > 0 &&
+          taskDetails.files &&
           <div className='border-2 my-4 rounded-md p-4 h-max w-auto'>
-            <FileViewer files={taskDetails.files} />
+            <FileViewer files={taskDetails.files} onDelete={handleFileDelete} />
           </div>
         }
       </div>

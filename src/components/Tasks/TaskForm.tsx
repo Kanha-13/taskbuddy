@@ -18,7 +18,7 @@ interface TaskFormProps {
   mode: "update" | "create";
 }
 
-const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, onUpdate, onClose, mode, taskData}) => {
+const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, onUpdate, onClose, mode, taskData }) => {
   const [isActive, setIsActive] = useState<Boolean>(false);
   const [activeTab, setActiveTab] = useState<"details" | "activity">("details");
   const [task, setTask] = useState<Task>({
@@ -30,7 +30,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, onUpdate, onClose, mode, 
     files: [],
   });
 
-  const handleChange = (
+  const handleChange = async (
     key: keyof Task,
     value: any
   ) => {
@@ -38,6 +38,10 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, onUpdate, onClose, mode, 
       ...prev,
       [key]: value,
     }));
+    if (key == "filesToDelete") await onUpdate({
+      ...task,
+      [key]: value,
+    });
   };
 
   const handleSubmit = () => {

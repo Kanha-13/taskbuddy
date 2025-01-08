@@ -8,6 +8,7 @@ export interface Task {
   dueDate: Date | string | null;
   filesData?: (File | null)[];//for storing data when uploading files
   files?: (string | undefined)[];//for storing the files link
+  filesToDelete?: (string | undefined)[];//for storing the files link
   description?: string;
 }
 
@@ -71,5 +72,5 @@ const taskSlice = createSlice({
   },
 });
 
-export const { setTasks, addTask, updateTask, deleteTask, changeTaskStatus, filterTasks, moveTask } = taskSlice.actions;
+export const { setTasks, addTask, updateTask, deleteTask, filterTasks } = taskSlice.actions;
 export default taskSlice.reducer;

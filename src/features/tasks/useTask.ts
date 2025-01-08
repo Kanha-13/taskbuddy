@@ -10,7 +10,7 @@ import {
 } from "./taskSlice.ts"; // Redux actions
 import { Task } from "./taskSlice.ts"; // Task interface
 import { RootState } from "../../store/store.ts"; // RootState type
-import { uploadFileToSupabase } from "../../utils/fileUpload.ts";
+import { deleteFileFromSupabase, uploadFileToSupabase } from "../../utils/fileUpload.ts";
 
 interface UseTasks {
   tasks: Task[];
@@ -19,7 +19,7 @@ interface UseTasks {
   error: string | null;
   fetchTasks: () => Promise<void>;
   addNewTask: (task: Task, user: any) => Promise<void>;
-  updateExistingTask: (task: Task) => Promise<void>;
+  updateExistingTask: (task: Task, user: any) => Promise<void>;
   deleteExistingTask: (taskId: string) => Promise<void>;
   filterTasksByParams: (params: {
     search: string;
@@ -57,26 +57,7 @@ const useTasks = (): UseTasks => {
       setLoading(true);
       setError(null);
       try {
-        let filesLink: (string | undefined)[] = [];
-        if (task.filesData && task.filesData.length > 0) {
-          const uploadPromises = task.filesData.map(async (file) => {
-            try {
-              if (file) {
-                const filelink = await uploadFileToSupabase(file.name + user?.email || "guest@guest.com", file, user.id);
-                if (!filelink) throw new Error(`Unable to upload file '${file.name}'`);
-                return `${file.name} + "<<-@separator@->>" + ${filelink}`;
-              }
-            } catch (err) {
-              if (file)
-                console.error(`Error uploading file '${file.name}':`, err);
-              throw err;
-            }
-          });
-          filesLink = await Promise.all(uploadPromises);
-        } else {
-          console.warn("No files to upload.");
-        }
-
+        const filesLink = await uploadFiles(task.filesData, user);
         task.files = filesLink;
         delete task.filesData;
         const newTask = await addTaskToFirebase(task);
@@ -92,13 +73,30 @@ const useTasks = (): UseTasks => {
 
   // Update an existing task in Firebase and Redux
   const updateExistingTask = useCallback(
-    async (task: Task) => {
+    async (task: Task, user: any) => {
+      let updatedTask = { ...task };
       setLoading(true);
       setError(null);
+      let newfilesLink = <(string | undefined)[] | undefined>[];
       try {
-        await updateTaskInFirebase(task); // Updates task in Firebase
-        dispatch(updateTask(task));
+        if (updatedTask.filesData?.length) {//check for new files
+          newfilesLink = await uploadFiles(updatedTask.filesData, user) || []
+          updatedTask.files = [...(updatedTask.files || []), ...newfilesLink];;
+          delete updatedTask.filesData;
+        }
+
+        if (updatedTask.filesToDelete?.length) {//check if previous files deleted
+          await deleteFiles(updatedTask.filesToDelete);
+          updatedTask.files = updatedTask.files?.filter(file => !(updatedTask.filesToDelete?.includes(file) ?? false));
+          delete updatedTask.filesToDelete;
+        }
+
+        await updateTaskInFirebase(updatedTask); // Updates task in Firebase
+        dispatch(updateTask(updatedTask));
       } catch (err) {
+        console.log(err)
+        if (newfilesLink?.length)
+          await deleteFiles(newfilesLink); //deleting because firebase throws error to update the files url in db 
         setError(err instanceof Error ? err.message : "Error updating task");
       } finally {
         setLoading(false);
@@ -149,5 +147,49 @@ const useTasks = (): UseTasks => {
     filterTasksByParams,
   };
 };
+
+
+const uploadFiles = async (filesData: Task['filesData'], user: any) => {
+  let filesLink: (string | undefined)[] = [];
+  if (filesData && filesData.length > 0) {
+    const uploadPromises = filesData.map(async (file) => {
+      try {
+        if (file) {
+          const filelink = await uploadFileToSupabase(file.name + user?.email || "guest@guest.com", file, user.id);
+          if (!filelink) throw new Error(`Unable to upload file '${file.name}'`);
+          return `${file.name} + "<<-@separator@->>" + ${filelink}`;
+        }
+      } catch (err) {
+        if (file)
+          console.error(`Error uploading file '${file.name}':`, err);
+        throw err;
+      }
+    });
+    filesLink = await Promise.all(uploadPromises);
+  } else {
+    console.warn("No files to upload.");
+    return;
+  }
+  return filesLink;
+}
+
+const deleteFiles = async (files: Task['files']) => {
+  try {
+    if (files?.length) {
+      await Promise.all(
+        files.map(async (file) => {
+          if (file) {
+            const sanitisedURL = file.split(' + "<<-@separator@->>" + ')[1];
+            await deleteFileFromSupabase(sanitisedURL);
+          }
+        })
+      );
+    }
+  } catch (error) {
+    console.log(error);
+    throw new Error("Unable to delete files");
+  }
+};
+
 
 export default useTasks;
