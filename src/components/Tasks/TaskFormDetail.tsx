@@ -114,7 +114,7 @@ const TaskFormDetail: React.FC<TaskFormDetailProps> = ({ taskDetails, handleChan
         </div>
         {
           (Array.isArray(taskDetails.files) && taskDetails.files.length > 0) &&
-          <div className='border-2 my-4 rounded-md p-4 h-max w-auto'>
+          <div className='border-2 my-4 rounded-md p-4 h-auto w-auto'>
             <FileViewer files={taskDetails.files} onDelete={handleFileDelete} />
           </div>
         }

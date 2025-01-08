@@ -4,7 +4,8 @@ import { Task } from '../features/tasks/taskSlice';
 interface DragAndDropProps {
   onFileUpload: (
     key: keyof Task,
-    value?: File[]) => void;
+    value?: File[]
+  ) => void;
 }
 
 const DragAndDropFileInput: React.FC<DragAndDropProps> = ({ onFileUpload }) => {
@@ -27,21 +28,29 @@ const DragAndDropFileInput: React.FC<DragAndDropProps> = ({ onFileUpload }) => {
 
     const files = Array.from(event.dataTransfer.files);
     setUploadedFiles(files);
-    onFileUpload("filesData", files);
+    onFileUpload('filesData', files);
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files ? Array.from(event.target.files) : [];
     setUploadedFiles(files);
-    onFileUpload("filesData", files);
+    onFileUpload('filesData', files);
   };
+
+  const handleClearFiles = () => {
+    setUploadedFiles([]);
+    onFileUpload('filesData', []);
+  };
+
+  const isImageFile = (file: File) =>
+    file.type.startsWith('image/');
 
   return (
     <div
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
-      className='text-xs'
+      className="text-xs"
       style={{
         border: isDragging ? '2px dashed #2956DD' : '2px dashed #ccc',
         padding: '20px',
@@ -51,26 +60,66 @@ const DragAndDropFileInput: React.FC<DragAndDropProps> = ({ onFileUpload }) => {
         transition: 'background-color 0.3s ease',
       }}
     >
-      <p style={{ margin: 0 }}>
-        Drop your files here or{' '}
-        <label className='text-[#2956DD] cursor-pointer underline underline-offset-1'>
-          Update
-          <input
-            type="file"
-            multiple
-            style={{ display: 'none' }}
-            onChange={handleFileChange}
-          />
-        </label>
-      </p>
+      {
+        uploadedFiles.length < 1 &&
+        <p style={{ margin: 0 }}>
+          Drop your files here or{' '}
+          <label className="text-[#2956DD] cursor-pointer underline underline-offset-1">
+            Update
+            <input
+              type="file"
+              multiple
+              style={{ display: 'none' }}
+              onChange={handleFileChange}
+            />
+          </label>
+        </p>
+      }
       {uploadedFiles.length > 0 && (
-        <div style={{ marginTop: '10px' }}>
-          <h4>Uploaded Files:</h4>
-          <ul>
+        <div className='mt-4'>
+          <h4 className='font-bold'>Uploaded Files:</h4>
+          <div className='flex flex-wrap mt-4 gap-4 justify-start'>
             {uploadedFiles.map((file, index) => (
-              <li key={index}>{file.name}</li>
+              <div className='flex flex-col justify-center items-center w-1/4 overflow-hidden max-h-[22vh]' key={file.name + index + "in file preview"}>
+                <div className='whitespace-nowrap overflow-hidden text-ellipsis max-w-full'>
+                  {file.name}
+                </div>
+                {isImageFile(file) && (
+                  <div className='rounded-md'>
+                    <img
+                      src={URL.createObjectURL(file)}
+                      alt={file.name}
+                      className='h-[20vh] w-max rounded-md'
+                    />
+                  </div>
+                )}
+                {file?.type === 'application/pdf' && (
+                  <div className="relative overflow-hidden w-full h-[20vh] rounded-md">
+                    <iframe
+                      src={URL.createObjectURL(file)}
+                      title={`PDF Viewer ${index}`}
+                      className="w-full h-full border-none"
+                    />
+                  </div>
+                )}
+                {!file?.type.startsWith('image/') && file?.type !== 'application/pdf' && (
+                  <div className="relative overflow-hidden w-full h-[20vh] rounded-md">
+                    <iframe
+                      src={URL.createObjectURL(file)}
+                      title={`TEXT Viewer ${index}`}
+                      className="w-full h-full overflow-hidden border-none"
+                    />
+                  </div>
+                )}
+              </div>
             ))}
-          </ul>
+          </div>
+          <button
+            onClick={handleClearFiles}
+            className='mt-4 p-2 px-4 rounded-full cursor-pointer bg-secondaryColor text-white font-bold'
+          >
+            Clear
+          </button>
         </div>
       )}
     </div>

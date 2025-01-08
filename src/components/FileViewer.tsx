@@ -35,7 +35,7 @@ const FileViewer: React.FC<RenderFileProps> = ({ files = [], onDelete }) => {
         })
       );
 
-      setBlobs(filesData.filter((item) => item !== null)); // Filter out nulls
+      setBlobs(filesData.filter((item) => item !== null));
     } catch (error) {
       console.error('Error fetching files:', error);
       setBlobs([]);
@@ -50,7 +50,7 @@ const FileViewer: React.FC<RenderFileProps> = ({ files = [], onDelete }) => {
       if (!filename) return;
 
       await onDelete(filename);
-      setBlobs((prevBlobs) => prevBlobs.filter((_, i) => i !== index)); // Remove file from state
+      setBlobs((prevBlobs) => prevBlobs.filter((_, i) => i !== index));
     } catch (error) {
       console.error('Error deleting file:', error);
     }
@@ -82,10 +82,10 @@ const FileViewer: React.FC<RenderFileProps> = ({ files = [], onDelete }) => {
         const url = URL.createObjectURL(blob.blob || new Blob);
 
         return (
-          <div key={blob.dbURL + index + "in file-viewer"} className="w-[30%] h-auto rounded-md relative">
+          <div key={blob.dbURL + index + "in file-viewer"} className="bg-gray-100 flex flex-col justify-between w-[30%] h-[38vh] rounded-md relative">
             <button
               onClick={() => handleDeleteFile(index)}
-              className="absolute -top-2 -right-2 text-[#121212] border border-black bg-[#FAFAFA] border-opacity-15 w-7 h-7 rounded-full"
+              className="absolute -top-2 -right-2 z-50 text-[#121212] border border-black bg-[#FAFAFA] border-opacity-15 w-7 h-7 rounded-full"
               aria-label="Delete file"
             >
               ✖
@@ -93,25 +93,31 @@ const FileViewer: React.FC<RenderFileProps> = ({ files = [], onDelete }) => {
 
             {/* Displaying different file types */}
             {blob?.blob?.type.startsWith('image/') && (
-              <img src={url} alt={`Fetched file ${index}`} className="rounded-md" />
+              <img src={url} alt={`Fetched file ${index}`} className="w-full object-cover rounded-md max-h-[29vh]" />
             )}
             {blob?.blob?.type === 'application/pdf' && (
-              <iframe
-                src={url}
-                title={`PDF Viewer ${index}`}
-                style={{ width: '100%', height: '500px', border: '1px solid #ddd' }}
-              />
+              <div className="relative overflow-hidden w-full h-[30vh] rounded-md">
+                <iframe
+                  src={url}
+                  title={`PDF Viewer ${index}`}
+                  className='w-full h-full max-h-[30vh] overflow-hidden rounded-md'
+                />
+              </div>
             )}
             {!blob?.blob?.type.startsWith('image/') && blob?.blob?.type !== 'application/pdf' && (
-              <a href={url} download={`file-${index}`} className="text-blue-500 underline">
-                Download File {blob.dbURL.split(' + "<<-@separator@->>" + ')?.[0]}
-              </a>
+              <div className="relative overflow-hidden w-full h-[30vh] rounded-md">
+                <iframe
+                  src={url}
+                  title={`TEXT Viewer ${index}`}
+                  className='w-full h-full max-h-[30vh] overflow-hidden rounded-md'
+                />
+              </div>
             )}
 
-            {/* Additional Download Link */}
-            <div className="mt-2">
-              <a href={url} download={`file-${index}`} className="text-blue-500 underline">
-                Download File "{blob.dbURL.split(' + "<<-@separator@->>" + ')?.[0]}"
+            {/* Download Link */}
+            <div className="mt-2 w-full p-2">
+              <a href={url} download={`file-${index}`} className="text-blue-500 underline h-full w-full">
+                Download File "{blob.dbURL.split(' + "<<-@separator@->>" + ')?.[0].slice(0,10)}.."
               </a>
             </div>
           </div>
