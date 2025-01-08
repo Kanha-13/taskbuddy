@@ -14,11 +14,11 @@ const ActivityLog: React.FC<ActivityLogProps> = ({ logs }) => (
     <h2 className="hidden md:block text-lg p-3 font-semibold pb-4 text-black text-opacity-60 font-mulish bg-white">Activity</h2>
     <div className="space-y-2 p-3 md:border-t-2 border-black border-opacity-10 w-full">
       {logs.map((log: Log, idx: number) => (
-        <div key={idx} className="flex justify-between mb-4">
-          <div key={idx} className="text-xs w-2/3 pr-12 text-[#1E212A] text-opacity-80">
+        <div key={"row-"+idx+"-in-activity-logs"} className="flex justify-between mb-4">
+          <div key={"row-data"+idx+"-in-activity-logs"} className="text-xs w-2/3 pr-12 text-[#1E212A] text-opacity-80">
             {log.detail}
           </div>
-          <div key={idx} className="text-xs w-1/3 text-[#1E212A] text-opacity-50">
+          <div key={"row-timestamp"+idx+"-in-activity-logs"} className="text-xs w-1/3 text-[#1E212A] text-opacity-50">
             {log.date}
           </div>
         </div>
