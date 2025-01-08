@@ -59,10 +59,12 @@ const useTasks = (): UseTasks => {
       setLoading(true);
       setError(null);
       try {
-        filesLink = await uploadFiles(task.filesData, user);
-        task.files = filesLink;
-        delete task.filesData;
-        const newTask = await addTaskToFirebase({ ...task, activityLogs: [{ act: "You added thistask", timeStamp: new Date() }] });
+        if (task.filesData) {
+          filesLink = await uploadFiles(task.filesData, user);
+          task.files = filesLink;
+          delete task.filesData;
+        }
+        const newTask = await addTaskToFirebase({ ...task, activityLogs: [{ act: "You created this task", timeStamp: `${new Date()}` }] });
         dispatch(addTask(newTask));
       } catch (err) {
         if (filesLink?.length)
@@ -87,7 +89,7 @@ const useTasks = (): UseTasks => {
         if (updatedTask.filesData?.length) {//check for new files
           newfilesLink = await uploadFiles(updatedTask.filesData, user) || []
           updatedTask.files = [...(updatedTask.files || []), ...newfilesLink];;
-          newActivity.push({ act: "You uploaded file", timeStamp: new Date() });
+          newActivity.push({ act: "You uploaded file", timeStamp: `${new Date()}` });
           delete updatedTask.filesData;
         }
 
