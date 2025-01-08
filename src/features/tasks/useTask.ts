@@ -7,6 +7,7 @@ import {
   deleteTask,
   filterTasks,
   setTasks,
+  Activity,
 } from "./taskSlice.ts"; // Redux actions
 import { Task } from "./taskSlice.ts"; // Task interface
 import { RootState } from "../../store/store.ts"; // RootState type
@@ -61,7 +62,7 @@ const useTasks = (): UseTasks => {
         filesLink = await uploadFiles(task.filesData, user);
         task.files = filesLink;
         delete task.filesData;
-        const newTask = await addTaskToFirebase(task);
+        const newTask = await addTaskToFirebase({ ...task, activityLogs: [{ act: "You added thistask", timeStamp: new Date() }] });
         dispatch(addTask(newTask));
       } catch (err) {
         if (filesLink?.length)
@@ -78,6 +79,7 @@ const useTasks = (): UseTasks => {
   const updateExistingTask = useCallback(
     async (task: Task, user: any) => {
       let updatedTask = { ...task };
+      let newActivity = <Activity[]>[]
       setLoading(true);
       setError(null);
       let newfilesLink = <(string | undefined)[] | undefined>[];
@@ -85,14 +87,38 @@ const useTasks = (): UseTasks => {
         if (updatedTask.filesData?.length) {//check for new files
           newfilesLink = await uploadFiles(updatedTask.filesData, user) || []
           updatedTask.files = [...(updatedTask.files || []), ...newfilesLink];;
+          newActivity.push({ act: "You uploaded file", timeStamp: new Date() });
           delete updatedTask.filesData;
         }
 
         if (updatedTask.filesToDelete?.length) {//check if previous files deleted
           await deleteFiles(updatedTask.filesToDelete);
           updatedTask.files = updatedTask.files?.filter(file => !(updatedTask.filesToDelete?.includes(file) ?? false));
+          newActivity.push({ act: "You deleted file", timeStamp: `${new Date()}` });
           delete updatedTask.filesToDelete;
         }
+
+        let oldTaskState = tasks.filter((taxk) => taxk.id == task.id)?.[0];
+        if (oldTaskState) {
+
+          if (task.status != oldTaskState.status) {
+            newActivity.push({ act: `You changed status from ${oldTaskState.status} to ${task.status}`, timeStamp: `${new Date()}` })
+          }
+          if (task.category != oldTaskState.category) {
+            newActivity.push({ act: `You changed category from ${oldTaskState.category} to ${task.category}`, timeStamp: `${new Date()}` })
+          }
+          if (task.description != oldTaskState.description) {
+            newActivity.push({ act: `You updated description`, timeStamp: `${new Date()}` })
+          }
+          if (task.title != oldTaskState.title) {
+            newActivity.push({ act: `You updated title`, timeStamp: `${new Date()}` })
+          }
+          if (task.dueDate != oldTaskState.dueDate) {
+            newActivity.push({ act: `You updated Due date from ${oldTaskState.dueDate} to ${task.dueDate}`, timeStamp: `${new Date()}` })
+          }
+        }
+
+        updatedTask.activityLogs = [...(updatedTask.activityLogs || []), ...(newActivity || [])];
 
         await updateTaskInFirebase(updatedTask); // Updates task in Firebase
         dispatch(updateTask(updatedTask));
@@ -105,7 +131,7 @@ const useTasks = (): UseTasks => {
         setLoading(false);
       }
     },
-    [dispatch]
+    [dispatch, tasks]
   );
 
   // Delete a task from Firebase and Redux
@@ -116,7 +142,7 @@ const useTasks = (): UseTasks => {
       try {
         const tasktodelete = tasks.filter((task) => task.id == taskId)?.[0]
         if (tasktodelete) {
-          if (tasktodelete.files && tasktodelete.files?.length > 0){
+          if (tasktodelete.files && tasktodelete.files?.length > 0) {
             await deleteFiles(tasktodelete.files);
           }
         }

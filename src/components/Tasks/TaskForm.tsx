@@ -4,12 +4,6 @@ import TaskFormDetail from "./TaskFormDetail.tsx";
 import ActivityLog from "../Activity/ActivityLog.tsx";
 import { Task } from "../../features/tasks/taskSlice.ts";
 
-const logs = [
-  { detail: "You created this task", date: "Dec 27 at 1:15 pm" },
-  { detail: "You uploaded file", date: "Dec 28 at 1:15 pm" },
-  { detail: "You changed the status from in progress to complete", date: "Dec 29 at 1:15 pm" },
-];
-
 interface TaskFormProps {
   taskData?: Task | undefined | null;
   onSubmit: (task: Task) => void;
@@ -115,7 +109,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, onUpdate, onClose, mode, 
             {mode === "update" ? (
               <div className="flex w-1/3">
                 <div style={{ marginTop: "0px" }} className="m-0 h-full border-l-2 border-black border-opacity-10"></div>
-                <ActivityLog logs={logs} />
+                <ActivityLog logs={task.activityLogs} />
               </div>
             ) : null}
           </div>

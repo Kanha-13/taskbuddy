@@ -1,5 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+export interface Activity {
+  act: string;
+  timeStamp: Date | string;
+}
+
 export interface Task {
   id: string;
   title: string;
@@ -10,6 +15,7 @@ export interface Task {
   files?: (string | undefined)[];//for storing the files link
   filesToDelete?: (string | undefined)[];//for storing the files link
   description?: string;
+  activityLogs?: Activity[];
 }
 
 interface TaskState {
