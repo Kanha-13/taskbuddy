@@ -116,7 +116,8 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, onUpdate, onClose, mode, 
           {/* Mobile Tab View */}
           <div className="md:hidden w-full">
             {activeTab === "details" && <TaskFormDetail taskDetails={task} handleChange={handleChange} />}
-            {activeTab === "activity" && mode === "update" && <ActivityLog logs={logs} />}
+            {activeTab === "activity" && mode === "update" && <ActivityLog logs={task.activityLogs} />
+            }
           </div>
         </div>
         <div style={{ marginTop: "0px" }} className="bg-boxGray h-1/8 w-full justify-end p-2 py-4 font-bold text-sm items-center flex border-b-2 border-black border-opacity-10">
