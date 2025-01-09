@@ -43,11 +43,11 @@ const TaskBoard: React.FC<TaskBoardProps> = ({ isSearching, tasks, onDelete, onC
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      {isSearching && tasks.length < 1 ? <NoSearchResult /> : (<div className="grid grid-cols-3 font-mulish gap-5 mt-10 w-4/5 h-[71vh] overflow-auto">
+      {isSearching && tasks.length < 1 ? <NoSearchResult /> : (<div className="grid grid-cols-3 font-mulish gap-5 mt-10 w-4/5 h-[71vh]">
         {isDroppableMounted && Object.entries(categorizedTasks).map(([status, tasks]) => (
           <Droppable type="group" key={status} droppableId={status}>
             {(provided, snapshot) => (
-              <div className="bg-gray-100 h-max p-4 rounded-2xl border-2 border-[#585751] border-opacity-[7%]">
+              <div className="bg-gray-100  h-max p-4 rounded-2xl border-2 border-[#585751] border-opacity-[7%]">
                 <div className={`${getSectionBgColor(status)} w-max px-3 py-1 rounded-md`}>
                   <h2 className="text-sm font-semibold capitalize">
                     {status.toUpperCase()}
@@ -58,7 +58,7 @@ const TaskBoard: React.FC<TaskBoardProps> = ({ isSearching, tasks, onDelete, onC
                   <div
                     {...provided.droppableProps}
                     ref={provided.innerRef}
-                    className="mt-4 h-[60vh] overflow-auto"
+                    className="mt-4 min-h-[60vh]"
                   >
                     {tasks.map((task, index) => (
                       <Draggable key={task.id} draggableId={task.id} index={index}>
@@ -75,8 +75,10 @@ const TaskBoard: React.FC<TaskBoardProps> = ({ isSearching, tasks, onDelete, onC
                     ))}
                     {provided.placeholder}
                     {tasks.length < 1 && (
-                      <div className="h-full max-h-full text-[#2F2F2F] font-mulish flex justify-center items-center font-medium">
-                        No task in {status}
+                      <div className="flex h-[60vh] justify-center items-center">
+                        <div className="h-max max-h-max my-auto text-[#2F2F2F] font-mulish flex justify-center items-center font-medium">
+                          No task in {status}
+                        </div>
                       </div>
                     )}
                   </div>
