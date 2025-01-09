@@ -116,7 +116,7 @@ const FileViewer: React.FC<RenderFileProps> = ({ files = [], onDelete }) => {
 
             {/* Download Link */}
             <div className="mt-2 w-full p-2">
-              <a href={url} download={`file-${index}`} className="text-blue-500 underline h-full w-full">
+              <a href={url} download={`${blob.dbURL.split(' + "<<-@separator@->>" + ')?.[0]}`} className="text-blue-500 underline h-full w-full">
                 Download File "{blob.dbURL.split(' + "<<-@separator@->>" + ')?.[0].slice(0,10)}.."
               </a>
             </div>

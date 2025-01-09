@@ -8,7 +8,7 @@ interface ActivityLogProps {
 
 const ActivityLog: React.FC<ActivityLogProps> = ({ logs }) => {
   const getTimeStamp = (timeStamp: Activity['timeStamp']) => {
-    return `${format(timeStamp, "MMM dd")} at ${format(timeStamp, "HH:mm a")}`
+    return `${format(timeStamp, "MMM dd")} at ${format(timeStamp, "hh:mm a")}`
   }
   return (
     <div className="w-full h-auto overflow-auto md:bg-boxGray ">

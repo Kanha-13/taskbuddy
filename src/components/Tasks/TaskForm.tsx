@@ -64,6 +64,12 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, onUpdate, onClose, mode, 
     if (taskData?.id) setTask(taskData);
   }, [taskData]);
 
+  useEffect(() => {
+    if (task.category != "" && task.title != "" && task.dueDate != "" && task.status != "")
+      setIsActive(true)
+    else setIsActive(false)
+  }, [task])
+
   return (
     <div className="fixed inset-0 bg-[#1f1f1f] bg-opacity-70 flex items-end justify-center md:items-center z-50">
       <div className={`bg-white overflow-hidden rounded-2xl rounded-b-none md:rounded-2xl font-mulish w-full ${getSize()} flex flex-col items-center justify-between m-0 space-y-4`}>

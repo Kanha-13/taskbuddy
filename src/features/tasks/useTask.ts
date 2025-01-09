@@ -113,7 +113,7 @@ const useTasks = (): UseTasks => {
             newActivity.push({ act: `You updated description`, timeStamp: `${new Date()}` })
           }
           if (task.title != oldTaskState.title) {
-            newActivity.push({ act: `You updated title`, timeStamp: `${new Date()}` })
+            newActivity.push({ act: `You updated task title`, timeStamp: `${new Date()}` })
           }
           if (task.dueDate != oldTaskState.dueDate) {
             newActivity.push({ act: `You updated Due date from ${oldTaskState.dueDate} to ${task.dueDate}`, timeStamp: `${new Date()}` })

@@ -60,7 +60,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, maxCharacters, onchange 
         console.error('Invalid raw content:', error);
       }
     }
-  }, [value]);
+  }, [value, isValueLoaded]);
 
   return (
     <div className="border-2 border-black rounded-lg my-4 min-h-28 md:min-h-[25%] flex flex-col justify-between px-3 pt-1 md:p-2 md:px-3 bg-[#FAFAFA] border-opacity-10">
