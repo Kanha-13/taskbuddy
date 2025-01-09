@@ -46,6 +46,7 @@ const TaskListRow: React.FC<TaskListRowProps> = ({ onEdit, onDelete, isChecked, 
   };
 
   const getDateLabel = (date: Date | string | null) => {
+    if(!date) return ""
     if (new Date().setHours(0, 0, 0, 0) === new Date(date).setHours(0, 0, 0, 0)) return "Today"
     return format(task.dueDate, "dd MMM, yyyy");
   }
@@ -94,7 +95,7 @@ const TaskListRow: React.FC<TaskListRowProps> = ({ onEdit, onDelete, isChecked, 
           isStatusOpen &&
           <Dropdown height="h-auto" width="w-max">
             <div onClick={(e) => handleStatusChange(e, "todo")} className={`text-xs text-left px-2 mb-1 font-semibold ${getStatusOptionBg("todo")}  hover:bg-pink-100 rounded-sm`}>TO-DO</div>
-            <div onClick={(e) => handleStatusChange(e, "in-progress")} className={`text-xs text-left px-2 mb-1 font-semibold ${getStatusOptionBg("in-progress")}  hover:bg-pink-100 rounded-sm`}>IN PROGRESS</div>
+            <div onClick={(e) => handleStatusChange(e, "in-progress")} className={`text-xs text-left px-2 mb-1 font-semibold ${getStatusOptionBg("in-progress")}  hover:bg-pink-100 rounded-sm`}>IN-PROGRESS</div>
             <div onClick={(e) => handleStatusChange(e, "completed")} className={`text-xs text-left px-2 mb-1 font-semibold ${getStatusOptionBg("completed")}  hover:bg-pink-100 rounded-sm`}>COMPLETED</div>
           </Dropdown>
         }
@@ -106,7 +107,7 @@ const TaskListRow: React.FC<TaskListRowProps> = ({ onEdit, onDelete, isChecked, 
         {
           isDrop ? <Dropdown height="h-auto" width="w-[230%]" position="top-full right-[24%]" >
             <li onClick={handleClick} className="flex pl-2 pr-4 hover:bg-pink-100 rounded-md font-semibold"><img className="mr-3" src={EditIcon} /> Edit</li>
-            <li onClick={() => onDelete(task.id)} className="flex pl-2 pt-2 pr-4 hover:bg-pink-100 rounded-md font-semibold text-[#DA2F2F]"><img className="mr-3" src={DeleteIcon} /> Delete</li>
+            <li onClick={() => onDelete(task.id)} className="flex pl-2 mt-2 pr-4 hover:bg-pink-100 rounded-md font-semibold text-[#DA2F2F]"><img className="mr-3" src={DeleteIcon} /> Delete</li>
           </Dropdown> : <></>
         }
       </div>

@@ -132,7 +132,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onChangeStatus, onDelete, on
                             className={`cursor-pointer ${getSectionBgColor(status)} p-2 px-4 shadow-sm flex justify-between items-center rounded-t-xl`}
                           >
                             <h2 className="text-lg font-semibold capitalize">
-                              {status.replace("-", " ")} ({tasks.length})
+                              {status} ({tasks.length})
                             </h2>
                             <DropIcon
                               color={getArrowColor(status)}

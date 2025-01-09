@@ -47,8 +47,8 @@ const TaskBoardCard: React.FC<TaskBoardCardProps> = ({ onDelete, task, index, on
           <Ellipses />
           {
             isDrop ? <Dropdown height="h-auto" width="w-[43%]" position='top-full right-1' >
-              <li onClick={handleClick} className="flex pl-2 hover:bg-[#fadfdf] font-semibold"><img className="mr-3" src={EditIcon} /> Edit</li>
-              <li onClick={()=>onDelete(task.id)} className="flex pl-2 mt-1 hover:bg-[#fadfdf] font-semibold text-[#DA2F2F]"><img className="mr-3" src={DeleteIcon} /> Delete</li>
+              <li onClick={handleClick} className="flex pl-2 hover:bg-pink-100 font-semibold"><img className="mr-3" src={EditIcon} /> Edit</li>
+              <li onClick={()=>onDelete(task.id)} className="flex pl-2 mt-1 hover:bg-pink-100 font-semibold text-[#DA2F2F]"><img className="mr-3" src={DeleteIcon} /> Delete</li>
             </Dropdown> : <></>
           }
         </div>

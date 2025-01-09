@@ -132,9 +132,9 @@ const Home: React.FC = () => {
     fetchTasks();
   }, [fetchTasks])
 
-  useEffect(() => {
-    if (!user) navigate("/");
-  }, [user])
+  // useEffect(() => {
+  //   if (!user) navigate("/");
+  // }, [user])
 
   return (
     <div className="md:p-4 md:px-7">

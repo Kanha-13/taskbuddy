@@ -46,8 +46,14 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, maxCharacters, onchange 
     setEditorState(RichUtils.toggleBlockType(editorState, blockType));
   };
 
+  const isEditorBlank = () => {
+    const contentState = editorState.getCurrentContent();
+    const plainText = contentState.getPlainText().trim();
+    return plainText === '';
+  }
+
   useEffect(() => {
-    if (value && !isValueLoaded) {
+    if (value && !isValueLoaded && isEditorBlank()) {// to prevent the editor being re render again and again
       setIsValueLoaded(true)
       try {
         const rawContent = JSON.parse(value);

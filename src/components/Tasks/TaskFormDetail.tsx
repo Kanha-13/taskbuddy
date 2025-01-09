@@ -99,14 +99,14 @@ const TaskFormDetail: React.FC<TaskFormDetailProps> = ({ taskDetails, handleChan
             onClick={() => setIsStatusOpen(!isStatusOpen)}
             className="flex justify-between items-center border-2 border-black border-opacity-10 bg-[#FAFAFA] rounded-lg p-2 w-full"
           >
-            <div className="">{taskDetails.status}</div>
+            <div className="">{taskDetails.status.toUpperCase()||"Choose"}</div>
             <DropIcon size="w-3 h-3" color="text-[#484B52]" isOpen={isStatusOpen} />
           </div>
           {
             isStatusOpen &&
             <Dropdown height="h-auto" width="w-max">
               <div onClick={() => handleStatusChange("todo")} className={`text-xs text-left px-2 mb-1 font-semibold ${getStatusOptionBg("todo")}  hover:bg-pink-100 rounded-sm`}>TO-DO</div>
-              <div onClick={() => handleStatusChange("in-progress")} className={`text-xs text-left px-2 mb-1 font-semibold ${getStatusOptionBg("in-progress")}  hover:bg-pink-100 rounded-sm`}>IN PROGRESS</div>
+              <div onClick={() => handleStatusChange("in-progress")} className={`text-xs text-left px-2 mb-1 font-semibold ${getStatusOptionBg("in-progress")}  hover:bg-pink-100 rounded-sm`}>IN-PROGRESS</div>
               <div onClick={() => handleStatusChange("completed")} className={`text-xs text-left px-2 mb-1 font-semibold ${getStatusOptionBg("completed")}  hover:bg-pink-100 rounded-sm`}>COMPLETED</div>
             </Dropdown>
           }

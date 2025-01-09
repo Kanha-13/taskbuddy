@@ -18,7 +18,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, onUpdate, onClose, mode, 
   const [task, setTask] = useState<Task>({
     id: "",
     title: "",
-    status: "todo",
+    status: "",
     category: "",
     dueDate: "",
     files: [],
@@ -39,16 +39,18 @@ const TaskForm: React.FC<TaskFormProps> = ({ onSubmit, onUpdate, onClose, mode, 
   };
 
   const handleSubmit = () => {
-    if (mode === "create") onSubmit(task);
-    else onUpdate(task);
-    setTask({
-      id: "",
-      title: "",
-      status: "todo",
-      category: "",
-      dueDate: "",
-      files: [],
-    });
+    if (isActive) {
+      if (mode === "create") onSubmit(task);
+      else onUpdate(task);
+      setTask({
+        id: "",
+        title: "",
+        status: "",
+        category: "",
+        dueDate: "",
+        files: [],
+      });
+    }
   };
 
   const getSize = () => {

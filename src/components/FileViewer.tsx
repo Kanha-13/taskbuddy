@@ -71,7 +71,7 @@ const FileViewer: React.FC<RenderFileProps> = ({ files = [], onDelete }) => {
 
   return (
     <div className="w-full h-auto flex flex-wrap gap-4 justify-start">
-      {blobs.map((blob, index) => <RenderFile blob={blob} index={index} onDelete={deleteFile} />)}
+      {blobs.map((blob, index) => <RenderFile key={blob?.dbURL + "in-render-file-component"} blob={blob} index={index} onDelete={deleteFile} />)}
     </div>
   );
 };

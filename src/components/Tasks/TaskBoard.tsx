@@ -50,7 +50,7 @@ const TaskBoard: React.FC<TaskBoardProps> = ({ isSearching, tasks, onDelete, onC
               <div className="bg-gray-100 h-max p-4 rounded-2xl border-2 border-[#585751] border-opacity-[7%]">
                 <div className={`${getSectionBgColor(status)} w-max px-3 py-1 rounded-md`}>
                   <h2 className="text-sm font-semibold capitalize">
-                    {status.replace("-", " ")}
+                    {status.toUpperCase()}
                   </h2>
                 </div>
 
