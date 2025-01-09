@@ -82,7 +82,7 @@ const FileViewer: React.FC<RenderFileProps> = ({ files = [], onDelete }) => {
         const url = URL.createObjectURL(blob.blob || new Blob);
 
         return (
-          <div key={blob.dbURL + index + "in file-viewer"} className="bg-gray-100 flex flex-col justify-between w-[30%] h-[38vh] rounded-md relative">
+          <div key={blob.dbURL + index + "in file-viewer"} className="bg-gray-100 flex flex-col justify-between w-[45%] md:w-[30%] h-[38vh] rounded-md relative">
             <button
               onClick={() => handleDeleteFile(index)}
               className="absolute -top-2 -right-2 z-50 text-[#121212] border border-black bg-[#FAFAFA] border-opacity-15 w-7 h-7 rounded-full"

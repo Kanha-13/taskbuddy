@@ -80,7 +80,7 @@ const DragAndDropFileInput: React.FC<DragAndDropProps> = ({ onFileUpload }) => {
           <h4 className='font-bold'>Uploaded Files:</h4>
           <div className='flex flex-wrap mt-4 gap-4 justify-start'>
             {uploadedFiles.map((file, index) => (
-              <div className='flex flex-col justify-center items-center w-1/4 overflow-hidden max-h-[22vh]' key={file.name + index + "in file preview"}>
+              <div className='flex flex-col justify-center items-center w-[45%] md:w-[30%] overflow-hidden max-h-[22vh]' key={file.name + index + "in file preview"}>
                 <div className='whitespace-nowrap overflow-hidden text-ellipsis max-w-full'>
                   {file.name}
                 </div>
