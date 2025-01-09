@@ -34,6 +34,7 @@ const TaskFilter: React.FC<TaskFilterProps> = ({ onFilterChange, onAddTask }) =>
   const handleCategoryChange = (newCategory: string) => {
     setCategory(newCategory);
     onFilterChange({ search, category: newCategory, startDate: dateRange.startDate, endDate: dateRange.endDate });
+    setIsCategoryOpen(false)
   };
 
   const handleDateChange = (range: DateRange) => {

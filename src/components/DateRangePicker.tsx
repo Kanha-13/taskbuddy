@@ -44,11 +44,13 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ mode = "range", value
   const handleMonthChange = (e: React.MouseEvent, newmonth: string) => {
     e.stopPropagation();
     setCurrentMonth(new Date(`${newmonth} 1, ${currentMonth.getFullYear()}`));
+    setSelectMonth(false)
   };
 
   const handleYearChange = (e: React.MouseEvent, newyear: number) => {
     e.stopPropagation();
     setCurrentMonth(new Date(newyear, currentMonth.getMonth()));
+    setSelectYear(false)
   };
 
   const renderDays = (startDate: Date) => {

@@ -10,11 +10,15 @@ interface DropdownProps {
   scrollTo?: number;
 }
 
-const Dropdown: React.FC<DropdownProps> = ({ scrollTo = 0, bgColor = "bg-[#FFF9F9]", border = "border-2 border-[#EBD7E7]", height = "h-auto", width = "w-full", position = "top-full left-0", children }) => {
+const Dropdown: React.FC<DropdownProps> = ({ scrollTo , bgColor = "bg-[#FFF9F9]", border = "border-2 border-[#EBD7E7]", height = "h-auto", width = "w-full", position = "top-full left-0", children }) => {
+  const [isScrolledOnce, setIsScrolled] = useState(false);
   useEffect(() => {
-    const element = document.getElementById("drop" + children?.[0])
-    element?.scrollBy({ top: scrollTo - element?.getBoundingClientRect().y-10})
-  }, [scrollTo])
+    if (!isScrolledOnce && scrollTo) {
+      setIsScrolled(true)
+      const element = document.getElementById("drop" + children?.[0])
+      element?.scrollBy({ top: scrollTo - element?.getBoundingClientRect().y - 10 })
+    }
+  }, [scrollTo, isScrolledOnce])
 
   return (
     <div id={"drop" + children?.[0]} className={`${bgColor} ${border} rounded-xl shadow-md absolute ${position} font-mulish p-2 overflow-y-auto mt-2 z-50 ${width} ${height}`} >
