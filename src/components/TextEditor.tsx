@@ -53,10 +53,10 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, maxCharacters, onchange 
   }
 
   useEffect(() => {
-    if (value && !isValueLoaded && isEditorBlank()) {// to prevent the editor being re render again and again
+    if (value != "" && !isValueLoaded && isEditorBlank()) {// to prevent the editor being re render again and again
       setIsValueLoaded(true)
       try {
-        const rawContent = JSON.parse(value);
+        const rawContent = JSON.parse(value || "");
         const contentState = convertFromRaw(rawContent);
 
         if (contentState !== editorState.getCurrentContent()) {
