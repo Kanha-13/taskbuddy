@@ -11,7 +11,6 @@ const StatusIcon: React.FC<StatusIconProps> = ({ status }) => {
         return "bg-[#A7A7A7]"
       case "in-progress":
         return "bg-[#00BCD4]"
-      // return "bg-[#FFD966]"
       case "completed":
         return "bg-[#1B8D17]"
     }

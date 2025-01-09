@@ -1,8 +1,8 @@
 import React from 'react';
 
 interface CrossIconProps {
-  size?: number; // Size of the icon (both width and height)
-  color?: string; // Color of the cross
+  size?: number;
+  color?: string;
 }
 
 const CrossIcon: React.FC<CrossIconProps> = ({ size = 24, color = 'black' }) => {

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { format, addMonths, isSameDay, isWithinInterval } from 'date-fns';
 import Dropdown from './DropDown.tsx';
+import DroperIcon from './DropTriangle.tsx';
 
 interface DateRange {
   startDate: Date | string | null;
@@ -106,18 +107,6 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ mode = "range", value
     return days;
   };
 
-  const DroperIcon = ({ direction }: { direction: boolean }) => {
-    return (
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 200" width="10" height="22" className="mb-2 ml-2">
-        {direction ? (
-          <polygon points="50,100 90,190 10,190" fill="#F8B1FF" />
-        ) : (
-          <polygon points="50,190 90,110 10,110" fill="#F8B1FF" />
-        )}
-      </svg>
-    );
-  };
-
   const handleOpenMonth = (e: React.MouseEvent) => {
     e.stopPropagation();
     setSelectMonth(!isselectMonth)
@@ -132,7 +121,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ mode = "range", value
       <div className="flex justify-center mb-4">
         <div onClick={handleOpenMonth} className="mr-2 text-center w-max flex justify-center items-center cursor-pointer relative">
           {format(new Date(0, currentMonth.getMonth()), 'MMMM')}
-          <DroperIcon direction={isselectMonth} />
+          <DroperIcon color='#F8B1FF' direction={isselectMonth} />
           {isselectMonth && (
             <Dropdown height="h-auto" width="w-max" position='right-34 top-full'>
               {months.map((month, index) => (
@@ -145,7 +134,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ mode = "range", value
         </div>
         <div onClick={handleOpenYear} className="ml-2 text-center w-max flex justify-center items-center cursor-pointer relative">
           {currentMonth.getFullYear()}
-          <DroperIcon direction={isselectYear} />
+          <DroperIcon color='#F8B1FF' direction={isselectYear} />
           {isselectYear && (
             <Dropdown height="h-[30vh]" width="w-max" position='right-34 top-full'>
               {years.map((year) => (

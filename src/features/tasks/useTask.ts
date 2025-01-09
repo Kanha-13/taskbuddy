@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchTasksFromFirebase, addTaskToFirebase, updateTaskInFirebase, deleteTaskFromFirebase } from "../../firebaseConfig.ts"; // Firebase service methods
+import { fetchTasksFromFirebase, addTaskToFirebase, updateTaskInFirebase, deleteTaskFromFirebase } from "../../firebaseConfig.ts";
 import {
   addTask,
   updateTask,
@@ -8,9 +8,9 @@ import {
   filterTasks,
   setTasks,
   Activity,
-} from "./taskSlice.ts"; // Redux actions
-import { Task } from "./taskSlice.ts"; // Task interface
-import { RootState } from "../../store/store.ts"; // RootState type
+} from "./taskSlice.ts"; 
+import { Task } from "./taskSlice.ts";
+import { RootState } from "../../store/store.ts"; 
 import { deleteFileFromSupabase, uploadFileToSupabase } from "../../utils/fileUpload.ts";
 
 interface UseTasks {
@@ -38,7 +38,6 @@ const useTasks = (): UseTasks => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch tasks from Firebase and sync with Redux
   const fetchTasks = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -52,7 +51,6 @@ const useTasks = (): UseTasks => {
     }
   }, [dispatch]);
 
-  // Add a new task to Firebase and Redux
   const addNewTask = useCallback(
     async (task: Task, user: any) => {
       let filesLink = <Task['files']>[]
@@ -77,7 +75,6 @@ const useTasks = (): UseTasks => {
     [dispatch]
   );
 
-  // Update an existing task in Firebase and Redux
   const updateExistingTask = useCallback(
     async (task: Task, user: any) => {
       let updatedTask = { ...task };
@@ -122,12 +119,12 @@ const useTasks = (): UseTasks => {
 
         updatedTask.activityLogs = [...(updatedTask.activityLogs || []), ...(newActivity || [])];
 
-        await updateTaskInFirebase(updatedTask); // Updates task in Firebase
+        await updateTaskInFirebase(updatedTask);
         dispatch(updateTask(updatedTask));
       } catch (err) {
         console.log(err)
         if (newfilesLink?.length)
-          await deleteFiles(newfilesLink); //deleting because firebase throws error to update the files url in db 
+          await deleteFiles(newfilesLink); //deleting because firebase fails to update the files url in db 
         setError(err instanceof Error ? err.message : "Error updating task");
       } finally {
         setLoading(false);
@@ -136,7 +133,6 @@ const useTasks = (): UseTasks => {
     [dispatch, tasks]
   );
 
-  // Delete a task from Firebase and Redux
   const deleteExistingTask = useCallback(
     async (taskId: string) => {
       setLoading(true);
@@ -148,7 +144,7 @@ const useTasks = (): UseTasks => {
             await deleteFiles(tasktodelete.files);
           }
         }
-        await deleteTaskFromFirebase(taskId); // Deletes task from Firebase
+        await deleteTaskFromFirebase(taskId);
         dispatch(deleteTask(taskId));
       } catch (err) {
         setError(err instanceof Error ? err.message : "Error deleting task");
@@ -159,7 +155,6 @@ const useTasks = (): UseTasks => {
     [dispatch]
   );
 
-  // Filter tasks in Redux
   const filterTasksByParams = useCallback(
     (params: {
       search: string;

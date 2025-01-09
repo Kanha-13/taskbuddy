@@ -8,7 +8,7 @@ interface TaskFormProps {
   taskData?: Task | undefined | null;
   onSubmit: (task: Task) => void;
   onUpdate: (task: Task) => void;
-  onClose: () => void; // To handle closing the modal
+  onClose: () => void;
   mode: "update" | "create";
 }
 

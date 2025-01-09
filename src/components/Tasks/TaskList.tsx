@@ -32,6 +32,8 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onChangeStatus, onDelete, on
     "in-progress": originalRenderLength,
     completed: originalRenderLength,
   });
+  const [tasksList, setTasksList] = useState<Task[]>(tasks);
+  const [sortOrder, setSortOrder] = useState<boolean>(true);
 
   const toggleSection = (section: "todo" | "in-progress" | "completed") => {
     setSections((prev) => ({ ...prev, [section]: !prev[section] }));
@@ -52,9 +54,9 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onChangeStatus, onDelete, on
   };
 
   const categorizedTasks = {
-    todo: tasks.filter((task) => task.status === "todo"),
-    "in-progress": tasks.filter((task) => task.status === "in-progress"),
-    completed: tasks.filter((task) => task.status === "completed"),
+    todo: tasksList.filter((task) => task.status === "todo"),
+    "in-progress": tasksList.filter((task) => task.status === "in-progress"),
+    completed: tasksList.filter((task) => task.status === "completed"),
   };
 
   const getSectionBgColor = (status: string) => {
@@ -80,6 +82,22 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onChangeStatus, onDelete, on
     return "";
   };
 
+  const handleSort = () => {
+    let orderdlist = [...tasksList];
+    if (sortOrder) {
+      setTasksList(orderdlist.sort((a, b) => new Date(b.dueDate) - new Date(a.dueDate)))
+    }
+    else {
+      setTasksList(orderdlist.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate)))
+    }
+    setSortOrder(!sortOrder);//true for ascending false of descending
+  }
+
+
+  useEffect(() => {
+    setTasksList(tasks)
+  }, [tasks])
+
   useEffect(() => {
     setMountDroppable(true);
   }, []);
@@ -88,11 +106,11 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onChangeStatus, onDelete, on
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="px-4 md:p-0 md:border-t-2 border-opacity-10 border-black mt-6 md:mt-8">
         {/* condition to check if the search filter is active and if the user filtered beyond the available task then rendering no search found illustrator */}
-        {isSearching && tasks.length < 1 ? (
+        {isSearching && tasksList.length < 1 ? (
           <NoSearchResult />
         ) : (
           <>
-            <ListHead />
+            <ListHead onSort={handleSort} />
             {/* here rendering the single tasks list into 3 sections using pre-filtered categorizedTasks list  */}
             {isDroppableMounted &&
               Object.entries(categorizedTasks).map(([status, tasks]) => {

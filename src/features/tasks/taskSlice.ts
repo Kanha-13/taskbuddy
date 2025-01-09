@@ -49,7 +49,8 @@ const taskSlice = createSlice({
       state.tasks = state.tasks.filter((task) => task.id !== action.payload);
     },
     filterTasks(state, action: PayloadAction<{ search: string; category: string; startDate?: Date | null; endDate?: Date | null }>) {
-      let filtered = state.tasks;
+      let filtered = [...state.tasks];
+      filtered.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
 
       if (action.payload.search) {
         filtered = filtered.filter((task) =>
