@@ -60,7 +60,7 @@ const TaskFormDetail: React.FC<TaskFormDetailProps> = ({ taskDetails, handleChan
         placeholder="Task Title"
         value={taskDetails.title}
         onChange={(e) => handleChange("title", e.target.value)}
-        className="border-2 border-black border-opacity-10 bg-[#FAFAFA] rounded-lg p-2 w-full"
+        className="outline-none border-2 border-black border-opacity-10 bg-[#FAFAFA] rounded-lg p-2 w-full"
       />
       <TextEditor value={taskDetails.description} onchange={(text) => handleChange("description", text)} maxCharacters={300} />
       <div className="w-full font-semibold gap-6 md:gap-0 flex flex-wrap md:flex-nowrap mt-2 items-center">
