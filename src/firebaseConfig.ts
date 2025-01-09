@@ -1,4 +1,4 @@
-import { getFirestore, collection, updateDoc, doc, deleteDoc, getDocs, setDoc } from "firebase/firestore";
+import { getFirestore, collection, updateDoc, doc, deleteDoc, getDocs, setDoc, query, where } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
 import { Task } from "./features/tasks/taskSlice";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
@@ -40,22 +40,21 @@ export const logoutFirebase = async () => {
   }
 };
 
-export const fetchTasksFromFirebase = async (): Promise<Task[]> => {
+export const fetchTasksFromFirebase = async (uid: string): Promise<Task[]> => {
+  if (!uid) throw new Error("User not authenticated");
   const tasksCollection = collection(db, "tasks");
-  const snapshot = await getDocs(tasksCollection);
-  return snapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...(doc.data() as Omit<Task, "id">),
-  }));
+  const q = query(tasksCollection, where("userId", "==", uid));
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map((doc) => doc.data() as Task);
 };
 
-export const addTaskToFirebase = async (task: Task): Promise<Task> => {
+export const addTaskToFirebase = async (task: Task, uid: string): Promise<Task> => {
+  if (!uid) throw new Error("User not authenticated");
   const tasksCollection = collection(db, "tasks");
   const docRef = doc(tasksCollection);
-  const taskWithId = { ...task, id: docRef.id };
-  await setDoc(docRef, taskWithId);
-
-  return taskWithId;
+  const taskWithUserId = { ...task, id: docRef.id, userId: uid };
+  await setDoc(docRef, taskWithUserId);
+  return taskWithUserId;
 };
 
 export const updateTaskInFirebase = async (task: Task): Promise<void> => {

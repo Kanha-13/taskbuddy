@@ -129,12 +129,13 @@ const Home: React.FC = () => {
   }, [checkRows])
 
   useEffect(() => {
-    fetchTasks();
-  }, [fetchTasks])
+    if (user?.uid)
+      fetchTasks(user?.uid);
+  }, [fetchTasks, user])
 
-  // useEffect(() => {
-  //   if (!user) navigate("/");
-  // }, [user])
+  useEffect(() => {
+    if (!user) navigate("/");
+  }, [user])
 
   return (
     <div className="md:p-4 md:px-7">

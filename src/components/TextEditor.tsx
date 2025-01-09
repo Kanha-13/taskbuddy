@@ -22,6 +22,7 @@ interface TextEditorProps {
 
 const TextEditor: React.FC<TextEditorProps> = ({ value, maxCharacters, onchange }) => {
   const [isValueLoaded, setIsValueLoaded] = useState<boolean>(false)
+  const [isComponentMounted, setIsComponentMounted] = useState<boolean>(false)
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()
   );
@@ -46,36 +47,32 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, maxCharacters, onchange 
     setEditorState(RichUtils.toggleBlockType(editorState, blockType));
   };
 
-  const isEditorBlank = () => {
-    const contentState = editorState.getCurrentContent();
-    const plainText = contentState.getPlainText().trim();
-    return plainText === '';
-  }
-
   useEffect(() => {
-    if (value && !isValueLoaded && isEditorBlank()) {// to prevent the editor being re render again and again
-      setIsValueLoaded(true)
+    if (value && !isValueLoaded) {
+      setIsValueLoaded(true);
       try {
         const rawContent = JSON.parse(value);
         const contentState = convertFromRaw(rawContent);
-
-        if (contentState !== editorState.getCurrentContent()) {
-          setEditorState(EditorState.createWithContent(contentState));
-        }
+        setEditorState(EditorState.createWithContent(contentState));
       } catch (error) {
         console.error('Invalid raw content:', error);
       }
     }
   }, [value, isValueLoaded]);
+  
+
+  useEffect(()=>{
+    setIsComponentMounted(true)
+  },[])
 
   return (
     <div className="border-2 border-black rounded-lg my-4 min-h-28 md:min-h-[25%] flex flex-col justify-between px-3 pt-1 md:p-2 md:px-3 bg-[#FAFAFA] border-opacity-10">
-      <div className="w-full h-auto">
-        <Editor
+      <div className="w-full h-full">
+        {isComponentMounted && <Editor
           placeholder={<div className='flex'><img src={descriptionIcon} /> Description</div>}
           editorState={editorState}
           onChange={handleEditorChange}
-        />
+        />}
       </div>
       <div className="flex justify-between items-center">
         <div className="w-1/4 flex justify-between items-center">
