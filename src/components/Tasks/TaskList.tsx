@@ -118,77 +118,78 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onChangeStatus, onDelete, on
                 const tasksToDisplay = tasks.slice(0, visibleTaskCount);
 
                 return (
-                  <Droppable key={status} droppableId={status}>
-                    {(provided) => (
-                      <div
-                        className={`mb-8 rounded-2xl md:border-2 border-[#EAECF0] ${sections[status as "todo" | "in-progress" | "completed"] ? "" : "overflow-hidden"}`}
-                        ref={provided.innerRef}
-                        {...provided.droppableProps}
-                      >
-                        {/* section header with title and collapse and expand btn */}
+                  isSearching && tasks.length < 1 ? <></> :
+                    <Droppable key={status} droppableId={status}>
+                      {(provided) => (
                         <div
-                          onClick={() => toggleSection(status as "todo" | "in-progress" | "completed")}
-                          className={`cursor-pointer ${getSectionBgColor(status)} p-2 px-4 shadow-sm flex justify-between items-center rounded-t-xl`}
+                          className={`mb-8 rounded-2xl md:border-2 border-[#EAECF0] ${sections[status as "todo" | "in-progress" | "completed"] ? "" : "overflow-hidden"}`}
+                          ref={provided.innerRef}
+                          {...provided.droppableProps}
                         >
-                          <h2 className="text-lg font-semibold capitalize">
-                            {status.replace("-", " ")} ({tasks.length})
-                          </h2>
-                          <DropIcon
-                            color={getArrowColor(status)}
-                            size="w-6 h-6 mr-3"
-                            isOpen={sections[status as "todo" | "in-progress" | "completed"]}
-                          />
-                        </div>
-                        {status === "todo" ? <AddTaskRow onSave={onCreateNewTask} /> : null}
-                        {/* here rendering the tasks for each section */}
-                        {sections[status as "todo" | "in-progress" | "completed"] && (
-                          <div className="space-y-2 bg-boxGray rounded-b-xl pb-2">
-                            {tasksToDisplay.map((task, index) => (
-                              <Draggable key={task.id} draggableId={task.id} index={index}>
-                                {(provided, snapshot) => (
-                                  <TaskListRow
-                                    isChecked={checkRows.includes(task.id)}
-                                    task={task}
-                                    onEdit={onChangeStatus}
-                                    onDelete={onDelete}
-                                    index={index}
-                                    provided={provided}
-                                    snapshot={snapshot}
-                                    onClick={onClickTask}
-                                    onRowCheck={onRowCheck}
-                                  />
-                                )}
-                              </Draggable>
-                            ))}
-                            {provided.placeholder}
-                            {tasks.length < 1 && (
-                              <div className="h-[25vh] text-[#2F2F2F] font-mulish flex justify-center items-center font-medium">
-                                No task in {status}
-                              </div>
-                            )}
-                            {/* for loading more tasks */}
-                            {visibleTaskCount < tasks.length && (
-                              <div
-                                onClick={() => loadMoreTasks(status as "todo" | "in-progress" | "completed")}
-                                className="cursor-pointer mx-auto text-center font-mulish font-semibold text-[#2683B5] underline underline-offset-2 py-2 text-blue rounded-b-xl mt-4"
-                              >
-                                Load More
-                              </div>
-                            )}
-                            {/* for loading lee tasks */}
-                            {visibleTaskCount > originalRenderLength && (
-                              <div
-                                onClick={() => loadLessTasks(status as "todo" | "in-progress" | "completed")}
-                                className="cursor-pointer mx-auto text-center font-mulish font-semibold text-[#2683B5] underline underline-offset-2 py-2 text-blue rounded-b-xl mt-4"
-                              >
-                                Load Less
-                              </div>
-                            )}
+                          {/* section header with title and collapse and expand btn */}
+                          <div
+                            onClick={() => toggleSection(status as "todo" | "in-progress" | "completed")}
+                            className={`cursor-pointer ${getSectionBgColor(status)} p-2 px-4 shadow-sm flex justify-between items-center rounded-t-xl`}
+                          >
+                            <h2 className="text-lg font-semibold capitalize">
+                              {status.replace("-", " ")} ({tasks.length})
+                            </h2>
+                            <DropIcon
+                              color={getArrowColor(status)}
+                              size="w-6 h-6 mr-3"
+                              isOpen={sections[status as "todo" | "in-progress" | "completed"]}
+                            />
                           </div>
-                        )}
-                      </div>
-                    )}
-                  </Droppable>
+                          {status === "todo" ? <AddTaskRow onSave={onCreateNewTask} /> : null}
+                          {/* here rendering the tasks for each section */}
+                          {sections[status as "todo" | "in-progress" | "completed"] && (
+                            <div className="space-y-2 bg-boxGray rounded-b-xl pb-2">
+                              {tasksToDisplay.map((task, index) => (
+                                <Draggable key={task.id} draggableId={task.id} index={index}>
+                                  {(provided, snapshot) => (
+                                    <TaskListRow
+                                      isChecked={checkRows.includes(task.id)}
+                                      task={task}
+                                      onEdit={onChangeStatus}
+                                      onDelete={onDelete}
+                                      index={index}
+                                      provided={provided}
+                                      snapshot={snapshot}
+                                      onClick={onClickTask}
+                                      onRowCheck={onRowCheck}
+                                    />
+                                  )}
+                                </Draggable>
+                              ))}
+                              {provided.placeholder}
+                              {tasks.length < 1 && (
+                                <div className="h-[25vh] text-[#2F2F2F] font-mulish flex justify-center items-center font-medium">
+                                  No task in {status}
+                                </div>
+                              )}
+                              {/* for loading more tasks */}
+                              {visibleTaskCount < tasks.length && (
+                                <div
+                                  onClick={() => loadMoreTasks(status as "todo" | "in-progress" | "completed")}
+                                  className="cursor-pointer mx-auto text-center font-mulish font-semibold text-[#2683B5] underline underline-offset-2 py-2 text-blue rounded-b-xl mt-4"
+                                >
+                                  Load More
+                                </div>
+                              )}
+                              {/* for loading lee tasks */}
+                              {visibleTaskCount > originalRenderLength && (
+                                <div
+                                  onClick={() => loadLessTasks(status as "todo" | "in-progress" | "completed")}
+                                  className="cursor-pointer mx-auto text-center font-mulish font-semibold text-[#2683B5] underline underline-offset-2 py-2 text-blue rounded-b-xl mt-4"
+                                >
+                                  Load Less
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </Droppable>
                 );
               })}
           </>

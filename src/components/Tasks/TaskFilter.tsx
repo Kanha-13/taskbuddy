@@ -47,6 +47,17 @@ const TaskFilter: React.FC<TaskFilterProps> = ({ onFilterChange, onAddTask }) =>
     return "bg-none"
   }
 
+  const handleClearAll = () => {
+    onFilterChange({ search: "", category: "", startDate: null, endDate: null });
+    setCategory("")
+    setDateRange({
+      startDate: null,
+      endDate: null,
+    })
+    setSearch("")
+
+  }
+
   const renderAddBtn = () => <button
     onClick={onAddTask}
     className="bg-secondaryColor ml-auto md:ml-0 outline-none text-white text-sm rounded-full font-semibold px-5 md:px-8 py-3"
@@ -71,6 +82,7 @@ const TaskFilter: React.FC<TaskFilterProps> = ({ onFilterChange, onAddTask }) =>
           {
             isCategoryOpen &&
             <Dropdown height="h-auto" width="w-max">
+              <div onClick={() => handleCategoryChange("")} className={`text-xs text-left px-2 mb-1 font-semibold ${getCatOptionBg("")}  hover:bg-pink-100 rounded-sm`}>All</div>
               <div onClick={() => handleCategoryChange("Work")} className={`text-xs text-left px-2 mb-1 font-semibold ${getCatOptionBg("Work")}  hover:bg-pink-100 rounded-sm`}>Work</div>
               <div onClick={() => handleCategoryChange("Personal")} className={`text-xs text-left px-2 mb-1 font-semibold ${getCatOptionBg("Personal")}  hover:bg-pink-100 rounded-sm`}>Personal</div>
             </Dropdown>
@@ -91,6 +103,7 @@ const TaskFilter: React.FC<TaskFilterProps> = ({ onFilterChange, onAddTask }) =>
             <DateRangePicker mode="range" value={dateRange} onChange={handleDateChange} />
           )}
         </div>
+        <div onClick={handleClearAll} className="text-xs cursor-pointer text-opacity-70 text-black">Clear All</div>
       </div>
 
       <div className="flex items-center gap-4 w-full sm:w-1/3">
