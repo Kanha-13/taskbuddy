@@ -82,9 +82,9 @@ const TaskFilter: React.FC<TaskFilterProps> = ({ onFilterChange, onAddTask }) =>
           {
             isCategoryOpen &&
             <Dropdown height="h-auto" width="w-max">
-              <div onClick={() => handleCategoryChange("")} className={`text-xs text-left px-2 mb-1 font-semibold ${getCatOptionBg("")}  hover:bg-pink-100 rounded-sm`}>All</div>
-              <div onClick={() => handleCategoryChange("Work")} className={`text-xs text-left px-2 mb-1 font-semibold ${getCatOptionBg("Work")}  hover:bg-pink-100 rounded-sm`}>Work</div>
-              <div onClick={() => handleCategoryChange("Personal")} className={`text-xs text-left px-2 mb-1 font-semibold ${getCatOptionBg("Personal")}  hover:bg-pink-100 rounded-sm`}>Personal</div>
+              <div onClick={() => handleCategoryChange("")} className={`text-xs text-left px-2 pr-8 mb-1 font-semibold ${getCatOptionBg("")}  hover:bg-pink-100 rounded-sm`}>All</div>
+              <div onClick={() => handleCategoryChange("Work")} className={`text-xs text-left px-2 pr-8 mb-1 font-semibold ${getCatOptionBg("Work")}  hover:bg-pink-100 rounded-sm`}>Work</div>
+              <div onClick={() => handleCategoryChange("Personal")} className={`text-xs text-left px-2 pr-8 mb-1 font-semibold ${getCatOptionBg("Personal")}  hover:bg-pink-100 rounded-sm`}>Personal</div>
             </Dropdown>
           }
         </div>
