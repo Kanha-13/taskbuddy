@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface DropdownProps {
   height?: string;
@@ -7,12 +7,17 @@ interface DropdownProps {
   bgColor?: string;
   border?: string;
   children: React.ReactNode;
+  scrollTo?: number;
 }
 
-const Dropdown: React.FC<DropdownProps> = ({ bgColor = "bg-[#FFF9F9]", border = "border-2 border-[#EBD7E7]", height = "h-auto", width = "w-full", position = "top-full left-0", children }) => {
+const Dropdown: React.FC<DropdownProps> = ({ scrollTo = 0, bgColor = "bg-[#FFF9F9]", border = "border-2 border-[#EBD7E7]", height = "h-auto", width = "w-full", position = "top-full left-0", children }) => {
+  useEffect(() => {
+    const element = document.getElementById("drop" + children?.[0])
+    element?.scrollBy({ top: scrollTo - element?.getBoundingClientRect().y-10})
+  }, [scrollTo])
 
   return (
-    <div className={`${bgColor} ${border} rounded-xl shadow-md absolute ${position} font-mulish p-2 overflow-y-auto mt-2 z-50 ${width} ${height}`} >
+    <div id={"drop" + children?.[0]} className={`${bgColor} ${border} rounded-xl shadow-md absolute ${position} font-mulish p-2 overflow-y-auto mt-2 z-50 ${width} ${height}`} >
       <ul className="py-1">
         {children}
       </ul>
