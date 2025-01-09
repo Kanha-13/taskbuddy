@@ -108,10 +108,10 @@ Visit `http://localhost:3000` to access the app in your browser.
 ## Screenshots
 
 ### Task List View
-![Task List](./assets/screenshots/task-list.png)
+![Task List](./src/assets/screenshots/task-list.png)
 
 ### Kanban Card View
-![Kanban View](./assets/screenshots/kanban-view.png)
+![Kanban View](./src/assets/screenshots/kanban-view.png)
 
 ---
 
