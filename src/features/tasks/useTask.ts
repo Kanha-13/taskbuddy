@@ -8,9 +8,9 @@ import {
   filterTasks,
   setTasks,
   Activity,
-} from "./taskSlice.ts"; 
+} from "./taskSlice.ts";
 import { Task } from "./taskSlice.ts";
-import { RootState } from "../../store/store.ts"; 
+import { RootState } from "../../store/store.ts";
 import { deleteFileFromSupabase, uploadFileToSupabase } from "../../utils/fileUpload.ts";
 
 interface UseTasks {
@@ -18,7 +18,7 @@ interface UseTasks {
   filteredTasks: Task[];
   loading: boolean;
   error: string | null;
-  fetchTasks: () => Promise<void>;
+  fetchTasks: (uid: string) => Promise<void>;
   addNewTask: (task: Task, user: any) => Promise<void>;
   updateExistingTask: (task: Task, user: any) => Promise<void>;
   deleteExistingTask: (taskId: string) => Promise<void>;
@@ -38,11 +38,11 @@ const useTasks = (): UseTasks => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchTasks = useCallback(async () => {
+  const fetchTasks = useCallback(async (uid: string) => {
     setLoading(true);
     setError(null);
     try {
-      const fetchedTasks = await fetchTasksFromFirebase();
+      const fetchedTasks = await fetchTasksFromFirebase(uid);
       dispatch(setTasks(fetchedTasks));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error fetching tasks");
@@ -62,7 +62,7 @@ const useTasks = (): UseTasks => {
           task.files = filesLink;
           delete task.filesData;
         }
-        const newTask = await addTaskToFirebase({ ...task, activityLogs: [{ act: "You created this task", timeStamp: `${new Date()}` }] });
+        const newTask = await addTaskToFirebase({ ...task, activityLogs: [{ act: "You created this task", timeStamp: `${new Date()}` }] }, user.uid);
         dispatch(addTask(newTask));
       } catch (err) {
         if (filesLink?.length)
@@ -122,7 +122,6 @@ const useTasks = (): UseTasks => {
         await updateTaskInFirebase(updatedTask);
         dispatch(updateTask(updatedTask));
       } catch (err) {
-        console.log(err)
         if (newfilesLink?.length)
           await deleteFiles(newfilesLink); //deleting because firebase fails to update the files url in db 
         setError(err instanceof Error ? err.message : "Error updating task");
@@ -218,7 +217,6 @@ const deleteFiles = async (files: Task['files']) => {
       );
     }
   } catch (error) {
-    console.log(error);
     throw new Error("Unable to delete files");
   }
 };
