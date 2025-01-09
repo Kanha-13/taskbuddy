@@ -1,46 +1,142 @@
-# Getting Started with Create React App
+# TaskBuddy - Task Management App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+TaskBuddy is a powerful and user-friendly task management application built using React and TypeScript. The app helps users manage tasks efficiently with a variety of features such as Google Firebase authentication, Firestore database integration, and file storage via Supabase buckets. Whether you're working on personal or work-related tasks, TaskBuddy provides all the tools you need to stay organized and productive.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## Live Demo
 
-### `npm start`
+You can try the TaskBuddy app live at the following URL:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+[TaskBuddy Live Demo](https://taskbuddy-13.vercel.app/)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+---
 
-### `npm test`
+## Features
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Task Management**: 
+  - Add, update, and delete tasks with detailed information.
+  - Set task title, description, category (Work or Personal), due date, and status (Todo, In-Progress, Completed).
+  - Store multiple files associated with each task in the Supabase bucket.
+  
+- **Rich Text Editor**: 
+  - Use a rich text editor for writing task descriptions, implemented with the [Draft.js](https://draftjs.org/) library.
 
-### `npm run build`
+- **Custom Date Range Picker**: 
+  - A beautiful, intuitive custom date range picker implemented using the [date-fns](https://date-fns.org/) library.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **File Upload and Preview**: 
+  - Drag and drop files into the task with a simple and easy-to-use upload feature.
+  - Preview uploaded files before finalizing.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- **Drag-and-Drop Task Tiles**: 
+  - Easily move tasks between Todo, In-Progress, and Completed sections using drag-and-drop functionality, implemented using the [`@hello-pangea/dnd`](https://github.com/atlassian/react-beautiful-dnd) library.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **Task Filters**: 
+  - Filter tasks based on category, due date range, task name, and other criteria.
+  - Apply and clear filters easily with a clear all filter option.
 
-### `npm run eject`
+- **Multi-Task Selection**: 
+  - Select multiple tasks and update their status or delete them all at once.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- **Two Different View Modes**: 
+  - Choose between List Mode and Kanban Card Mode for different ways to view and manage your tasks.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **Responsive Design**: 
+  - Fully responsive UI that works seamlessly across mobile, tablet, and PC devices.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+---
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Tech Stack
 
-## Learn More
+- **Frontend**: React, TypeScript, Tailwind CSS, Draft.js (for rich text editor), date-fns (for date picker)
+- **Authentication**: Google Firebase Auth
+- **Database**: Firestore (for storing tasks)
+- **File Storage**: Supabase Bucket (for storing task-related files)
+- **Drag and Drop**: [`@hello-pangea/dnd`](https://github.com/atlassian/react-beautiful-dnd) for task tile drag-and-drop functionality
+  
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Installation
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+1. Clone the repository:
+
+```bash
+git clone https://github.com/Kanha-13/taskbuddy.git
+cd taskbuddy
+```
+
+2. Install dependencies:
+
+If you're using `yarn`:
+
+```bash
+yarn install
+```
+
+If you're using `npm`:
+
+```bash
+npm install
+```
+
+3. Set up Firebase and Supabase:
+   - Create a Firebase project and enable authentication.
+   - Create a Supabase project and enable the file storage bucket.
+   - Add your Firebase and Supabase configuration to the `.env` file.
+
+   A reference `.env.example` file has been provided in the repository to help you set up the necessary environment variables.
+
+4. Start the development server:
+
+If you're using `yarn`:
+
+```bash
+yarn start
+```
+
+If you're using `npm`:
+
+```bash
+npm start
+```
+
+Visit `http://localhost:3000` to access the app in your browser.
+
+---
+
+## Screenshots
+
+### Task List View
+![Task List](./src/assets/screenshots/task-list.png)
+
+### Kanban Card View
+![Kanban View](./src/assets/screenshots/kanban-view.png)
+
+---
+
+## Contributing
+
+Feel free to fork this repository, submit pull requests, and contribute to this project. Whether you want to improve the UI, add features, or fix bugs, all contributions are welcome!
+
+---
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## Acknowledgments
+
+- [Draft.js](https://draftjs.org/) for the rich text editor.
+- [date-fns](https://date-fns.org/) for the custom date range picker.
+- [Supabase](https://supabase.com/) for file storage.
+- [Firebase](https://firebase.google.com/) for authentication.
+- [`@hello-pangea/dnd`](https://github.com/hello-pangea/dnd) for the drag-and-drop functionality.
+
+---
+
+Enjoy using TaskBuddy for all your task management needs! 🥳
+
+--- 
